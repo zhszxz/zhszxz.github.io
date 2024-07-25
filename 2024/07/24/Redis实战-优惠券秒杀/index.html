@@ -15,24 +15,24 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="3、优惠卷秒杀3.1 -全局唯一ID每个店铺都可以发布优惠券：  当用户抢购时，就会生成订单并保存到tb_voucher_order这张表中，而订单表如果使用数据库自增ID就存在一些问题：  id的规律性太明显 受单表数据量的限制  场景分析：如果我们的id具有太明显的规则，用户或者说商业对手很容易猜测出来我们的一些敏感信息，比如商城在一天时间内，卖出了多少单，这明显不合适。">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/1653362612286.png">
-<meta property="og:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/1653363100502.png">
-<meta property="og:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/1653363172079.png">
-<meta property="og:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/1653365145124.png">
-<meta property="og:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/1653365839526.png">
-<meta property="og:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/1653366238564.png">
-<meta property="og:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/1653368335155.png">
-<meta property="og:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/1653368562591.png">
-<meta property="og:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/1653369268550.png">
-<meta property="og:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/1653370271627.png">
-<meta property="og:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/1653371854389.png">
-<meta property="og:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/1653373434815.png">
-<meta property="og:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/1653383810643.png">
+<meta property="og:image" content="http://example.com/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E4%BC%98%E6%83%A0%E5%88%B8%E7%A7%92%E6%9D%80/1653362612286.png">
+<meta property="og:image" content="http://example.com/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E4%BC%98%E6%83%A0%E5%88%B8%E7%A7%92%E6%9D%80/1653363100502.png">
+<meta property="og:image" content="http://example.com/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E4%BC%98%E6%83%A0%E5%88%B8%E7%A7%92%E6%9D%80/1653363172079.png">
+<meta property="og:image" content="http://example.com/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E4%BC%98%E6%83%A0%E5%88%B8%E7%A7%92%E6%9D%80/1653365145124.png">
+<meta property="og:image" content="http://example.com/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E4%BC%98%E6%83%A0%E5%88%B8%E7%A7%92%E6%9D%80/1653365839526.png">
+<meta property="og:image" content="http://example.com/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E4%BC%98%E6%83%A0%E5%88%B8%E7%A7%92%E6%9D%80/1653366238564.png">
+<meta property="og:image" content="http://example.com/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E4%BC%98%E6%83%A0%E5%88%B8%E7%A7%92%E6%9D%80/1653368335155.png">
+<meta property="og:image" content="http://example.com/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E4%BC%98%E6%83%A0%E5%88%B8%E7%A7%92%E6%9D%80/1653368562591.png">
+<meta property="og:image" content="http://example.com/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E4%BC%98%E6%83%A0%E5%88%B8%E7%A7%92%E6%9D%80/1653369268550.png">
+<meta property="og:image" content="http://example.com/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E4%BC%98%E6%83%A0%E5%88%B8%E7%A7%92%E6%9D%80/1653370271627.png">
+<meta property="og:image" content="http://example.com/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E4%BC%98%E6%83%A0%E5%88%B8%E7%A7%92%E6%9D%80/1653371854389.png">
+<meta property="og:image" content="http://example.com/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E4%BC%98%E6%83%A0%E5%88%B8%E7%A7%92%E6%9D%80/1653373434815.png">
+<meta property="og:image" content="http://example.com/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E4%BC%98%E6%83%A0%E5%88%B8%E7%A7%92%E6%9D%80/1653383810643.png">
 <meta property="article:published_time" content="2024-07-24T08:25:02.000Z">
 <meta property="article:modified_time" content="2024-07-24T08:47:55.345Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/1653362612286.png">
+<meta name="twitter:image" content="http://example.com/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E4%BC%98%E6%83%A0%E5%88%B8%E7%A7%92%E6%9D%80/1653362612286.png">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -189,7 +189,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h2 id="3、优惠卷秒杀"><a href="#3、优惠卷秒杀" class="headerlink" title="3、优惠卷秒杀"></a>3、优惠卷秒杀</h2><h3 id="3-1-全局唯一ID"><a href="#3-1-全局唯一ID" class="headerlink" title="3.1 -全局唯一ID"></a>3.1 -全局唯一ID</h3><p>每个店铺都可以发布优惠券：</p>
-<p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/1653362612286.png" alt="1653362612286"></p>
+<p><img src="/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E4%BC%98%E6%83%A0%E5%88%B8%E7%A7%92%E6%9D%80/1653362612286.png" alt="1653362612286"></p>
 <p>当用户抢购时，就会生成订单并保存到tb_voucher_order这张表中，而订单表如果使用数据库自增ID就存在一些问题：</p>
 <ul>
 <li>id的规律性太明显</li>
@@ -200,9 +200,9 @@
 
 <p>场景分析二：随着我们商城规模越来越大，mysql的单表的容量不宜超过500W，数据量过大之后，我们要进行拆库拆表，但拆分表了之后，他们从逻辑上讲他们是同一张表，所以他们的id是不能一样的， 于是乎我们需要保证id的唯一性。</p>
 <p><strong>全局ID生成器</strong>，是一种在分布式系统下用来生成全局唯一ID的工具，一般要满足下列特性：</p>
-<p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/1653363100502.png" alt="1653363100502"></p>
+<p><img src="/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E4%BC%98%E6%83%A0%E5%88%B8%E7%A7%92%E6%9D%80/1653363100502.png" alt="1653363100502"></p>
 <p>为了增加ID的安全性，我们可以不直接使用Redis自增的数值，而是拼接一些其它信息：</p>
-<p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/1653363172079.png" alt="1653363172079"></p>
+<p><img src="/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E4%BC%98%E6%83%A0%E5%88%B8%E7%A7%92%E6%9D%80/1653363172079.png" alt="1653363172079"></p>
 <p>ID的组成部分：符号位：1bit，永远为0</p>
 <p>时间戳：31bit，以秒为单位，可以使用69年</p>
 <p>序列号：32bit，秒内的计数器，支持每秒产生2^32个不同ID</p>
@@ -219,7 +219,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">testIdWorker</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">    <span class="type">CountDownLatch</span> <span class="variable">latch</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CountDownLatch</span>(<span class="number">300</span>);</span><br><span class="line"></span><br><span class="line">    <span class="type">Runnable</span> <span class="variable">task</span> <span class="operator">=</span> () -&gt; &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</span><br><span class="line">            <span class="type">long</span> <span class="variable">id</span> <span class="operator">=</span> redisIdWorker.nextId(<span class="string">&quot;order&quot;</span>);</span><br><span class="line">            System.out.println(<span class="string">&quot;id = &quot;</span> + id);</span><br><span class="line">        &#125;</span><br><span class="line">        latch.countDown();</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="type">long</span> <span class="variable">begin</span> <span class="operator">=</span> System.currentTimeMillis();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">300</span>; i++) &#123;</span><br><span class="line">        es.submit(task);</span><br><span class="line">    &#125;</span><br><span class="line">    latch.await();</span><br><span class="line">    <span class="type">long</span> <span class="variable">end</span> <span class="operator">=</span> System.currentTimeMillis();</span><br><span class="line">    System.out.println(<span class="string">&quot;time = &quot;</span> + (end - begin));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h3 id="3-3-添加优惠卷"><a href="#3-3-添加优惠卷" class="headerlink" title="3.3 添加优惠卷"></a>3.3 添加优惠卷</h3><p>每个店铺都可以发布优惠券，分为平价券和特价券。平价券可以任意购买，而特价券需要秒杀抢购：</p>
-<p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/1653365145124.png" alt="1653365145124"></p>
+<p><img src="/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E4%BC%98%E6%83%A0%E5%88%B8%E7%A7%92%E6%9D%80/1653365145124.png" alt="1653365145124"></p>
 <p>tb_voucher：优惠券的基本信息，优惠金额、使用规则等<br>tb_seckill_voucher：优惠券的库存、开始抢购时间，结束抢购时间。特价优惠券才需要填写这些信息</p>
 <p>平价卷由于优惠力度并不是很大，所以是可以任意领取</p>
 <p>而代金券由于优惠力度大，所以像第二种卷，就得限制数量，从表结构上也能看出，特价卷除了具有优惠卷的基本信息以外，还具有库存，抢购时间，结束时间等等字段</p>
@@ -234,7 +234,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="meta">@Transactional</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addSeckillVoucher</span><span class="params">(Voucher voucher)</span> &#123;</span><br><span class="line">    <span class="comment">// 保存优惠券</span></span><br><span class="line">    save(voucher);</span><br><span class="line">    <span class="comment">// 保存秒杀信息</span></span><br><span class="line">    <span class="type">SeckillVoucher</span> <span class="variable">seckillVoucher</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SeckillVoucher</span>();</span><br><span class="line">    seckillVoucher.setVoucherId(voucher.getId());</span><br><span class="line">    seckillVoucher.setStock(voucher.getStock());</span><br><span class="line">    seckillVoucher.setBeginTime(voucher.getBeginTime());</span><br><span class="line">    seckillVoucher.setEndTime(voucher.getEndTime());</span><br><span class="line">    seckillVoucherService.save(seckillVoucher);</span><br><span class="line">    <span class="comment">// 保存秒杀库存到Redis中</span></span><br><span class="line">    stringRedisTemplate.opsForValue().set(SECKILL_STOCK_KEY + voucher.getId(), voucher.getStock().toString());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h3 id="3-4-实现秒杀下单"><a href="#3-4-实现秒杀下单" class="headerlink" title="3.4 实现秒杀下单"></a>3.4 实现秒杀下单</h3><p>下单核心思路：当我们点击抢购时，会触发右侧的请求，我们只需要编写对应的controller即可</p>
-<p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/1653365839526.png" alt="1653365839526"></p>
+<p><img src="/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E4%BC%98%E6%83%A0%E5%88%B8%E7%A7%92%E6%9D%80/1653365839526.png" alt="1653365839526"></p>
 <p>秒杀下单应该思考的内容：</p>
 <p>下单时需要判断两点：</p>
 <ul>
@@ -244,7 +244,7 @@
 <p>下单核心逻辑分析：</p>
 <p>当用户开始进行下单，我们应当去查询优惠卷信息，查询到优惠卷信息，判断是否满足秒杀条件</p>
 <p>比如时间是否充足，如果时间充足，则进一步判断库存是否足够，如果两者都满足，则扣减库存，创建订单，然后返回订单id，如果有一个条件不满足则直接结束。</p>
-<p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/1653366238564.png" alt="1653366238564"></p>
+<p><img src="/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E4%BC%98%E6%83%A0%E5%88%B8%E7%A7%92%E6%9D%80/1653366238564.png" alt="1653366238564"></p>
 <p>VoucherOrderServiceImpl</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> Result <span class="title function_">seckillVoucher</span><span class="params">(Long voucherId)</span> &#123;</span><br><span class="line">    <span class="comment">// 1.查询优惠券</span></span><br><span class="line">    <span class="type">SeckillVoucher</span> <span class="variable">voucher</span> <span class="operator">=</span> seckillVoucherService.getById(voucherId);</span><br><span class="line">    <span class="comment">// 2.判断秒杀是否开始</span></span><br><span class="line">    <span class="keyword">if</span> (voucher.getBeginTime().isAfter(LocalDateTime.now())) &#123;</span><br><span class="line">        <span class="comment">// 尚未开始</span></span><br><span class="line">        <span class="keyword">return</span> Result.fail(<span class="string">&quot;秒杀尚未开始！&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 3.判断秒杀是否已经结束</span></span><br><span class="line">    <span class="keyword">if</span> (voucher.getEndTime().isBefore(LocalDateTime.now())) &#123;</span><br><span class="line">        <span class="comment">// 尚未开始</span></span><br><span class="line">        <span class="keyword">return</span> Result.fail(<span class="string">&quot;秒杀已经结束！&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 4.判断库存是否充足</span></span><br><span class="line">    <span class="keyword">if</span> (voucher.getStock() &lt; <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="comment">// 库存不足</span></span><br><span class="line">        <span class="keyword">return</span> Result.fail(<span class="string">&quot;库存不足！&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//5，扣减库存</span></span><br><span class="line">    <span class="type">boolean</span> <span class="variable">success</span> <span class="operator">=</span> seckillVoucherService.update()</span><br><span class="line">            .setSql(<span class="string">&quot;stock= stock -1&quot;</span>)</span><br><span class="line">            .eq(<span class="string">&quot;voucher_id&quot;</span>, voucherId).update();</span><br><span class="line">    <span class="keyword">if</span> (!success) &#123;</span><br><span class="line">        <span class="comment">//扣减库存</span></span><br><span class="line">        <span class="keyword">return</span> Result.fail(<span class="string">&quot;库存不足！&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//6.创建订单</span></span><br><span class="line">    <span class="type">VoucherOrder</span> <span class="variable">voucherOrder</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">VoucherOrder</span>();</span><br><span class="line">    <span class="comment">// 6.1.订单id</span></span><br><span class="line">    <span class="type">long</span> <span class="variable">orderId</span> <span class="operator">=</span> redisIdWorker.nextId(<span class="string">&quot;order&quot;</span>);</span><br><span class="line">    voucherOrder.setId(orderId);</span><br><span class="line">    <span class="comment">// 6.2.用户id</span></span><br><span class="line">    <span class="type">Long</span> <span class="variable">userId</span> <span class="operator">=</span> UserHolder.getUser().getId();</span><br><span class="line">    voucherOrder.setUserId(userId);</span><br><span class="line">    <span class="comment">// 6.3.代金券id</span></span><br><span class="line">    voucherOrder.setVoucherId(voucherId);</span><br><span class="line">    save(voucherOrder);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> Result.ok(orderId);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -252,9 +252,9 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (voucher.getStock() &lt; <span class="number">1</span>) &#123;</span><br><span class="line">       <span class="comment">// 库存不足</span></span><br><span class="line">       <span class="keyword">return</span> Result.fail(<span class="string">&quot;库存不足！&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="comment">//5，扣减库存</span></span><br><span class="line">   <span class="type">boolean</span> <span class="variable">success</span> <span class="operator">=</span> seckillVoucherService.update()</span><br><span class="line">           .setSql(<span class="string">&quot;stock= stock -1&quot;</span>)</span><br><span class="line">           .eq(<span class="string">&quot;voucher_id&quot;</span>, voucherId).update();</span><br><span class="line">   <span class="keyword">if</span> (!success) &#123;</span><br><span class="line">       <span class="comment">//扣减库存</span></span><br><span class="line">       <span class="keyword">return</span> Result.fail(<span class="string">&quot;库存不足！&quot;</span>);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
 
 <p>假设线程1过来查询库存，判断出来库存大于1，正准备去扣减库存，但是还没有来得及去扣减，此时线程2过来，线程2也去查询库存，发现这个数量一定也大于1，那么这两个线程都会去扣减库存，最终多个线程相当于一起去扣减库存，此时就会出现库存的超卖问题。</p>
-<p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/1653368335155.png" alt="1653368335155"></p>
+<p><img src="/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E4%BC%98%E6%83%A0%E5%88%B8%E7%A7%92%E6%9D%80/1653368335155.png" alt="1653368335155"></p>
 <p>超卖问题是典型的多线程安全问题，针对这一问题的常见解决方案就是加锁：而对于加锁，我们通常有两种解决方案：见下图：</p>
-<p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/1653368562591.png" alt="1653368562591"></p>
+<p><img src="/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E4%BC%98%E6%83%A0%E5%88%B8%E7%A7%92%E6%9D%80/1653368562591.png" alt="1653368562591"></p>
 <p><strong>悲观锁：</strong></p>
 <p> 悲观锁可以实现对于数据的串行化执行，比如syn，和lock都是悲观锁的代表，同时，悲观锁中又可以再细分为公平锁，非公平锁，可重入锁，等等</p>
 <p><strong>乐观锁：</strong></p>
@@ -265,7 +265,7 @@
 
 <p><strong>课程中的使用方式：</strong></p>
 <p>课程中的使用方式是没有像cas一样带自旋的操作，也没有对version的版本号+1 ，他的操作逻辑是在操作时，对版本号进行+1 操作，然后要求version 如果是1 的情况下，才能操作，那么第一个线程在操作后，数据库中的version变成了2，但是他自己满足version&#x3D;1 ，所以没有问题，此时线程2执行，线程2 最后也需要加上条件version &#x3D;1 ，但是现在由于线程1已经操作过了，所以线程2，操作时就不满足version&#x3D;1 的条件了，所以线程2无法执行成功</p>
-<p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/1653369268550.png" alt="1653369268550"></p>
+<p><img src="/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E4%BC%98%E6%83%A0%E5%88%B8%E7%A7%92%E6%9D%80/1653369268550.png" alt="1653369268550"></p>
 <h3 id="3-6-乐观锁解决超卖问题"><a href="#3-6-乐观锁解决超卖问题" class="headerlink" title="3.6 乐观锁解决超卖问题"></a>3.6 乐观锁解决超卖问题</h3><p><strong>修改代码方案一、</strong></p>
 <p>VoucherOrderServiceImpl 在扣减库存时，改为：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">boolean</span> <span class="variable">success</span> <span class="operator">=</span> seckillVoucherService.update()</span><br><span class="line">            .setSql(<span class="string">&quot;stock= stock -1&quot;</span>) <span class="comment">//set stock = stock -1</span></span><br><span class="line">            .eq(<span class="string">&quot;voucher_id&quot;</span>, voucherId).eq(<span class="string">&quot;stock&quot;</span>,voucher.getStock()).update(); <span class="comment">//where id = ？ and stock = ?</span></span><br></pre></td></tr></table></figure>
@@ -281,12 +281,12 @@
 <p>大量线程并发更新一个原子性的时候，天然的问题就是自旋，会导致并发性问题，当然这也比我们直接使用syn来的好</p>
 <p>所以利用这么一个类，LongAdder来进行优化</p>
 <p>如果获取某个值，则会对cell和base的值进行递增，最后返回一个完整的值</p>
-<p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/1653370271627.png" alt="1653370271627"></p>
+<p><img src="/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E4%BC%98%E6%83%A0%E5%88%B8%E7%A7%92%E6%9D%80/1653370271627.png" alt="1653370271627"></p>
 <h3 id="3-6-优惠券秒杀-一人一单"><a href="#3-6-优惠券秒杀-一人一单" class="headerlink" title="3.6 优惠券秒杀-一人一单"></a>3.6 优惠券秒杀-一人一单</h3><p>需求：修改秒杀业务，要求同一个优惠券，一个用户只能下一单</p>
 <p><strong>现在的问题在于：</strong></p>
 <p>优惠卷是为了引流，但是目前的情况是，一个人可以无限制的抢这个优惠卷，所以我们应当增加一层逻辑，让一个用户只能下一个单，而不是让一个用户下多个单</p>
 <p>具体操作逻辑如下：比如时间是否充足，如果时间充足，则进一步判断库存是否足够，然后再根据优惠卷id和用户id查询是否已经下过这个订单，如果下过这个订单，则不再下单，否则进行下单</p>
-<p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/1653371854389.png" alt="1653371854389"></p>
+<p><img src="/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E4%BC%98%E6%83%A0%E5%88%B8%E7%A7%92%E6%9D%80/1653371854389.png" alt="1653371854389"></p>
 <p>VoucherOrderServiceImpl  </p>
 <p><strong>初步代码：增加一人一单逻辑</strong></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> Result <span class="title function_">seckillVoucher</span><span class="params">(Long voucherId)</span> &#123;</span><br><span class="line">    <span class="comment">// 1.查询优惠券</span></span><br><span class="line">    <span class="type">SeckillVoucher</span> <span class="variable">voucher</span> <span class="operator">=</span> seckillVoucherService.getById(voucherId);</span><br><span class="line">    <span class="comment">// 2.判断秒杀是否开始</span></span><br><span class="line">    <span class="keyword">if</span> (voucher.getBeginTime().isAfter(LocalDateTime.now())) &#123;</span><br><span class="line">        <span class="comment">// 尚未开始</span></span><br><span class="line">        <span class="keyword">return</span> Result.fail(<span class="string">&quot;秒杀尚未开始！&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 3.判断秒杀是否已经结束</span></span><br><span class="line">    <span class="keyword">if</span> (voucher.getEndTime().isBefore(LocalDateTime.now())) &#123;</span><br><span class="line">        <span class="comment">// 尚未开始</span></span><br><span class="line">        <span class="keyword">return</span> Result.fail(<span class="string">&quot;秒杀已经结束！&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 4.判断库存是否充足</span></span><br><span class="line">    <span class="keyword">if</span> (voucher.getStock() &lt; <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="comment">// 库存不足</span></span><br><span class="line">        <span class="keyword">return</span> Result.fail(<span class="string">&quot;库存不足！&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 5.一人一单逻辑</span></span><br><span class="line">    <span class="comment">// 5.1.用户id</span></span><br><span class="line">    <span class="type">Long</span> <span class="variable">userId</span> <span class="operator">=</span> UserHolder.getUser().getId();</span><br><span class="line">    <span class="type">int</span> <span class="variable">count</span> <span class="operator">=</span> query().eq(<span class="string">&quot;user_id&quot;</span>, userId).eq(<span class="string">&quot;voucher_id&quot;</span>, voucherId).count();</span><br><span class="line">    <span class="comment">// 5.2.判断是否存在</span></span><br><span class="line">    <span class="keyword">if</span> (count &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">// 用户已经购买过了</span></span><br><span class="line">        <span class="keyword">return</span> Result.fail(<span class="string">&quot;用户已经购买过一次！&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//6，扣减库存</span></span><br><span class="line">    <span class="type">boolean</span> <span class="variable">success</span> <span class="operator">=</span> seckillVoucherService.update()</span><br><span class="line">            .setSql(<span class="string">&quot;stock= stock -1&quot;</span>)</span><br><span class="line">            .eq(<span class="string">&quot;voucher_id&quot;</span>, voucherId).update();</span><br><span class="line">    <span class="keyword">if</span> (!success) &#123;</span><br><span class="line">        <span class="comment">//扣减库存</span></span><br><span class="line">        <span class="keyword">return</span> Result.fail(<span class="string">&quot;库存不足！&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//7.创建订单</span></span><br><span class="line">    <span class="type">VoucherOrder</span> <span class="variable">voucherOrder</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">VoucherOrder</span>();</span><br><span class="line">    <span class="comment">// 7.1.订单id</span></span><br><span class="line">    <span class="type">long</span> <span class="variable">orderId</span> <span class="operator">=</span> redisIdWorker.nextId(<span class="string">&quot;order&quot;</span>);</span><br><span class="line">    voucherOrder.setId(orderId);</span><br><span class="line"></span><br><span class="line">    voucherOrder.setUserId(userId);</span><br><span class="line">    <span class="comment">// 7.3.代金券id</span></span><br><span class="line">    voucherOrder.setVoucherId(voucherId);</span><br><span class="line">    save(voucherOrder);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> Result.ok(orderId);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -300,9 +300,9 @@
 
 <p>但是以上代码还是存在问题，问题的原因在于当前方法被spring的事务控制，如果你在方法内部加锁，可能会导致当前方法事务还没有提交，但是锁已经释放也会导致问题，所以我们选择将当前方法整体包裹起来，确保事务不会出现问题：如下：</p>
 <p>在seckillVoucher 方法中，添加以下逻辑，这样就能保证事务的特性，同时也控制了锁的粒度</p>
-<p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/1653373434815.png" alt="1653373434815"></p>
+<p><img src="/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E4%BC%98%E6%83%A0%E5%88%B8%E7%A7%92%E6%9D%80/1653373434815.png" alt="1653373434815"></p>
 <p>但是以上做法依然有问题，因为你调用的方法，其实是this.的方式调用的，事务想要生效，还得利用代理来生效，所以这个地方，我们需要获得原始的事务对象， 来操作事务</p>
-<p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/1653383810643.png" alt="1653383810643"></p>
+<p><img src="/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E4%BC%98%E6%83%A0%E5%88%B8%E7%A7%92%E6%9D%80/1653383810643.png" alt="1653383810643"></p>
 <h3 id=""><a href="#" class="headerlink" title=""></a></h3>
       
 
@@ -548,22 +548,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">redis入门</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">API</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">集合</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">面向对象</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">缓存穿透</a>
               </li>
              
@@ -580,6 +564,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">阻塞队列</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">消息队列</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">分布式锁</a>
               </li>
              
@@ -588,11 +580,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">阻塞队列</a>
+                <a href="javascript:void(0)" class="js-tag color4">API</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">消息队列</a>
+                <a href="javascript:void(0)" class="js-tag color3">redis入门</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">集合</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">面向对象</a>
               </li>
             
             <div class="clearfix"></div>
