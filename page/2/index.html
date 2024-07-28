@@ -152,6 +152,603 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Redis实战-附近商户、用户签到、UV统计" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E9%99%84%E8%BF%91%E5%95%86%E6%88%B7%E3%80%81%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/">Redis实战-附近商户、用户签到、UV统计</a>
+    </h1>
+  
+
+        
+        <a href="/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E9%99%84%E8%BF%91%E5%95%86%E6%88%B7%E3%80%81%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/" class="archive-article-date">
+  	<time datetime="2024-07-25T14:29:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-07-25</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="10、附近商户"><a href="#10、附近商户" class="headerlink" title="10、附近商户"></a>10、附近商户</h2><h3 id="10-1、附近商户-GEO数据结构的基本用法"><a href="#10-1、附近商户-GEO数据结构的基本用法" class="headerlink" title="10.1、附近商户-GEO数据结构的基本用法"></a>10.1、附近商户-GEO数据结构的基本用法</h3><p>GEO就是Geolocation的简写形式，代表地理坐标。Redis在3.2版本中加入了对GEO的支持，允许存储地理坐标信息，帮助我们根据经纬度来检索数据。常见的命令有：</p>
+<ul>
+<li><p>GEOADD：添加一个地理空间信息，包含：经度（longitude）、纬度（latitude）、值（member）</p>
+</li>
+<li><p>GEODIST：计算指定的两个点之间的距离并返回</p>
+</li>
+<li><p>GEOHASH：将指定member的坐标转为hash字符串形式并返回</p>
+</li>
+<li><p>GEOPOS：返回指定member的坐标</p>
+</li>
+<li><p>GEORADIUS：指定圆心、半径，找到该圆内包含的所有member，并按照与圆心之间的距离排序后返回。6.以后已废弃</p>
+</li>
+<li><p>GEOSEARCH：在指定范围内搜索member，并按照与指定点之间的距离排序后返回。范围可以是圆形或矩形。6.2.新功能</p>
+</li>
+<li><p>GEOSEARCHSTORE：与GEOSEARCH功能一致，不过可以把结果存储到一个指定的key。 6.2.新功能</p>
+        
+          <a class="article-more-a" href="/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E9%99%84%E8%BF%91%E5%95%86%E6%88%B7%E3%80%81%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">GEO</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">BitMap</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">HyperLogLog</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Redis//" class="article-tag-list-link color1">Redis</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E9%99%84%E8%BF%91%E5%95%86%E6%88%B7%E3%80%81%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Redis实战-达人探店、好友关注" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E8%BE%BE%E4%BA%BA%E6%8E%A2%E5%BA%97%E3%80%81%E5%A5%BD%E5%8F%8B%E5%85%B3%E6%B3%A8/">Redis实战-达人探店、好友关注</a>
+    </h1>
+  
+
+        
+        <a href="/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E8%BE%BE%E4%BA%BA%E6%8E%A2%E5%BA%97%E3%80%81%E5%A5%BD%E5%8F%8B%E5%85%B3%E6%B3%A8/" class="archive-article-date">
+  	<time datetime="2024-07-25T14:16:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-07-25</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="8、达人探店"><a href="#8、达人探店" class="headerlink" title="8、达人探店"></a>8、达人探店</h2><h3 id="8-1、达人探店-发布探店笔记"><a href="#8-1、达人探店-发布探店笔记" class="headerlink" title="8.1、达人探店-发布探店笔记"></a>8.1、达人探店-发布探店笔记</h3><p>发布探店笔记</p>
+<p>探店笔记类似点评网站的评价，往往是图文结合。对应的表有两个：<br>tb_blog：探店笔记表，包含笔记中的标题、文字、图片等<br>tb_blog_comments：其他用户对探店笔记的评价</p>
+<p><strong>具体发布流程</strong></p>
+        
+          <a class="article-more-a" href="/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E8%BE%BE%E4%BA%BA%E6%8E%A2%E5%BA%97%E3%80%81%E5%A5%BD%E5%8F%8B%E5%85%B3%E6%B3%A8/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">set</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">sorted set</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Feed流</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Redis//" class="article-tag-list-link color1">Redis</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E8%BE%BE%E4%BA%BA%E6%8E%A2%E5%BA%97%E3%80%81%E5%A5%BD%E5%8F%8B%E5%85%B3%E6%B3%A8/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Redis实战-秒杀优化：异步秒杀" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E7%A7%92%E6%9D%80%E4%BC%98%E5%8C%96%EF%BC%9A%E5%BC%82%E6%AD%A5%E7%A7%92%E6%9D%80/">Redis实战-秒杀优化：异步秒杀</a>
+    </h1>
+  
+
+        
+        <a href="/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E7%A7%92%E6%9D%80%E4%BC%98%E5%8C%96%EF%BC%9A%E5%BC%82%E6%AD%A5%E7%A7%92%E6%9D%80/" class="archive-article-date">
+  	<time datetime="2024-07-24T09:10:32.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-07-24</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="6、秒杀优化"><a href="#6、秒杀优化" class="headerlink" title="6、秒杀优化"></a>6、秒杀优化</h2><h3 id="6-1-秒杀优化-异步秒杀思路"><a href="#6-1-秒杀优化-异步秒杀思路" class="headerlink" title="6.1 秒杀优化-异步秒杀思路"></a>6.1 秒杀优化-异步秒杀思路</h3><p>我们来回顾一下下单流程</p>
+<p>当用户发起请求，此时会请求nginx，nginx会访问到tomcat，而tomcat中的程序，会进行串行操作，分成如下几个步骤</p>
+<p>1、查询优惠卷</p>
+<p>2、判断秒杀库存是否足够</p>
+<p>3、查询订单</p>
+<p>4、校验是否是一人一单</p>
+<p>5、扣减库存</p>
+<p>6、创建订单</p>
+        
+          <a class="article-more-a" href="/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E7%A7%92%E6%9D%80%E4%BC%98%E5%8C%96%EF%BC%9A%E5%BC%82%E6%AD%A5%E7%A7%92%E6%9D%80/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">阻塞队列</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">消息队列</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Redis//" class="article-tag-list-link color1">Redis</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E7%A7%92%E6%9D%80%E4%BC%98%E5%8C%96%EF%BC%9A%E5%BC%82%E6%AD%A5%E7%A7%92%E6%9D%80/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Redis实战-秒杀优化：分布式锁" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E7%A7%92%E6%9D%80%E4%BC%98%E5%8C%96%EF%BC%9A%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/">Redis实战-秒杀优化：分布式锁</a>
+    </h1>
+  
+
+        
+        <a href="/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E7%A7%92%E6%9D%80%E4%BC%98%E5%8C%96%EF%BC%9A%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" class="archive-article-date">
+  	<time datetime="2024-07-24T08:49:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-07-24</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="3-7-集群环境下的并发问题"><a href="#3-7-集群环境下的并发问题" class="headerlink" title="3.7 集群环境下的并发问题"></a>3.7 集群环境下的并发问题</h3><p>通过加锁可以解决在单机情况下的一人一单安全问题，但是在集群模式下就不行了。</p>
+<p>1、我们将服务启动两份，端口分别为8081和8082：</p>
+<p>2、然后修改nginx的conf目录下的nginx.conf文件，配置反向代理和负载均衡：</p>
+<p><strong>具体操作(略)</strong></p>
+<p><strong>有关锁失效原因分析</strong></p>
+<p>由于现在我们部署了多个tomcat，每个tomcat都有一个属于自己的jvm，那么假设在服务器A的tomcat内部，有两个线程，这两个线程由于使用的是同一份代码，那么他们的锁对象是同一个，是可以实现互斥的，但是如果现在是服务器B的tomcat内部，又有两个线程，但是他们的锁对象写的虽然和服务器A一样，但是锁对象却不是同一个，所以线程3和线程4可以实现互斥，但是却无法和线程1和线程2实现互斥，这就是 集群环境下，syn锁失效的原因，在这种情况下，我们就需要使用分布式锁来解决这个问题。</p>
+        
+          <a class="article-more-a" href="/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E7%A7%92%E6%9D%80%E4%BC%98%E5%8C%96%EF%BC%9A%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">分布式锁</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Lua脚本</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Redis//" class="article-tag-list-link color1">Redis</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E7%A7%92%E6%9D%80%E4%BC%98%E5%8C%96%EF%BC%9A%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Redis实战-优惠券秒杀" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E4%BC%98%E6%83%A0%E5%88%B8%E7%A7%92%E6%9D%80/">Redis实战-优惠券秒杀</a>
+    </h1>
+  
+
+        
+        <a href="/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E4%BC%98%E6%83%A0%E5%88%B8%E7%A7%92%E6%9D%80/" class="archive-article-date">
+  	<time datetime="2024-07-24T08:25:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-07-24</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="3、优惠卷秒杀"><a href="#3、优惠卷秒杀" class="headerlink" title="3、优惠卷秒杀"></a>3、优惠卷秒杀</h2><h3 id="3-1-全局唯一ID"><a href="#3-1-全局唯一ID" class="headerlink" title="3.1 -全局唯一ID"></a>3.1 -全局唯一ID</h3><p>每个店铺都可以发布优惠券：</p>
+<p><img src="/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E4%BC%98%E6%83%A0%E5%88%B8%E7%A7%92%E6%9D%80/1653362612286.png" alt="1653362612286"></p>
+<p>当用户抢购时，就会生成订单并保存到tb_voucher_order这张表中，而订单表如果使用数据库自增ID就存在一些问题：</p>
+<ul>
+<li>id的规律性太明显</li>
+<li>受单表数据量的限制</li>
+</ul>
+<p>场景分析：如果我们的id具有太明显的规则，用户或者说商业对手很容易猜测出来我们的一些敏感信息，比如商城在一天时间内，卖出了多少单，这明显不合适。</p>
+        
+          <a class="article-more-a" href="/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E4%BC%98%E6%83%A0%E5%88%B8%E7%A7%92%E6%9D%80/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">悲观锁</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">乐观锁</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Redis//" class="article-tag-list-link color1">Redis</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E4%BC%98%E6%83%A0%E5%88%B8%E7%A7%92%E6%9D%80/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Redis实战-商户查询缓存" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E5%95%86%E6%88%B7%E6%9F%A5%E8%AF%A2%E7%BC%93%E5%AD%98/">Redis实战-商户查询缓存</a>
+    </h1>
+  
+
+        
+        <a href="/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E5%95%86%E6%88%B7%E6%9F%A5%E8%AF%A2%E7%BC%93%E5%AD%98/" class="archive-article-date">
+  	<time datetime="2024-07-24T05:22:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-07-24</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="2、商户查询缓存"><a href="#2、商户查询缓存" class="headerlink" title="2、商户查询缓存"></a>2、商户查询缓存</h2><h3 id="2-1-什么是缓存"><a href="#2-1-什么是缓存" class="headerlink" title="2.1 什么是缓存?"></a>2.1 什么是缓存?</h3><p><strong>前言</strong>:<strong>什么是缓存?</strong></p>
+<p>举个例子:越野车,山地自行车,都拥有”避震器”,<strong>防止</strong>车体加速后因惯性,在酷似”U”字母的地形上飞跃,硬着陆导致的<strong>损害</strong>,像个弹簧一样;</p>
+<p>同样,实际开发中,系统也需要”避震器”,防止过高的数据访问猛冲系统,导致其操作线程无法及时处理信息而瘫痪;</p>
+<p>这在实际开发中对企业讲,对产品口碑,用户评价都是致命的;所以企业非常重视缓存技术;</p>
+<p><strong>缓存(<strong>Cache),就是数据交换的</strong>缓冲区</strong>,俗称的缓存就是<strong>缓冲区内的数据</strong>,一般从数据库中获取,存储于本地代码</p>
+        
+          <a class="article-more-a" href="/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E5%95%86%E6%88%B7%E6%9F%A5%E8%AF%A2%E7%BC%93%E5%AD%98/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">缓存穿透</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">缓存雪崩</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">缓存击穿</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Redis//" class="article-tag-list-link color1">Redis</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2024/07/24/Redis%E5%AE%9E%E6%88%98-%E5%95%86%E6%88%B7%E6%9F%A5%E8%AF%A2%E7%BC%93%E5%AD%98/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Redis实战-用户登录" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -532,298 +1129,9 @@
 
 
   
-    <article id="post-面向对象" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/07/15/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">面向对象</a>
-    </h1>
-  
-
-        
-        <a href="/2024/07/15/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/" class="archive-article-date">
-  	<time datetime="2024-07-15T12:21:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-07-15</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1-类和对象"><a href="#1-类和对象" class="headerlink" title="1. 类和对象"></a>1. 类和对象</h2><h3 id="1-1-类和对象的理解"><a href="#1-1-类和对象的理解" class="headerlink" title="1.1 类和对象的理解"></a>1.1 类和对象的理解</h3><p>客观存在的事物皆为对象 ，所以我们也常常说万物皆对象。</p>
-<ul>
-<li>类<ul>
-<li>类的理解<ul>
-<li>类是对现实生活中一类具有共同属性和行为的事物的抽象</li>
-<li>类是对象的数据类型，类是具有相同属性和行为的一组对象的集合</li>
-<li>简单理解：类就是对现实事物的一种描述</li>
-</ul>
-</li>
-<li>类的组成<ul>
-<li>属性：指事物的特征，例如：手机事物（品牌，价格，尺寸）</li>
-<li>行为：指事物能执行的操作，例如：手机事物（打电话，发短信）</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>类和对象的关系<ul>
-<li>类：类是对现实生活中一类具有共同属性和行为的事物的抽象</li>
-<li>对象：是能够看得到摸的着的真实存在的实体</li>
-<li>简单理解：<strong>类是对事物的一种描述，对象则为具体存在的事物</strong></li>
-</ul>
-</li>
-</ul>
-        
-          <a class="article-more-a" href="/2024/07/15/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">面向对象</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java基础//" class="article-tag-list-link color2">Java基础</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/07/15/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-MarkDown基础语法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/">MarkDown基础语法</a>
-    </h1>
-  
-
-        
-        <a href="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/" class="archive-article-date">
-  	<time datetime="2024-07-08T14:45:49.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-07-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="一级标题"><a href="#一级标题" class="headerlink" title="一级标题"></a>一级标题</h1><h2 id="二级标题"><a href="#二级标题" class="headerlink" title="二级标题"></a>二级标题</h2><p><strong>加粗文本</strong></p>
-<p><em>斜体文本</em></p>
-<p><em><strong>斜体并加粗</strong></em></p>
-<p><del>删除线文本</del></p>
-<p><code>System.out.println(&quot;一行代码&quot;);</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">System.out.println(<span class="string">&quot;代码块&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>这是一行引用</p>
-</blockquote>
-<ul>
-<li>无序列表</li>
-<li>加号加空格</li>
-<li>或者减号加空格</li>
-</ul>
-<ol>
-<li>有序列表</li>
-<li>香蕉</li>
-<li>苹果</li>
-<li>菠萝</li>
-</ol>
-<p><a target="_blank" rel="noopener" href="https://zhszxz.github.io/">友情链接</a></p>
-<p><strong>待办列表</strong></p>
-<ul>
-<li><input disabled="" type="checkbox"> 学习</li>
-<li><input checked="" disabled="" type="checkbox"> 学习</li>
-<li><input checked="" disabled="" type="checkbox"> 还是学习</li>
-</ul>
-<p><em><em>分割线：3个或以上</em> - _</em>*</p>
-<hr>
-<hr>
-<hr>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">MarkDown</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-hello-world" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/07/08/hello-world/">Hello World</a>
-    </h1>
-  
-
-        
-        <a href="/2024/07/08/hello-world/" class="archive-article-date">
-  	<time datetime="2024-07-08T14:40:48.293Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-07-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/07/08/hello-world/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
     </nav>
   
 
@@ -1015,6 +1323,58 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">面向对象</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">File</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">InputStream</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">OutputStream</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Reader</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Writer</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Thread</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">缓冲流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">转换流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">序列化流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">打印流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">压缩流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">异常</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">ThreadPool</a>
               </li>
             
             <div class="clearfix"></div>
