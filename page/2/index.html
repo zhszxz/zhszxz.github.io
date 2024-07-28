@@ -152,6 +152,101 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-认识Redis及其数据类型" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2024/07/22/%E8%AE%A4%E8%AF%86Redis%E5%8F%8A%E5%85%B6%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">认识Redis及其数据类型</a>
+    </h1>
+  
+
+        
+        <a href="/2024/07/22/%E8%AE%A4%E8%AF%86Redis%E5%8F%8A%E5%85%B6%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/" class="archive-article-date">
+  	<time datetime="2024-07-22T06:47:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-07-22</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Redis快速入门"><a href="#Redis快速入门" class="headerlink" title="Redis快速入门"></a>Redis快速入门</h1><p>Redis的常见命令和客户端使用</p>
+<h1 id="1-初识Redis"><a href="#1-初识Redis" class="headerlink" title="1.初识Redis"></a>1.初识Redis</h1><p>Redis是一种键值型的NoSql数据库，这里有两个关键字：</p>
+<ul>
+<li><p>键值型</p>
+</li>
+<li><p>NoSql</p>
+</li>
+</ul>
+<p>其中<strong>键值型</strong>，是指Redis中存储的数据都是以key、value对的形式存储，而value的形式多种多样，可以是字符串、数值、甚至json：</p>
+        
+          <a class="article-more-a" href="/2024/07/22/%E8%AE%A4%E8%AF%86Redis%E5%8F%8A%E5%85%B6%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">redis入门</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Redis//" class="article-tag-list-link color1">Redis</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2024/07/22/%E8%AE%A4%E8%AF%86Redis%E5%8F%8A%E5%85%B6%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-常用API（一）" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -242,19 +337,19 @@
 
 
   
-    <article id="post-集合" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-集合-List、Set" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2024/07/15/%E9%9B%86%E5%90%88/">集合</a>
+      <a class="article-title" href="/2024/07/15/%E9%9B%86%E5%90%88-List%E3%80%81Set/">集合-List、Set</a>
     </h1>
   
 
         
-        <a href="/2024/07/15/%E9%9B%86%E5%90%88/" class="archive-article-date">
+        <a href="/2024/07/15/%E9%9B%86%E5%90%88-List%E3%80%81Set/" class="archive-article-date">
   	<time datetime="2024-07-15T12:47:34.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-07-15</time>
 </a>
         
@@ -262,22 +357,446 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="1-ArrayList"><a href="#1-ArrayList" class="headerlink" title="1.ArrayList"></a>1.ArrayList</h2><h3 id="集合和数组的优势对比："><a href="#集合和数组的优势对比：" class="headerlink" title="集合和数组的优势对比："></a>集合和数组的优势对比：</h3><ol>
-<li>长度可变</li>
-<li>添加数据的时候不需要考虑索引，默认将数据添加到末尾</li>
+        <h2 id="1-Collection集合"><a href="#1-Collection集合" class="headerlink" title="1.Collection集合"></a>1.Collection集合</h2><h3 id="1-1数组和集合的区别【理解】"><a href="#1-1数组和集合的区别【理解】" class="headerlink" title="1.1数组和集合的区别【理解】"></a>1.1数组和集合的区别【理解】</h3><ul>
+<li><p>相同点</p>
+<p>都是容器,可以存储多个数据</p>
+</li>
+<li><p>不同点</p>
+<ul>
+<li><p>数组的长度是不可变的,集合的长度是可变的</p>
+</li>
+<li><p>数组可以存基本数据类型和引用数据类型</p>
+<p>集合只能存引用数据类型,如果要存基本数据类型,需要存对应的包装类</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="1-2集合类体系结构【理解】"><a href="#1-2集合类体系结构【理解】" class="headerlink" title="1.2集合类体系结构【理解】"></a>1.2集合类体系结构【理解】</h3><p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/1_%E9%9B%86%E5%90%88%E7%B1%BB%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%9B%BE.png" alt="01_集合类体系结构图"></p>
+<h3 id="1-3Collection-集合概述和使用【应用】"><a href="#1-3Collection-集合概述和使用【应用】" class="headerlink" title="1.3Collection 集合概述和使用【应用】"></a>1.3Collection 集合概述和使用【应用】</h3><ul>
+<li><p>Collection集合概述</p>
+<ul>
+<li>是单例集合的顶层接口,它表示一组对象,这些对象也称为Collection的元素</li>
+<li>JDK 不提供此接口的任何直接实现.它提供更具体的子接口(如Set和List)实现</li>
+</ul>
+</li>
+<li><p>创建Collection集合的对象</p>
+<ul>
+<li>多态的方式</li>
+<li>具体的实现类ArrayList</li>
+</ul>
+</li>
+<li><p>Collection集合常用方法</p>
+<table>
+<thead>
+<tr>
+<th align="left">方法名</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">boolean add(E e)</td>
+<td align="left">添加元素</td>
+</tr>
+<tr>
+<td align="left">boolean remove(Object o)</td>
+<td align="left">从集合中移除指定的元素</td>
+</tr>
+<tr>
+<td align="left">boolean removeIf(Object o)</td>
+<td align="left">根据条件进行移除</td>
+</tr>
+<tr>
+<td align="left">void   clear()</td>
+<td align="left">清空集合中的元素</td>
+</tr>
+<tr>
+<td align="left">boolean contains(Object o)</td>
+<td align="left">判断集合中是否存在指定的元素</td>
+</tr>
+<tr>
+<td align="left">boolean isEmpty()</td>
+<td align="left">判断集合是否为空</td>
+</tr>
+<tr>
+<td align="left">int   size()</td>
+<td align="left">集合的长度，也就是集合中元素的个数</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<h3 id="1-4Collection集合的遍历"><a href="#1-4Collection集合的遍历" class="headerlink" title="1.4Collection集合的遍历"></a>1.4Collection集合的遍历</h3><h4 id="1-4-1-迭代器遍历"><a href="#1-4-1-迭代器遍历" class="headerlink" title="1.4.1 迭代器遍历"></a>1.4.1 迭代器遍历</h4><ul>
+<li><p>迭代器介绍</p>
+<ul>
+<li>迭代器,集合的专用遍历方式</li>
+<li>Iterator<E> iterator(): 返回此集合中元素的迭代器,通过集合对象的iterator()方法得到</li>
+</ul>
+</li>
+<li><p>Iterator中的常用方法</p>
+<p>​	boolean hasNext(): 判断当前位置是否有元素可以被取出<br>​	E next(): 获取当前位置的元素,将迭代器对象移向下一个索引位置</p>
+</li>
+<li><p>Collection集合的遍历</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">IteratorDemo1</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//创建集合对象</span></span><br><span class="line">        Collection&lt;String&gt; c = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//添加元素</span></span><br><span class="line">        c.add(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line">        c.add(<span class="string">&quot;world&quot;</span>);</span><br><span class="line">        c.add(<span class="string">&quot;java&quot;</span>);</span><br><span class="line">        c.add(<span class="string">&quot;javaee&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//Iterator&lt;E&gt; iterator()：返回此集合中元素的迭代器，通过集合的iterator()方法得到</span></span><br><span class="line">        Iterator&lt;String&gt; it = c.iterator();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//用while循环改进元素的判断和获取</span></span><br><span class="line">        <span class="keyword">while</span> (it.hasNext()) &#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">s</span> <span class="operator">=</span> it.next();</span><br><span class="line">            System.out.println(s);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>迭代器中删除的方法</p>
+<p>​	void remove(): 删除迭代器对象当前指向的元素</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">IteratorDemo2</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        ArrayList&lt;String&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        list.add(<span class="string">&quot;a&quot;</span>);</span><br><span class="line">        list.add(<span class="string">&quot;b&quot;</span>);</span><br><span class="line">        list.add(<span class="string">&quot;b&quot;</span>);</span><br><span class="line">        list.add(<span class="string">&quot;c&quot;</span>);</span><br><span class="line">        list.add(<span class="string">&quot;d&quot;</span>);</span><br><span class="line"></span><br><span class="line">        Iterator&lt;String&gt; it = list.iterator();</span><br><span class="line">        <span class="keyword">while</span>(it.hasNext())&#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">s</span> <span class="operator">=</span> it.next();</span><br><span class="line">            <span class="keyword">if</span>(<span class="string">&quot;b&quot;</span>.equals(s))&#123;</span><br><span class="line">                <span class="comment">//指向谁,那么此时就删除谁.</span></span><br><span class="line">                it.remove();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(list);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="1-4-2-增强for"><a href="#1-4-2-增强for" class="headerlink" title="1.4.2 增强for"></a>1.4.2 增强for</h4><ul>
+<li><p>介绍</p>
+<ul>
+<li>它是JDK5之后出现的,其内部原理是一个Iterator迭代器</li>
+<li>实现Iterable接口的类才可以使用迭代器和增强for</li>
+<li>简化数组和Collection集合的遍历</li>
+</ul>
+</li>
+<li><p>格式</p>
+<p>​	for(集合&#x2F;数组中元素的数据类型 变量名 :  集合&#x2F;数组名) {</p>
+<p>​		&#x2F;&#x2F; 已经将当前遍历到的元素封装到变量中了,直接使用变量即可</p>
+<p>​	}</p>
+</li>
+<li><p>代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyCollectonDemo1</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        ArrayList&lt;String&gt; list =  <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        list.add(<span class="string">&quot;a&quot;</span>);</span><br><span class="line">        list.add(<span class="string">&quot;b&quot;</span>);</span><br><span class="line">        list.add(<span class="string">&quot;c&quot;</span>);</span><br><span class="line">        list.add(<span class="string">&quot;d&quot;</span>);</span><br><span class="line">        list.add(<span class="string">&quot;e&quot;</span>);</span><br><span class="line">        list.add(<span class="string">&quot;f&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//1,数据类型一定是集合或者数组中元素的类型</span></span><br><span class="line">        <span class="comment">//2,str仅仅是一个变量名而已,在循环的过程中,依次表示集合或者数组中的每一个元素</span></span><br><span class="line">        <span class="comment">//3,list就是要遍历的集合或者数组</span></span><br><span class="line">        <span class="keyword">for</span>(String str : list)&#123;</span><br><span class="line">            System.out.println(str);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>细节点注意：</p>
+</li>
+</ul>
+<p>1.报错NoSuchElementException       </p>
+<p> 2.迭代器遍历完毕，指针不会复位        </p>
+<p>3.循环中只能用一次next方法        </p>
+<p>4.迭代器遍历时，不能用集合的方法进行增加或者删除</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">A04_CollectionDemo4</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">      <span class="comment">/*</span></span><br><span class="line"><span class="comment">        迭代器的细节注意点：</span></span><br><span class="line"><span class="comment">            1.报错NoSuchElementException</span></span><br><span class="line"><span class="comment">            2.迭代器遍历完毕，指针不会复位</span></span><br><span class="line"><span class="comment">            3.循环中只能用一次next方法</span></span><br><span class="line"><span class="comment">            4.迭代器遍历时，不能用集合的方法进行增加或者删除</span></span><br><span class="line"><span class="comment">            	暂时当做一个结论先行记忆，在今天我们会讲解源码详细的再来分析。</span></span><br><span class="line"><span class="comment">                如果我实在要删除：那么可以用迭代器提供的remove方法进行删除。</span></span><br><span class="line"><span class="comment">                如果我要添加，暂时没有办法。(只是暂时)</span></span><br><span class="line"><span class="comment">       */</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//1.创建集合并添加元素</span></span><br><span class="line">        Collection&lt;String&gt; coll = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        coll.add(<span class="string">&quot;aaa&quot;</span>);</span><br><span class="line">        coll.add(<span class="string">&quot;bbb&quot;</span>);</span><br><span class="line">        coll.add(<span class="string">&quot;ccc&quot;</span>);</span><br><span class="line">        coll.add(<span class="string">&quot;ddd&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//2.获取迭代器对象</span></span><br><span class="line">        <span class="comment">//迭代器就好比是一个箭头，默认指向集合的0索引处</span></span><br><span class="line">        Iterator&lt;String&gt; it = coll.iterator();</span><br><span class="line">        <span class="comment">//3.利用循环不断的去获取集合中的每一个元素</span></span><br><span class="line">        <span class="keyword">while</span>(it.hasNext())&#123;</span><br><span class="line">            <span class="comment">//4.next方法的两件事情：获取元素并移动指针</span></span><br><span class="line">            <span class="type">String</span> <span class="variable">str</span> <span class="operator">=</span> it.next();</span><br><span class="line">            System.out.println(str);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//当上面循环结束之后，迭代器的指针已经指向了最后没有元素的位置</span></span><br><span class="line">        <span class="comment">//System.out.println(it.next());//NoSuchElementException</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//迭代器遍历完毕，指针不会复位</span></span><br><span class="line">        System.out.println(it.hasNext());</span><br><span class="line"></span><br><span class="line">        <span class="comment">//如果我们要继续第二次遍历集合，只能再次获取一个新的迭代器对象</span></span><br><span class="line">        Iterator&lt;String&gt; it2 = coll.iterator();</span><br><span class="line">        <span class="keyword">while</span>(it2.hasNext())&#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">str</span> <span class="operator">=</span> it2.next();</span><br><span class="line">            System.out.println(str);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-4-3-lambda表达式"><a href="#1-4-3-lambda表达式" class="headerlink" title="1.4.3 lambda表达式"></a>1.4.3 lambda表达式</h4><p>​	利用forEach方法，再结合lambda表达式的方式进行遍历</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">A07_CollectionDemo7</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">       <span class="comment">/* </span></span><br><span class="line"><span class="comment">        lambda表达式遍历：</span></span><br><span class="line"><span class="comment">                default void forEach(Consumer&lt;? super T&gt; action):</span></span><br><span class="line"><span class="comment">        */</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//1.创建集合并添加元素</span></span><br><span class="line">        Collection&lt;String&gt; coll = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        coll.add(<span class="string">&quot;zhangsan&quot;</span>);</span><br><span class="line">        coll.add(<span class="string">&quot;lisi&quot;</span>);</span><br><span class="line">        coll.add(<span class="string">&quot;wangwu&quot;</span>);</span><br><span class="line">        <span class="comment">//2.利用匿名内部类的形式</span></span><br><span class="line">        <span class="comment">//底层原理：</span></span><br><span class="line">        <span class="comment">//其实也会自己遍历集合，依次得到每一个元素</span></span><br><span class="line">        <span class="comment">//把得到的每一个元素，传递给下面的accept方法</span></span><br><span class="line">        <span class="comment">//s依次表示集合中的每一个数据</span></span><br><span class="line">       <span class="comment">/* coll.forEach(new Consumer&lt;String&gt;() &#123;</span></span><br><span class="line"><span class="comment">            @Override</span></span><br><span class="line"><span class="comment">            public void accept(String s) &#123;</span></span><br><span class="line"><span class="comment">                System.out.println(s);</span></span><br><span class="line"><span class="comment">            &#125;</span></span><br><span class="line"><span class="comment">        &#125;);*/</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//lambda表达式</span></span><br><span class="line">        coll.forEach(s -&gt; System.out.println(s));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-List集合"><a href="#2-List集合" class="headerlink" title="2.List集合"></a>2.List集合</h2><h3 id="2-1List集合的概述和特点【记忆】"><a href="#2-1List集合的概述和特点【记忆】" class="headerlink" title="2.1List集合的概述和特点【记忆】"></a>2.1List集合的概述和特点【记忆】</h3><ul>
+<li>List集合的概述<ul>
+<li>有序集合,这里的有序指的是存取顺序</li>
+<li>用户可以精确控制列表中每个元素的插入位置,用户可以通过整数索引访问元素,并搜索列表中的元素</li>
+<li>与Set集合不同,列表通常允许重复的元素</li>
+</ul>
+</li>
+<li>List集合的特点<ul>
+<li>存取有序</li>
+<li>可以重复</li>
+<li>有索引</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-2List集合的特有方法【应用】"><a href="#2-2List集合的特有方法【应用】" class="headerlink" title="2.2List集合的特有方法【应用】"></a>2.2List集合的特有方法【应用】</h3><ul>
+<li><p>方法介绍</p>
+<table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>void add(int index,E   element)</td>
+<td>在此集合中的指定位置插入指定的元素</td>
+</tr>
+<tr>
+<td>E remove(int   index)</td>
+<td>删除指定索引处的元素，返回被删除的元素</td>
+</tr>
+<tr>
+<td>E set(int index,E   element)</td>
+<td>修改指定索引处的元素，返回被修改的元素</td>
+</tr>
+<tr>
+<td>E get(int   index)</td>
+<td>返回指定索引处的元素</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>示例代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyListDemo</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        List&lt;String&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        list.add(<span class="string">&quot;aaa&quot;</span>);</span><br><span class="line">        list.add(<span class="string">&quot;bbb&quot;</span>);</span><br><span class="line">        list.add(<span class="string">&quot;ccc&quot;</span>);</span><br><span class="line">        <span class="comment">//method1(list);</span></span><br><span class="line">        <span class="comment">//method2(list);</span></span><br><span class="line">        <span class="comment">//method3(list);</span></span><br><span class="line">        <span class="comment">//method4(list);</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">method4</span><span class="params">(List&lt;String&gt; list)</span> &#123;</span><br><span class="line">        <span class="comment">//        E get(int index)		返回指定索引处的元素</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">s</span> <span class="operator">=</span> list.get(<span class="number">0</span>);</span><br><span class="line">        System.out.println(s);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">method3</span><span class="params">(List&lt;String&gt; list)</span> &#123;</span><br><span class="line">        <span class="comment">//        E set(int index,E element)	修改指定索引处的元素，返回被修改的元素</span></span><br><span class="line">        <span class="comment">//被替换的那个元素,在集合中就不存在了.</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">result</span> <span class="operator">=</span> list.set(<span class="number">0</span>, <span class="string">&quot;qqq&quot;</span>);</span><br><span class="line">        System.out.println(result);</span><br><span class="line">        System.out.println(list);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">method2</span><span class="params">(List&lt;String&gt; list)</span> &#123;</span><br><span class="line">        <span class="comment">//        E remove(int index)		删除指定索引处的元素，返回被删除的元素</span></span><br><span class="line">        <span class="comment">//在List集合中有两个删除的方法</span></span><br><span class="line">        <span class="comment">//第一个 删除指定的元素,返回值表示当前元素是否删除成功</span></span><br><span class="line">        <span class="comment">//第二个 删除指定索引的元素,返回值表示实际删除的元素</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">s</span> <span class="operator">=</span> list.remove(<span class="number">0</span>);</span><br><span class="line">        System.out.println(s);</span><br><span class="line">        System.out.println(list);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">method1</span><span class="params">(List&lt;String&gt; list)</span> &#123;</span><br><span class="line">        <span class="comment">//        void add(int index,E element)	在此集合中的指定位置插入指定的元素</span></span><br><span class="line">        <span class="comment">//原来位置上的元素往后挪一个索引.</span></span><br><span class="line">        list.add(<span class="number">0</span>,<span class="string">&quot;qqq&quot;</span>);</span><br><span class="line">        System.out.println(list);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="2-3List集合的五种遍历方式【应用】"><a href="#2-3List集合的五种遍历方式【应用】" class="headerlink" title="2.3List集合的五种遍历方式【应用】"></a>2.3List集合的五种遍历方式【应用】</h3><ol>
+<li>迭代器</li>
+<li>列表迭代器</li>
+<li>增强for</li>
+<li>Lambda表达式</li>
+<li>普通for循环</li>
 </ol>
-<h3 id="1-1-ArrayList类概述"><a href="#1-1-ArrayList类概述" class="headerlink" title="1.1 ArrayList类概述"></a>1.1 ArrayList类概述</h3><ul>
-<li><p>什么是集合</p>
-<p>​	提供一种存储空间可变的存储模型，存储的数据容量可以发生改变</p>
+<p>代码示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//创建集合并添加元素</span></span><br><span class="line">List&lt;String&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">list.add(<span class="string">&quot;aaa&quot;</span>);</span><br><span class="line">list.add(<span class="string">&quot;bbb&quot;</span>);</span><br><span class="line">list.add(<span class="string">&quot;ccc&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//1.迭代器</span></span><br><span class="line"><span class="comment">/*Iterator&lt;String&gt; it = list.iterator();</span></span><br><span class="line"><span class="comment">     while(it.hasNext())&#123;</span></span><br><span class="line"><span class="comment">        String str = it.next();</span></span><br><span class="line"><span class="comment">        System.out.println(str);</span></span><br><span class="line"><span class="comment">&#125;*/</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//2.增强for</span></span><br><span class="line"><span class="comment">//下面的变量s，其实就是一个第三方的变量而已。</span></span><br><span class="line"><span class="comment">//在循环的过程中，依次表示集合中的每一个元素</span></span><br><span class="line"><span class="comment">/* for (String s : list) &#123;</span></span><br><span class="line"><span class="comment">       System.out.println(s);</span></span><br><span class="line"><span class="comment">   &#125;*/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//3.Lambda表达式</span></span><br><span class="line"><span class="comment">//forEach方法的底层其实就是一个循环遍历，依次得到集合中的每一个元素</span></span><br><span class="line"><span class="comment">//并把每一个元素传递给下面的accept方法</span></span><br><span class="line"><span class="comment">//accept方法的形参s，依次表示集合中的每一个元素</span></span><br><span class="line"><span class="comment">//list.forEach(s-&gt;System.out.println(s) );</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//4.普通for循环</span></span><br><span class="line"><span class="comment">//size方法跟get方法还有循环结合的方式，利用索引获取到集合中的每一个元素</span></span><br><span class="line"><span class="comment">/*for (int i = 0; i &lt; list.size(); i++) &#123;</span></span><br><span class="line"><span class="comment">            //i:依次表示集合中的每一个索引</span></span><br><span class="line"><span class="comment">            String s = list.get(i);</span></span><br><span class="line"><span class="comment">            System.out.println(s);</span></span><br><span class="line"><span class="comment">        &#125;*/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 5.列表迭代器</span></span><br><span class="line"><span class="comment">//获取一个列表迭代器的对象，里面的指针默认也是指向0索引的</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//额外添加了一个方法：在遍历的过程中，可以添加元素</span></span><br><span class="line">ListIterator&lt;String&gt; it = list.listIterator();</span><br><span class="line"><span class="keyword">while</span>(it.hasNext())&#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">str</span> <span class="operator">=</span> it.next();</span><br><span class="line">    <span class="keyword">if</span>(<span class="string">&quot;bbb&quot;</span>.equals(str))&#123;</span><br><span class="line">        <span class="comment">//qqq</span></span><br><span class="line">        it.add(<span class="string">&quot;qqq&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">System.out.println(list);</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-4-细节点注意："><a href="#2-4-细节点注意：" class="headerlink" title="2.4 细节点注意："></a>2.4 细节点注意：</h3><p>List系列集合中的两个删除的方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span>直接删除元素</span><br><span class="line"><span class="number">2.</span>通过索引进行删除</span><br></pre></td></tr></table></figure>
+
+<p>代码示例:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//List系列集合中的两个删除的方法</span></span><br><span class="line"><span class="comment">//1.直接删除元素</span></span><br><span class="line"><span class="comment">//2.通过索引进行删除</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//1.创建集合并添加元素</span></span><br><span class="line">List&lt;Integer&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">list.add(<span class="number">1</span>);</span><br><span class="line">list.add(<span class="number">2</span>);</span><br><span class="line">list.add(<span class="number">3</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//2.删除元素</span></span><br><span class="line"><span class="comment">//请问：此时删除的是1这个元素，还是1索引上的元素？</span></span><br><span class="line"><span class="comment">//为什么？</span></span><br><span class="line"><span class="comment">//因为在调用方法的时候，如果方法出现了重载现象</span></span><br><span class="line"><span class="comment">//优先调用，实参跟形参类型一致的那个方法。</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//list.remove(1);</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//手动装箱，手动把基本数据类型的1，变成Integer类型</span></span><br><span class="line"><span class="type">Integer</span> <span class="variable">i</span> <span class="operator">=</span> Integer.valueOf(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">list.remove(i);</span><br><span class="line"></span><br><span class="line">System.out.println(list);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="3-数据结构"><a href="#3-数据结构" class="headerlink" title="3.数据结构"></a>3.数据结构</h2><h3 id="3-1数据结构之栈和队列【记忆】"><a href="#3-1数据结构之栈和队列【记忆】" class="headerlink" title="3.1数据结构之栈和队列【记忆】"></a>3.1数据结构之栈和队列【记忆】</h3><ul>
+<li><p>栈结构</p>
+<p>​	先进后出</p>
 </li>
-<li><p>ArrayList集合的特点</p>
-<p>​	长度可以变化，只能存储引用数据类型。</p>
+<li><p>队列结构</p>
+<p>​	先进先出</p>
 </li>
-<li><p>泛型的使用</p>
-<p>​	用于约束集合中存储元素的数据类型</p>
-        
-          <a class="article-more-a" href="/2024/07/15/%E9%9B%86%E5%90%88/#more">more >></a>
-        
+</ul>
+<h3 id="3-2数据结构之数组和链表【记忆】"><a href="#3-2数据结构之数组和链表【记忆】" class="headerlink" title="3.2数据结构之数组和链表【记忆】"></a>3.2数据结构之数组和链表【记忆】</h3><ul>
+<li><p>数组结构</p>
+<p>​	查询快、增删慢</p>
+</li>
+<li><p>队列结构</p>
+<p>​	查询慢、增删快</p>
+</li>
+</ul>
+<h2 id="4-List集合的实现类"><a href="#4-List集合的实现类" class="headerlink" title="4.List集合的实现类"></a>4.List集合的实现类</h2><h3 id="4-1List集合子类的特点【记忆】"><a href="#4-1List集合子类的特点【记忆】" class="headerlink" title="4.1List集合子类的特点【记忆】"></a>4.1List集合子类的特点【记忆】</h3><ul>
+<li><p>ArrayList集合</p>
+<p>​	底层是数组结构实现，查询快、增删慢</p>
+</li>
+<li><p>LinkedList集合</p>
+<p>​	底层是链表结构实现，查询慢、增删快</p>
+</li>
+</ul>
+<h3 id="4-2LinkedList集合的特有功能【应用】"><a href="#4-2LinkedList集合的特有功能【应用】" class="headerlink" title="4.2LinkedList集合的特有功能【应用】"></a>4.2LinkedList集合的特有功能【应用】</h3><ul>
+<li><p>特有方法</p>
+<table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public void addFirst(E e)</td>
+<td>在该列表开头插入指定的元素</td>
+</tr>
+<tr>
+<td>public void addLast(E e)</td>
+<td>将指定的元素追加到此列表的末尾</td>
+</tr>
+<tr>
+<td>public E getFirst()</td>
+<td>返回此列表中的第一个元素</td>
+</tr>
+<tr>
+<td>public   E getLast()</td>
+<td>返回此列表中的最后一个元素</td>
+</tr>
+<tr>
+<td>public E removeFirst()</td>
+<td>从此列表中删除并返回第一个元素</td>
+</tr>
+<tr>
+<td>public   E removeLast()</td>
+<td>从此列表中删除并返回最后一个元素</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>示例代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyLinkedListDemo4</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        LinkedList&lt;String&gt; list = <span class="keyword">new</span> <span class="title class_">LinkedList</span>&lt;&gt;();</span><br><span class="line">        list.add(<span class="string">&quot;aaa&quot;</span>);</span><br><span class="line">        list.add(<span class="string">&quot;bbb&quot;</span>);</span><br><span class="line">        list.add(<span class="string">&quot;ccc&quot;</span>);</span><br><span class="line"><span class="comment">//        public void addFirst(E e)	在该列表开头插入指定的元素</span></span><br><span class="line">        <span class="comment">//method1(list);</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//        public void addLast(E e)	将指定的元素追加到此列表的末尾</span></span><br><span class="line">        <span class="comment">//method2(list);</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//        public E getFirst()		返回此列表中的第一个元素</span></span><br><span class="line"><span class="comment">//        public E getLast()		返回此列表中的最后一个元素</span></span><br><span class="line">        <span class="comment">//method3(list);</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//        public E removeFirst()		从此列表中删除并返回第一个元素</span></span><br><span class="line"><span class="comment">//        public E removeLast()		从此列表中删除并返回最后一个元素</span></span><br><span class="line">        <span class="comment">//method4(list);</span></span><br><span class="line">      </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">method4</span><span class="params">(LinkedList&lt;String&gt; list)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">first</span> <span class="operator">=</span> list.removeFirst();</span><br><span class="line">        System.out.println(first);</span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">last</span> <span class="operator">=</span> list.removeLast();</span><br><span class="line">        System.out.println(last);</span><br><span class="line"></span><br><span class="line">        System.out.println(list);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">method3</span><span class="params">(LinkedList&lt;String&gt; list)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">first</span> <span class="operator">=</span> list.getFirst();</span><br><span class="line">        <span class="type">String</span> <span class="variable">last</span> <span class="operator">=</span> list.getLast();</span><br><span class="line">        System.out.println(first);</span><br><span class="line">        System.out.println(last);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">method2</span><span class="params">(LinkedList&lt;String&gt; list)</span> &#123;</span><br><span class="line">        list.addLast(<span class="string">&quot;www&quot;</span>);</span><br><span class="line">        System.out.println(list);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">method1</span><span class="params">(LinkedList&lt;String&gt; list)</span> &#123;</span><br><span class="line">        list.addFirst(<span class="string">&quot;qqq&quot;</span>);</span><br><span class="line">        System.out.println(list);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="5-源码分析"><a href="#5-源码分析" class="headerlink" title="5. 源码分析"></a>5. 源码分析</h2><h3 id="5-1-ArrayList源码分析："><a href="#5-1-ArrayList源码分析：" class="headerlink" title="5.1 ArrayList源码分析："></a>5.1 ArrayList源码分析：</h3><p>核心步骤：</p>
+<ol>
+<li><p>创建ArrayList对象的时候，他在底层先创建了一个长度为0的数组。</p>
+<p>数组名字：elementDate，定义变量size。</p>
+<p>size这个变量有两层含义：<br>①：元素的个数，也就是集合的长度<br>②：下一个元素的存入位置</p>
+</li>
+<li><p>添加元素，添加完毕后，size++</p>
+</li>
+</ol>
+<p>扩容时机一：</p>
+<ol start="3">
+<li>当存满时候，会创建一个新的数组，新数组的长度，是原来的1.5倍，也就是长度为15.再把所有的元素，全拷贝到新数组中。如果继续添加数据，这个长度为15的数组也满了，那么下次还会继续扩容，还是1.5倍。</li>
+</ol>
+<p>扩容时机二：</p>
+<ol start="4">
+<li><p>一次性添加多个数据，扩容1.5倍不够，怎么办呀？</p>
+<p>如果一次添加多个元素，1.5倍放不下，那么新创建数组的长度以实际为准。</p>
+</li>
+</ol>
+<p>举个例子：<br>在一开始，如果默认的长度为10的数组已经装满了，在装满的情况下，我一次性要添加100个数据很显然，10扩容1.5倍，变成15，还是不够，</p>
+<p>怎么办？</p>
+<p>此时新数组的长度，就以实际情况为准，就是110</p>
+<p>具体分析过程可以参见视频讲解。</p>
+<p><strong>添加一个元素时的扩容：</strong></p>
+<p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/%E4%B8%80%E6%AC%A1%E6%B7%BB%E5%8A%A0%E6%95%B0%E6%8D%AE.png" alt="第一次添加数据"></p>
+<p><strong>添加多个元素时的扩容：</strong></p>
+<p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/11%E6%AC%A1%E6%B7%BB%E5%8A%A0%E6%95%B0%E6%8D%AE.png" alt="第11次添加数据"></p>
+<h3 id="5-2-LinkedList源码分析："><a href="#5-2-LinkedList源码分析：" class="headerlink" title="5.2 LinkedList源码分析："></a>5.2 LinkedList源码分析：</h3><p>底层是双向链表结构</p>
+<p>核心步骤如下：</p>
+<ol>
+<li>刚开始创建的时候，底层创建了两个变量：一个记录头结点first，一个记录尾结点last，默认为null</li>
+<li>添加第一个元素时，底层创建一个结点对象，first和last都记录这个结点的地址值</li>
+<li>添加第二个元素时，底层创建一个结点对象，第一个结点会记录第二个结点的地址值，last会记录新结点的地址值</li>
+</ol>
+<p>具体分析过程可以参见视频讲解。</p>
+<p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/inkedList%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.png" alt="LinkedList源码分析"></p>
+<h3 id="5-3-迭代器源码分析："><a href="#5-3-迭代器源码分析：" class="headerlink" title="5.3 迭代器源码分析："></a>5.3 迭代器源码分析：</h3><p>迭代器遍历相关的三个方法：</p>
+<ul>
+<li><p>Iterator<E> iterator()  ：获取一个迭代器对象</p>
+</li>
+<li><p>boolean hasNext()       ：判断当前指向的位置是否有元素</p>
+</li>
+<li><p>E next()                ：获取当前指向的元素并移动指针</p>
+</li>
+</ul>
+<p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/%E4%BB%A3%E5%99%A8%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.png" alt="迭代器源码分析"></p>
+<h2 id="6-泛型"><a href="#6-泛型" class="headerlink" title="6.泛型"></a>6.泛型</h2><h3 id="6-1泛型概述"><a href="#6-1泛型概述" class="headerlink" title="6.1泛型概述"></a>6.1泛型概述</h3><ul>
+<li><p>泛型的介绍</p>
+<p>​	泛型是JDK5中引入的特性，它提供了编译时类型安全检测机制</p>
+</li>
+<li><p>泛型的好处</p>
+<ol>
+<li>把运行时期的问题提前到了编译期间</li>
+<li>避免了强制类型转换</li>
+</ol>
+</li>
+<li><p>泛型的定义格式</p>
+<ul>
+<li>&lt;类型&gt;: 指定一种类型的格式.尖括号里面可以任意书写,一般只写一个字母.例如: <E> <T></li>
+<li>&lt;类型1,类型2…&gt;: 指定多种类型的格式,多种类型之间用逗号隔开.例如: &lt;E,T&gt; &lt;K,V&gt;</li>
+</ul>
+</li>
+</ul>
+<h2 id="7-Set集合"><a href="#7-Set集合" class="headerlink" title="7.Set集合"></a>7.Set集合</h2><h3 id="7-1Set集合概述和特点【应用】"><a href="#7-1Set集合概述和特点【应用】" class="headerlink" title="7.1Set集合概述和特点【应用】"></a>7.1Set集合概述和特点【应用】</h3><ul>
+<li>不可以存储重复元素</li>
+<li>没有索引,不能使用普通for循环遍历</li>
+</ul>
+<h3 id="7-2Set集合的使用【应用】"><a href="#7-2Set集合的使用【应用】" class="headerlink" title="7.2Set集合的使用【应用】"></a>7.2Set集合的使用【应用】</h3><p>存储字符串并遍历</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MySet1</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">      	<span class="comment">//创建集合对象</span></span><br><span class="line">        Set&lt;String&gt; set = <span class="keyword">new</span> <span class="title class_">TreeSet</span>&lt;&gt;();</span><br><span class="line">      	<span class="comment">//添加元素</span></span><br><span class="line">        set.add(<span class="string">&quot;ccc&quot;</span>);</span><br><span class="line">        set.add(<span class="string">&quot;aaa&quot;</span>);</span><br><span class="line">        set.add(<span class="string">&quot;aaa&quot;</span>);</span><br><span class="line">        set.add(<span class="string">&quot;bbb&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//        for (int i = 0; i &lt; set.size(); i++) &#123;</span></span><br><span class="line"><span class="comment">//            //Set集合是没有索引的，所以不能使用通过索引获取元素的方法</span></span><br><span class="line"><span class="comment">//        &#125;</span></span><br><span class="line">      </span><br><span class="line">      	<span class="comment">//遍历集合</span></span><br><span class="line">        Iterator&lt;String&gt; it = set.iterator();</span><br><span class="line">        <span class="keyword">while</span> (it.hasNext())&#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">s</span> <span class="operator">=</span> it.next();</span><br><span class="line">            System.out.println(s);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="string">&quot;-----------------------------------&quot;</span>);</span><br><span class="line">        <span class="keyword">for</span> (String s : set) &#123;</span><br><span class="line">            System.out.println(s);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="8-TreeSet集合"><a href="#8-TreeSet集合" class="headerlink" title="8.TreeSet集合"></a>8.TreeSet集合</h2><h3 id="8-1TreeSet集合概述和特点【应用】"><a href="#8-1TreeSet集合概述和特点【应用】" class="headerlink" title="8.1TreeSet集合概述和特点【应用】"></a>8.1TreeSet集合概述和特点【应用】</h3><ul>
+<li>不可以存储重复元素</li>
+<li>没有索引</li>
+<li>可以将元素按照规则进行排序<ul>
+<li>TreeSet()：根据其元素的自然排序进行排序</li>
+<li>TreeSet(Comparator comparator) ：根据指定的比较器进行排序</li>
+</ul>
+</li>
+</ul>
+<h3 id="8-2TreeSet集合基本使用【应用】"><a href="#8-2TreeSet集合基本使用【应用】" class="headerlink" title="8.2TreeSet集合基本使用【应用】"></a>8.2TreeSet集合基本使用【应用】</h3><p>存储Integer类型的整数并遍历</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TreeSetDemo01</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//创建集合对象</span></span><br><span class="line">        TreeSet&lt;Integer&gt; ts = <span class="keyword">new</span> <span class="title class_">TreeSet</span>&lt;Integer&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//添加元素</span></span><br><span class="line">        ts.add(<span class="number">10</span>);</span><br><span class="line">        ts.add(<span class="number">40</span>);</span><br><span class="line">        ts.add(<span class="number">30</span>);</span><br><span class="line">        ts.add(<span class="number">50</span>);</span><br><span class="line">        ts.add(<span class="number">20</span>);</span><br><span class="line"></span><br><span class="line">        ts.add(<span class="number">30</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//遍历集合</span></span><br><span class="line">        <span class="keyword">for</span>(Integer i : ts) &#123;</span><br><span class="line">            System.out.println(i);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="8-3自然排序Comparable的使用【应用】"><a href="#8-3自然排序Comparable的使用【应用】" class="headerlink" title="8.3自然排序Comparable的使用【应用】"></a>8.3自然排序Comparable的使用【应用】</h3><ul>
+<li><p>案例需求</p>
+<ul>
+<li>存储学生对象并遍历，创建TreeSet集合使用无参构造方法</li>
+<li>要求：按照年龄从小到大排序，年龄相同时，按照姓名的字母顺序排序</li>
+</ul>
+</li>
+<li><p>实现步骤</p>
+<ol>
+<li>使用空参构造创建TreeSet集合<ul>
+<li>用TreeSet集合存储自定义对象，无参构造方法使用的是自然排序对元素进行排序的</li>
+</ul>
+</li>
+<li>自定义的Student类实现Comparable接口<ul>
+<li>自然排序，就是让元素所属的类实现Comparable接口，重写compareTo(T o)方法</li>
+</ul>
+</li>
+<li>重写接口中的compareTo方法<ul>
+<li>重写方法时，一定要注意排序规则必须按照要求的主要条件和次要条件来写</li>
+</ul>
+</li>
+</ol>
+</li>
+<li><p>代码实现</p>
+<p>学生类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Student</span> <span class="keyword">implements</span> <span class="title class_">Comparable</span>&lt;Student&gt;&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> age;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Student</span><span class="params">()</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Student</span><span class="params">(String name, <span class="type">int</span> age)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">        <span class="built_in">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setName</span><span class="params">(String name)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getAge</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setAge</span><span class="params">(<span class="type">int</span> age)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Student&#123;&quot;</span> +</span><br><span class="line">                <span class="string">&quot;name=&#x27;&quot;</span> + name + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&quot;, age=&quot;</span> + age +</span><br><span class="line">                <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">compareTo</span><span class="params">(Student o)</span> &#123;</span><br><span class="line">        <span class="comment">//按照对象的年龄进行排序</span></span><br><span class="line">        <span class="comment">//主要判断条件: 按照年龄从小到大排序</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">result</span> <span class="operator">=</span> <span class="built_in">this</span>.age - o.age;</span><br><span class="line">        <span class="comment">//次要判断条件: 年龄相同时，按照姓名的字母顺序排序</span></span><br><span class="line">        result = result == <span class="number">0</span> ? <span class="built_in">this</span>.name.compareTo(o.getName()) : result;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyTreeSet2</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//创建集合对象</span></span><br><span class="line">        TreeSet&lt;Student&gt; ts = <span class="keyword">new</span> <span class="title class_">TreeSet</span>&lt;&gt;();</span><br><span class="line">	    <span class="comment">//创建学生对象</span></span><br><span class="line">        <span class="type">Student</span> <span class="variable">s1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Student</span>(<span class="string">&quot;zhangsan&quot;</span>,<span class="number">28</span>);</span><br><span class="line">        <span class="type">Student</span> <span class="variable">s2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Student</span>(<span class="string">&quot;lisi&quot;</span>,<span class="number">27</span>);</span><br><span class="line">        <span class="type">Student</span> <span class="variable">s3</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Student</span>(<span class="string">&quot;wangwu&quot;</span>,<span class="number">29</span>);</span><br><span class="line">        <span class="type">Student</span> <span class="variable">s4</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Student</span>(<span class="string">&quot;zhaoliu&quot;</span>,<span class="number">28</span>);</span><br><span class="line">        <span class="type">Student</span> <span class="variable">s5</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Student</span>(<span class="string">&quot;qianqi&quot;</span>,<span class="number">30</span>);</span><br><span class="line">		<span class="comment">//把学生添加到集合</span></span><br><span class="line">        ts.add(s1);</span><br><span class="line">        ts.add(s2);</span><br><span class="line">        ts.add(s3);</span><br><span class="line">        ts.add(s4);</span><br><span class="line">        ts.add(s5);</span><br><span class="line">		<span class="comment">//遍历集合</span></span><br><span class="line">        <span class="keyword">for</span> (Student student : ts) &#123;</span><br><span class="line">            System.out.println(student);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="8-4比较器排序Comparator的使用【应用】"><a href="#8-4比较器排序Comparator的使用【应用】" class="headerlink" title="8.4比较器排序Comparator的使用【应用】"></a>8.4比较器排序Comparator的使用【应用】</h3><ul>
+<li><p>案例需求</p>
+<ul>
+<li>存储老师对象并遍历，创建TreeSet集合使用带参构造方法</li>
+<li>要求：按照年龄从小到大排序，年龄相同时，按照姓名的字母顺序排序</li>
+</ul>
+</li>
+<li><p>实现步骤</p>
+<ul>
+<li>用TreeSet集合存储自定义对象，带参构造方法使用的是比较器排序对元素进行排序的</li>
+<li>比较器排序，就是让集合构造方法接收Comparator的实现类对象，重写compare(T o1,T o2)方法</li>
+<li>重写方法时，一定要注意排序规则必须按照要求的主要条件和次要条件来写</li>
+</ul>
+</li>
+<li><p>代码实现</p>
+<p>老师类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Teacher</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> age;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Teacher</span><span class="params">()</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Teacher</span><span class="params">(String name, <span class="type">int</span> age)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">        <span class="built_in">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setName</span><span class="params">(String name)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getAge</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setAge</span><span class="params">(<span class="type">int</span> age)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Teacher&#123;&quot;</span> +</span><br><span class="line">                <span class="string">&quot;name=&#x27;&quot;</span> + name + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&quot;, age=&quot;</span> + age +</span><br><span class="line">                <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyTreeSet4</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">      	<span class="comment">//创建集合对象</span></span><br><span class="line">        TreeSet&lt;Teacher&gt; ts = <span class="keyword">new</span> <span class="title class_">TreeSet</span>&lt;&gt;(<span class="keyword">new</span> <span class="title class_">Comparator</span>&lt;Teacher&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">compare</span><span class="params">(Teacher o1, Teacher o2)</span> &#123;</span><br><span class="line">                <span class="comment">//o1表示现在要存入的那个元素</span></span><br><span class="line">                <span class="comment">//o2表示已经存入到集合中的元素</span></span><br><span class="line">              </span><br><span class="line">                <span class="comment">//主要条件</span></span><br><span class="line">                <span class="type">int</span> <span class="variable">result</span> <span class="operator">=</span> o1.getAge() - o2.getAge();</span><br><span class="line">                <span class="comment">//次要条件</span></span><br><span class="line">                result = result == <span class="number">0</span> ? o1.getName().compareTo(o2.getName()) : result;</span><br><span class="line">                <span class="keyword">return</span> result;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">		<span class="comment">//创建老师对象</span></span><br><span class="line">        <span class="type">Teacher</span> <span class="variable">t1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Teacher</span>(<span class="string">&quot;zhangsan&quot;</span>,<span class="number">23</span>);</span><br><span class="line">        <span class="type">Teacher</span> <span class="variable">t2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Teacher</span>(<span class="string">&quot;lisi&quot;</span>,<span class="number">22</span>);</span><br><span class="line">        <span class="type">Teacher</span> <span class="variable">t3</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Teacher</span>(<span class="string">&quot;wangwu&quot;</span>,<span class="number">24</span>);</span><br><span class="line">        <span class="type">Teacher</span> <span class="variable">t4</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Teacher</span>(<span class="string">&quot;zhaoliu&quot;</span>,<span class="number">24</span>);</span><br><span class="line">		<span class="comment">//把老师添加到集合</span></span><br><span class="line">        ts.add(t1);</span><br><span class="line">        ts.add(t2);</span><br><span class="line">        ts.add(t3);</span><br><span class="line">        ts.add(t4);</span><br><span class="line">		<span class="comment">//遍历集合</span></span><br><span class="line">        <span class="keyword">for</span> (Teacher teacher : ts) &#123;</span><br><span class="line">            System.out.println(teacher);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="8-5两种比较方式总结【理解】"><a href="#8-5两种比较方式总结【理解】" class="headerlink" title="8.5两种比较方式总结【理解】"></a>8.5两种比较方式总结【理解】</h3><ul>
+<li>两种比较方式小结<ul>
+<li>自然排序: 自定义类实现Comparable接口,重写compareTo方法,根据返回值进行排序</li>
+<li>比较器排序: 创建TreeSet对象的时候传递Comparator的实现类对象,重写compare方法,根据返回值进行排序</li>
+<li>在使用的时候,默认使用自然排序,当自然排序不满足现在的需求时,必须使用比较器排序</li>
+</ul>
+</li>
+<li>两种方式中关于返回值的规则<ul>
+<li>如果返回值为负数，表示当前存入的元素是较小值，存左边</li>
+<li>如果返回值为0，表示当前存入的元素跟集合中元素重复了，不存</li>
+<li>如果返回值为正数，表示当前存入的元素是较大值，存右边</li>
+</ul>
+</li>
+</ul>
+<h2 id="9-HashSet集合"><a href="#9-HashSet集合" class="headerlink" title="9.HashSet集合"></a>9.HashSet集合</h2><h3 id="9-1HashSet集合概述和特点【应用】"><a href="#9-1HashSet集合概述和特点【应用】" class="headerlink" title="9.1HashSet集合概述和特点【应用】"></a>9.1HashSet集合概述和特点【应用】</h3><ul>
+<li>底层数据结构是哈希表</li>
+<li>存取无序</li>
+<li>不可以存储重复元素</li>
+<li>没有索引,不能使用普通for循环遍历</li>
+</ul>
+<h3 id="9-2HashSet集合的基本应用【应用】"><a href="#9-2HashSet集合的基本应用【应用】" class="headerlink" title="9.2HashSet集合的基本应用【应用】"></a>9.2HashSet集合的基本应用【应用】</h3><p>存储字符串并遍历</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HashSetDemo</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//创建集合对象</span></span><br><span class="line">        HashSet&lt;String&gt; set = <span class="keyword">new</span> <span class="title class_">HashSet</span>&lt;String&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//添加元素</span></span><br><span class="line">        set.add(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line">        set.add(<span class="string">&quot;world&quot;</span>);</span><br><span class="line">        set.add(<span class="string">&quot;java&quot;</span>);</span><br><span class="line">        <span class="comment">//不包含重复元素的集合</span></span><br><span class="line">        set.add(<span class="string">&quot;world&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//遍历</span></span><br><span class="line">        <span class="keyword">for</span>(String s : set) &#123;</span><br><span class="line">            System.out.println(s);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="9-3哈希值【理解】"><a href="#9-3哈希值【理解】" class="headerlink" title="9.3哈希值【理解】"></a>9.3哈希值【理解】</h3><ul>
+<li><p>哈希值简介</p>
+<p>​	是JDK根据对象的地址或者字符串或者数字算出来的int类型的数值</p>
+</li>
+<li><p>如何获取哈希值</p>
+<p>​	Object类中的public int hashCode()：返回对象的哈希码值</p>
+</li>
+<li><p>哈希值的特点</p>
+<ul>
+<li>同一个对象多次调用hashCode()方法返回的哈希值是相同的</li>
+<li>默认情况下，不同对象的哈希值是不同的。而重写hashCode()方法，可以实现让不同对象的哈希值相同</li>
+</ul>
+</li>
+</ul>
+<h3 id="9-4哈希表结构【理解】"><a href="#9-4哈希表结构【理解】" class="headerlink" title="9.4哈希表结构【理解】"></a>9.4哈希表结构【理解】</h3><ul>
+<li><p>JDK1.8以前</p>
+<p>​	数组 + 链表</p>
+<p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/4_JKD8%E4%BB%A5%E5%89%8D%E5%93%88%E5%B8%8C%E8%A1%A8.png" alt="14_JKD8以前哈希表"></p>
+</li>
+<li><p>JDK1.8以后</p>
+<ul>
+<li><p>节点个数少于等于8个</p>
+<p>​	数组 + 链表</p>
+</li>
+<li><p>节点个数多于8个</p>
+<p>​	数组 + 红黑树</p>
+</li>
+</ul>
+<p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/5_JKD8%E4%BB%A5%E5%90%8E%E5%93%88%E5%B8%8C%E8%A1%A8.png" alt="15_JKD8以后哈希表"></p>
+</li>
+</ul>
+<h3 id="5-5HashSet集合存储学生对象并遍历【应用】"><a href="#5-5HashSet集合存储学生对象并遍历【应用】" class="headerlink" title="5.5HashSet集合存储学生对象并遍历【应用】"></a>5.5HashSet集合存储学生对象并遍历【应用】</h3><ul>
+<li><p>案例需求</p>
+<ul>
+<li>创建一个存储学生对象的集合，存储多个学生对象，使用程序实现在控制台遍历该集合</li>
+<li>要求：学生对象的成员变量值相同，我们就认为是同一个对象</li>
+</ul>
+</li>
+<li><p>代码实现</p>
+<p>学生类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Student</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> age;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Student</span><span class="params">()</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Student</span><span class="params">(String name, <span class="type">int</span> age)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">        <span class="built_in">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setName</span><span class="params">(String name)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getAge</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setAge</span><span class="params">(<span class="type">int</span> age)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">equals</span><span class="params">(Object o)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span> == o) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">if</span> (o == <span class="literal">null</span> || getClass() != o.getClass()) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">        <span class="type">Student</span> <span class="variable">student</span> <span class="operator">=</span> (Student) o;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (age != student.age) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">return</span> name != <span class="literal">null</span> ? name.equals(student.name) : student.name == <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">hashCode</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">result</span> <span class="operator">=</span> name != <span class="literal">null</span> ? name.hashCode() : <span class="number">0</span>;</span><br><span class="line">        result = <span class="number">31</span> * result + age;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HashSetDemo02</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//创建HashSet集合对象</span></span><br><span class="line">        HashSet&lt;Student&gt; hs = <span class="keyword">new</span> <span class="title class_">HashSet</span>&lt;Student&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//创建学生对象</span></span><br><span class="line">        <span class="type">Student</span> <span class="variable">s1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Student</span>(<span class="string">&quot;林青霞&quot;</span>, <span class="number">30</span>);</span><br><span class="line">        <span class="type">Student</span> <span class="variable">s2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Student</span>(<span class="string">&quot;张曼玉&quot;</span>, <span class="number">35</span>);</span><br><span class="line">        <span class="type">Student</span> <span class="variable">s3</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Student</span>(<span class="string">&quot;王祖贤&quot;</span>, <span class="number">33</span>);</span><br><span class="line"></span><br><span class="line">        <span class="type">Student</span> <span class="variable">s4</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Student</span>(<span class="string">&quot;王祖贤&quot;</span>, <span class="number">33</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//把学生添加到集合</span></span><br><span class="line">        hs.add(s1);</span><br><span class="line">        hs.add(s2);</span><br><span class="line">        hs.add(s3);</span><br><span class="line">        hs.add(s4);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//遍历集合(增强for)</span></span><br><span class="line">        <span class="keyword">for</span> (Student s : hs) &#123;</span><br><span class="line">            System.out.println(s.getName() + <span class="string">&quot;,&quot;</span> + s.getAge());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>总结</p>
+<p>​	HashSet集合存储自定义类型元素,要想实现元素的唯一,要求必须重写hashCode方法和equals方法</p>
+</li>
+</ul>
+
       
 
       
@@ -290,7 +809,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">集合</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">List</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Set</a>
         		</li>
       		
 		</ul>
@@ -311,7 +834,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2024/07/15/%E9%9B%86%E5%90%88/">展开全文 >></a>
+          <a class="article-more-a" href="/2024/07/15/%E9%9B%86%E5%90%88-List%E3%80%81Set/">展开全文 >></a>
         </p>
       
 
@@ -779,10 +1302,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">集合</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">面向对象</a>
               </li>
              
@@ -808,6 +1327,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Feed流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">List</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Set</a>
               </li>
             
             <div class="clearfix"></div>
