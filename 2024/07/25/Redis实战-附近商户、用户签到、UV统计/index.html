@@ -15,17 +15,17 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="10、附近商户10.1、附近商户-GEO数据结构的基本用法GEO就是Geolocation的简写形式，代表地理坐标。Redis在3.2版本中加入了对GEO的支持，允许存储地理坐标信息，帮助我们根据经纬度来检索数据。常见的命令有：  GEOADD：添加一个地理空间信息，包含：经度（longitude）、纬度（latitude）、值（member）  GEODIST：计算指定的两个点之间的距离并返回">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653822036941.png">
-<meta property="og:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653822021827.png">
-<meta property="og:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653823145495.png">
-<meta property="og:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653824498278.png">
-<meta property="og:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653833970361.png">
-<meta property="og:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653834455899.png">
-<meta property="og:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653835784444.png">
-<meta property="og:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653836416586.png">
-<meta property="og:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653836578970.png">
-<meta property="og:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653837988985.png">
-<meta property="og:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653838053608.png">
+<meta property="og:image" content="http://example.com/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E9%99%84%E8%BF%91%E5%95%86%E6%88%B7%E3%80%81%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653822036941.png">
+<meta property="og:image" content="http://example.com/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E9%99%84%E8%BF%91%E5%95%86%E6%88%B7%E3%80%81%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653822021827.png">
+<meta property="og:image" content="http://example.com/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E9%99%84%E8%BF%91%E5%95%86%E6%88%B7%E3%80%81%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653823145495.png">
+<meta property="og:image" content="http://example.com/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E9%99%84%E8%BF%91%E5%95%86%E6%88%B7%E3%80%81%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653824498278.png">
+<meta property="og:image" content="http://example.com/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E9%99%84%E8%BF%91%E5%95%86%E6%88%B7%E3%80%81%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653833970361.png">
+<meta property="og:image" content="http://example.com/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E9%99%84%E8%BF%91%E5%95%86%E6%88%B7%E3%80%81%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653834455899.png">
+<meta property="og:image" content="http://example.com/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E9%99%84%E8%BF%91%E5%95%86%E6%88%B7%E3%80%81%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653835784444.png">
+<meta property="og:image" content="http://example.com/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E9%99%84%E8%BF%91%E5%95%86%E6%88%B7%E3%80%81%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653836416586.png">
+<meta property="og:image" content="http://example.com/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E9%99%84%E8%BF%91%E5%95%86%E6%88%B7%E3%80%81%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653836578970.png">
+<meta property="og:image" content="http://example.com/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E9%99%84%E8%BF%91%E5%95%86%E6%88%B7%E3%80%81%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653837988985.png">
+<meta property="og:image" content="http://example.com/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E9%99%84%E8%BF%91%E5%95%86%E6%88%B7%E3%80%81%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653838053608.png">
 <meta property="article:published_time" content="2024-07-25T14:29:51.000Z">
 <meta property="article:modified_time" content="2024-07-25T14:34:07.718Z">
 <meta property="article:author" content="John Doe">
@@ -33,7 +33,7 @@
 <meta property="article:tag" content="BitMap">
 <meta property="article:tag" content="HyperLogLog">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653822036941.png">
+<meta name="twitter:image" content="http://example.com/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E9%99%84%E8%BF%91%E5%95%86%E6%88%B7%E3%80%81%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653822036941.png">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -207,9 +207,9 @@
 <span id="more"></span></li>
 </ul>
 <h3 id="10-2、-附近商户-导入店铺数据到GEO"><a href="#10-2、-附近商户-导入店铺数据到GEO" class="headerlink" title="10.2、 附近商户-导入店铺数据到GEO"></a>10.2、 附近商户-导入店铺数据到GEO</h3><p>具体场景说明：</p>
-<p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653822036941.png" alt="1653822036941"></p>
+<p><img src="/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E9%99%84%E8%BF%91%E5%95%86%E6%88%B7%E3%80%81%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653822036941.png" alt="1653822036941"></p>
 <p>当我们点击美食之后，会出现一系列的商家，商家中可以按照多种排序方式，我们此时关注的是距离，这个地方就需要使用到我们的GEO，向后台传入当前app收集的地址(我们此处是写死的) ，以当前坐标作为圆心，同时绑定相同的店家类型type，以及分页信息，把这几个条件传入后台，后台查询出对应的数据再返回。</p>
-<p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653822021827.png" alt="1653822021827"></p>
+<p><img src="/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E9%99%84%E8%BF%91%E5%95%86%E6%88%B7%E3%80%81%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653822021827.png" alt="1653822021827"></p>
 <p>我们要做的事情是：将数据库表中的数据导入到redis中去，redis中的GEO，GEO在redis中就一个menber和一个经纬度，我们把x和y轴传入到redis做的经纬度位置去，但我们不能把所有的数据都放入到menber中去，毕竟作为redis是一个内存级数据库，如果存海量数据，redis还是力不从心，所以我们在这个地方存储他的id即可。</p>
 <p>但是这个时候还有一个问题，就是在redis中并没有存储type，所以我们无法根据type来对数据进行筛选，所以我们可以按照商户类型做分组，类型相同的商户作为同一组，以typeId为key存入同一个GEO集合中即可</p>
 <p>代码</p>
@@ -230,7 +230,7 @@
 
 
 <h2 id="11、用户签到"><a href="#11、用户签到" class="headerlink" title="11、用户签到"></a>11、用户签到</h2><h4 id="11-1、用户签到-BitMap功能演示"><a href="#11-1、用户签到-BitMap功能演示" class="headerlink" title="11.1、用户签到-BitMap功能演示"></a>11.1、用户签到-BitMap功能演示</h4><p>我们针对签到功能完全可以通过mysql来完成，比如说以下这张表</p>
-<p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653823145495.png" alt="1653823145495"></p>
+<p><img src="/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E9%99%84%E8%BF%91%E5%95%86%E6%88%B7%E3%80%81%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653823145495.png" alt="1653823145495"></p>
 <p>用户一次签到，就是一条记录，假如有1000万用户，平均每人每年签到次数为10次，则这张表一年的数据量为 1亿条</p>
 <p>每签到一次需要使用（8 + 8 + 1 + 1 + 3 + 1）共22 字节的内存，一个月则最多需要600多字节</p>
 <p>我们如何能够简化一点呢？其实可以考虑小时候一个挺常见的方案，就是小时候，咱们准备一张小小的卡片，你只要签到就打上一个勾，我最后判断你是否签到，其实只需要到小卡片上看一看就知道了</p>
@@ -238,7 +238,7 @@
 <p>我们按月来统计用户签到信息，签到记录为1，未签到则记录为0.</p>
 <p>把每一个bit位对应当月的每一天，形成了映射关系。用0和1标示业务状态，这种思路就称为位图（BitMap）。这样我们就用极小的空间，来实现了大量数据的表示</p>
 <p>Redis中是利用string类型数据结构实现BitMap，因此最大上限是512M，转换为bit则是 2^32个bit位。</p>
-<p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653824498278.png" alt="1653824498278"></p>
+<p><img src="/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E9%99%84%E8%BF%91%E5%95%86%E6%88%B7%E3%80%81%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653824498278.png" alt="1653824498278"></p>
 <p>BitMap的操作命令有：</p>
 <ul>
 <li>SETBIT：向指定位置（offset）存入一个0或1</li>
@@ -252,7 +252,7 @@
 <h4 id="11-2-、用户签到-实现签到功能"><a href="#11-2-、用户签到-实现签到功能" class="headerlink" title="11.2 、用户签到-实现签到功能"></a>11.2 、用户签到-实现签到功能</h4><p>需求：实现签到接口，将当前用户当天签到信息保存到Redis中</p>
 <p>思路：我们可以把年和月作为bitMap的key，然后保存到一个bitMap中，每次签到就到对应的位上把数字从0变成1，只要对应是1，就表明说明这一天已经签到了，反之则没有签到。</p>
 <p>我们通过接口文档发现，此接口并没有传递任何的参数，没有参数怎么确实是哪一天签到呢？这个很容易，可以通过后台代码直接获取即可，然后到对应的地址上去修改bitMap。</p>
-<p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653833970361.png" alt="1653833970361"></p>
+<p><img src="/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E9%99%84%E8%BF%91%E5%95%86%E6%88%B7%E3%80%81%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653833970361.png" alt="1653833970361"></p>
 <p><strong>代码</strong></p>
 <p>UserController</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@PostMapping(&quot;/sign&quot;)</span></span><br><span class="line"><span class="keyword">public</span> Result <span class="title function_">sign</span><span class="params">()</span>&#123;</span><br><span class="line">   <span class="keyword">return</span> userService.sign();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -261,7 +261,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> Result <span class="title function_">sign</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">// 1.获取当前登录用户</span></span><br><span class="line">    <span class="type">Long</span> <span class="variable">userId</span> <span class="operator">=</span> UserHolder.getUser().getId();</span><br><span class="line">    <span class="comment">// 2.获取日期</span></span><br><span class="line">    <span class="type">LocalDateTime</span> <span class="variable">now</span> <span class="operator">=</span> LocalDateTime.now();</span><br><span class="line">    <span class="comment">// 3.拼接key</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">keySuffix</span> <span class="operator">=</span> now.format(DateTimeFormatter.ofPattern(<span class="string">&quot;:yyyyMM&quot;</span>));</span><br><span class="line">    <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> USER_SIGN_KEY + userId + keySuffix;</span><br><span class="line">    <span class="comment">// 4.获取今天是本月的第几天</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">dayOfMonth</span> <span class="operator">=</span> now.getDayOfMonth();</span><br><span class="line">    <span class="comment">// 5.写入Redis SETBIT key offset 1</span></span><br><span class="line">    stringRedisTemplate.opsForValue().setBit(key, dayOfMonth - <span class="number">1</span>, <span class="literal">true</span>);</span><br><span class="line">    <span class="keyword">return</span> Result.ok();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h4 id="11-3-用户签到-签到统计"><a href="#11-3-用户签到-签到统计" class="headerlink" title="11.3 用户签到-签到统计"></a>11.3 用户签到-签到统计</h4><p><strong>问题1：</strong>什么叫做连续签到天数？<br>从最后一次签到开始向前统计，直到遇到第一次未签到为止，计算总的签到次数，就是连续签到天数。</p>
-<p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653834455899.png" alt="1653834455899"></p>
+<p><img src="/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E9%99%84%E8%BF%91%E5%95%86%E6%88%B7%E3%80%81%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653834455899.png" alt="1653834455899"></p>
 <p>Java逻辑代码：获得当前这个月的最后一次签到数据，定义一个计数器，然后不停的向前统计，直到获得第一个非0的数字即可，每得到一个非0的数字计数器+1，直到遍历完所有的数据，就可以获得当前月的签到总天数了</p>
 <p><strong>问题2：</strong>如何得到本月到今天为止的所有签到数据？</p>
 <p>  BITFIELD key GET u[dayOfMonth] 0</p>
@@ -270,7 +270,7 @@
 <p>注意：bitMap返回的数据是10进制，哪假如说返回一个数字8，那么我哪儿知道到底哪些是0，哪些是1呢？我们只需要让得到的10进制数字和1做与运算就可以了，因为1只有遇见1 才是1，其他数字都是0 ，我们把签到结果和1进行与操作，每与一次，就把签到结果向右移动一位，依次内推，我们就能完成逐个遍历的效果了。</p>
 <p>需求：实现下面接口，统计当前用户截止当前时间在本月的连续签到天数</p>
 <p>有用户有时间我们就可以组织出对应的key，此时就能找到这个用户截止这天的所有签到记录，再根据这套算法，就能统计出来他连续签到的次数了</p>
-<p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653835784444.png" alt="1653835784444"></p>
+<p><img src="/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E9%99%84%E8%BF%91%E5%95%86%E6%88%B7%E3%80%81%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653835784444.png" alt="1653835784444"></p>
 <p>代码</p>
 <p><strong>UserController</strong></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping(&quot;/sign/count&quot;)</span></span><br><span class="line"><span class="keyword">public</span> Result <span class="title function_">signCount</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> userService.signCount();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -291,13 +291,13 @@
 <p>第二种解决方案：遇到的问题是：如果是不同的id那就可以防止下次过来直击数据</p>
 <p>所以我们如何解决呢？</p>
 <p>我们可以将数据库的数据，所对应的id写入到一个list集合中，当用户过来访问的时候，我们直接去判断list中是否包含当前的要查询的数据，如果说用户要查询的id数据并不在list集合中，则直接返回，如果list中包含对应查询的id数据，则说明不是一次缓存穿透数据，则直接放行。</p>
-<p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653836416586.png" alt="1653836416586"></p>
+<p><img src="/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E9%99%84%E8%BF%91%E5%95%86%E6%88%B7%E3%80%81%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653836416586.png" alt="1653836416586"></p>
 <p>现在的问题是这个主键其实并没有那么短，而是很长的一个 主键</p>
 <p>哪怕你单独去提取这个主键，但是在11年左右，淘宝的商品总量就已经超过10亿个</p>
 <p>所以如果采用以上方案，这个list也会很大，所以我们可以使用bitmap来减少list的存储空间</p>
 <p>我们可以把list数据抽象成一个非常大的bitmap，我们不再使用list，而是将db中的id数据利用哈希思想，比如：</p>
 <p>id % bitmap.size  &#x3D; 算出当前这个id对应应该落在bitmap的哪个索引上，然后将这个值从0变成1，然后当用户来查询数据时，此时已经没有了list，让用户用他查询的id去用相同的哈希算法， 算出来当前这个id应当落在bitmap的哪一位，然后判断这一位是0，还是1，如果是0则表明这一位上的数据一定不存在，  采用这种方式来处理，需要重点考虑一个事情，就是误差率，所谓的误差率就是指当发生哈希冲突的时候，产生的误差。</p>
-<p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653836578970.png" alt="1653836578970"></p>
+<p><img src="/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E9%99%84%E8%BF%91%E5%95%86%E6%88%B7%E3%80%81%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653836578970.png" alt="1653836578970"></p>
 <h2 id="12、UV统计"><a href="#12、UV统计" class="headerlink" title="12、UV统计"></a>12、UV统计</h2><h3 id="12-1-、UV统计-HyperLogLog"><a href="#12-1-、UV统计-HyperLogLog" class="headerlink" title="12.1 、UV统计-HyperLogLog"></a>12.1 、UV统计-HyperLogLog</h3><p>首先我们搞懂两个概念：</p>
 <ul>
 <li>UV：全称Unique Visitor，也叫独立访客量，是指通过互联网访问、浏览这个网页的自然人。1天内同一个用户多次访问该网站，只记录1次。</li>
@@ -306,9 +306,9 @@
 <p>通常来说UV会比PV大很多，所以衡量同一个网站的访问量，我们需要综合考虑很多因素，所以我们只是单纯的把这两个值作为一个参考值</p>
 <p>UV统计在服务端做会比较麻烦，因为要判断该用户是否已经统计过了，需要将统计过的用户信息保存。但是如果每个访问的用户都保存到Redis中，数据量会非常恐怖，那怎么处理呢？</p>
 <p>Hyperloglog(HLL)是从Loglog算法派生的概率算法，用于确定非常大的集合的基数，而不需要存储其所有值。相关算法原理大家可以参考：<a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903785744056333#heading-0">https://juejin.cn/post/6844903785744056333#heading-0</a><br>Redis中的HLL是基于string结构实现的，单个HLL的内存<strong>永远小于16kb</strong>，<strong>内存占用低</strong>的令人发指！作为代价，其测量结果是概率性的，<strong>有小于0.81％的误差</strong>。不过对于UV统计来说，这完全可以忽略。</p>
-<p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653837988985.png" alt="1653837988985"></p>
+<p><img src="/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E9%99%84%E8%BF%91%E5%95%86%E6%88%B7%E3%80%81%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653837988985.png" alt="1653837988985"></p>
 <h3 id="12-2-UV统计-测试百万数据的统计"><a href="#12-2-UV统计-测试百万数据的统计" class="headerlink" title="12.2 UV统计-测试百万数据的统计"></a>12.2 UV统计-测试百万数据的统计</h3><p>测试思路：我们直接利用单元测试，向HyperLogLog中添加100万条数据，看看内存占用和统计效果如何</p>
-<p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653838053608.png" alt="1653838053608"></p>
+<p><img src="/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E9%99%84%E8%BF%91%E5%95%86%E6%88%B7%E3%80%81%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/1653838053608.png" alt="1653838053608"></p>
 <p>经过测试：我们会发生他的误差是在允许范围内，并且内存占用极小</p>
 
       
@@ -574,27 +574,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">session</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">缓存穿透</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">缓存雪崩</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">缓存击穿</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">悲观锁</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">乐观锁</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">session</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -614,15 +602,35 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">API</a>
+                <a href="javascript:void(0)" class="js-tag color4">set</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">redis入门</a>
+                <a href="javascript:void(0)" class="js-tag color1">sorted set</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">面向对象</a>
+                <a href="javascript:void(0)" class="js-tag color1">Feed流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">缓存穿透</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">缓存雪崩</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">缓存击穿</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Stream流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">方法引用</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -638,15 +646,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">set</a>
+                <a href="javascript:void(0)" class="js-tag color4">API</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">sorted set</a>
+                <a href="javascript:void(0)" class="js-tag color4">Map</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Feed流</a>
+                <a href="javascript:void(0)" class="js-tag color3">redis入门</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -655,6 +663,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Set</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">面向对象</a>
               </li>
             
             <div class="clearfix"></div>
