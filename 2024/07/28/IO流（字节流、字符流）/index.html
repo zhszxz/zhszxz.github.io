@@ -15,8 +15,8 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="1. IO概述1.1 什么是IO生活中，你肯定经历过这样的场景。当你编辑一个文本文件，忘记了ctrl+s ，可能文件就白白编辑了。当你电脑上插入一个U盘，可以把一个视频，拷贝到你的电脑硬盘里。那么数据都是在哪些设备上的呢？键盘、内存、硬盘、外接设备等等。 我们把这种数据的传输，可以看做是一种数据的流动，按照流动的方向，以内存为基准，分为输入input 和输出output ，即流向内存是输入流，流出">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/1_io.jpg">
-<meta property="og:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/2_copy.jpg">
+<meta property="og:image" content="http://example.com/2024/07/28/IO%E6%B5%81%EF%BC%88%E5%AD%97%E8%8A%82%E6%B5%81%E3%80%81%E5%AD%97%E7%AC%A6%E6%B5%81%EF%BC%89/1_io.jpg">
+<meta property="og:image" content="http://example.com/2024/07/28/IO%E6%B5%81%EF%BC%88%E5%AD%97%E8%8A%82%E6%B5%81%E3%80%81%E5%AD%97%E7%AC%A6%E6%B5%81%EF%BC%89/2_copy.jpg">
 <meta property="article:published_time" content="2024-07-28T12:50:56.000Z">
 <meta property="article:modified_time" content="2024-07-28T13:02:43.665Z">
 <meta property="article:author" content="John Doe">
@@ -25,7 +25,7 @@
 <meta property="article:tag" content="Reader">
 <meta property="article:tag" content="Writer">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/1_io.jpg">
+<meta name="twitter:image" content="http://example.com/2024/07/28/IO%E6%B5%81%EF%BC%88%E5%AD%97%E8%8A%82%E6%B5%81%E3%80%81%E5%AD%97%E7%AC%A6%E6%B5%81%EF%BC%89/1_io.jpg">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -196,7 +196,7 @@
 <li><strong>字节流</strong> ：以字节为单位，读写数据的流。</li>
 <li><strong>字符流</strong> ：以字符为单位，读写数据的流。</li>
 </ul>
-<h2 id="1-3-IO的流向说明图解"><a href="#1-3-IO的流向说明图解" class="headerlink" title="1.3 IO的流向说明图解"></a>1.3 IO的流向说明图解</h2><p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/1_io.jpg"></p>
+<h2 id="1-3-IO的流向说明图解"><a href="#1-3-IO的流向说明图解" class="headerlink" title="1.3 IO的流向说明图解"></a>1.3 IO的流向说明图解</h2><p><img src="/2024/07/28/IO%E6%B5%81%EF%BC%88%E5%AD%97%E8%8A%82%E6%B5%81%E3%80%81%E5%AD%97%E7%AC%A6%E6%B5%81%EF%BC%89/1_io.jpg"></p>
 <h2 id="1-4-顶级父类们"><a href="#1-4-顶级父类们" class="headerlink" title="1.4 顶级父类们"></a>1.4 顶级父类们</h2><table>
 <thead>
 <tr>
@@ -338,7 +338,7 @@
 <p>小贴士：</p>
 <p>使用数组读取，每次读取多个字节，减少了系统间的IO操作次数，从而提高了读写的效率，建议开发中使用。</p>
 </blockquote>
-<h2 id="2-6-字节流练习：图片复制"><a href="#2-6-字节流练习：图片复制" class="headerlink" title="2.6 字节流练习：图片复制"></a>2.6 字节流练习：图片复制</h2><h3 id="复制原理图解"><a href="#复制原理图解" class="headerlink" title="复制原理图解"></a>复制原理图解</h3><p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/2_copy.jpg"></p>
+<h2 id="2-6-字节流练习：图片复制"><a href="#2-6-字节流练习：图片复制" class="headerlink" title="2.6 字节流练习：图片复制"></a>2.6 字节流练习：图片复制</h2><h3 id="复制原理图解"><a href="#复制原理图解" class="headerlink" title="复制原理图解"></a>复制原理图解</h3><p><img src="/2024/07/28/IO%E6%B5%81%EF%BC%88%E5%AD%97%E8%8A%82%E6%B5%81%E3%80%81%E5%AD%97%E7%AC%A6%E6%B5%81%EF%BC%89/2_copy.jpg"></p>
 <h3 id="案例实现"><a href="#案例实现" class="headerlink" title="案例实现"></a>案例实现</h3><p>复制图片文件，代码使用演示：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Copy</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        <span class="comment">// 1.创建流对象</span></span><br><span class="line">        <span class="comment">// 1.1 指定数据源</span></span><br><span class="line">        <span class="type">FileInputStream</span> <span class="variable">fis</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileInputStream</span>(<span class="string">&quot;D:\\test.jpg&quot;</span>);</span><br><span class="line">        <span class="comment">// 1.2 指定目的地</span></span><br><span class="line">        <span class="type">FileOutputStream</span> <span class="variable">fos</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(<span class="string">&quot;test_copy.jpg&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2.读写数据</span></span><br><span class="line">        <span class="comment">// 2.1 定义数组</span></span><br><span class="line">        <span class="type">byte</span>[] b = <span class="keyword">new</span> <span class="title class_">byte</span>[<span class="number">1024</span>];</span><br><span class="line">        <span class="comment">// 2.2 定义长度</span></span><br><span class="line">        <span class="type">int</span> len;</span><br><span class="line">        <span class="comment">// 2.3 循环读取</span></span><br><span class="line">        <span class="keyword">while</span> ((len = fis.read(b))!=-<span class="number">1</span>) &#123;</span><br><span class="line">            <span class="comment">// 2.4 写出数据</span></span><br><span class="line">            fos.write(b, <span class="number">0</span> , len);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3.关闭资源</span></span><br><span class="line">        fos.close();</span><br><span class="line">        fis.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -746,7 +746,31 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">File</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">MarkDown</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">缓冲流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">转换流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">序列化流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">打印流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">压缩流</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -755,6 +779,34 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">乐观锁</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">InputStream</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">OutputStream</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Reader</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Writer</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">缓存穿透</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">缓存雪崩</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">缓存击穿</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -790,26 +842,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">缓存穿透</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">缓存雪崩</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">缓存击穿</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Stream流</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">方法引用</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">GEO</a>
               </li>
              
@@ -822,47 +854,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">API</a>
+                <a href="javascript:void(0)" class="js-tag color3">Stream流</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Map</a>
+                <a href="javascript:void(0)" class="js-tag color5">方法引用</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">redis入门</a>
+                <a href="javascript:void(0)" class="js-tag color4">xml</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">List</a>
+                <a href="javascript:void(0)" class="js-tag color3">反射</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Set</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">面向对象</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">File</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">InputStream</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">OutputStream</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Reader</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Writer</a>
+                <a href="javascript:void(0)" class="js-tag color5">动态代理</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -870,23 +878,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">缓冲流</a>
+                <a href="javascript:void(0)" class="js-tag color4">API</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">转换流</a>
+                <a href="javascript:void(0)" class="js-tag color5">类加载器</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">序列化流</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">打印流</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">压缩流</a>
+                <a href="javascript:void(0)" class="js-tag color2">双亲委派模型</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -906,19 +906,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">反射</a>
+                <a href="javascript:void(0)" class="js-tag color3">redis入门</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">动态代理</a>
+                <a href="javascript:void(0)" class="js-tag color5">List</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">类加载器</a>
+                <a href="javascript:void(0)" class="js-tag color4">Set</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">双亲委派模型</a>
+                <a href="javascript:void(0)" class="js-tag color4">Map</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">面向对象</a>
               </li>
             
             <div class="clearfix"></div>

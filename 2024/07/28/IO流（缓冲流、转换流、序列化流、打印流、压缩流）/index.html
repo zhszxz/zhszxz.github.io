@@ -15,9 +15,9 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="1. 缓冲流昨天学习了基本的一些流，作为IO流的入门，今天我们要见识一些更强大的流。比如能够高效读写的缓冲流，能够转换编码的转换流，能够持久化存储对象的序列化流等等。这些功能更为强大的流，都是在基本的流对象基础之上创建而来的，就像穿上铠甲的武士一样，相当于是对基本流对象的一种增强。 1.1 概述缓冲流,也叫高效流，是对4个基本的FileXxx 流的增强，所以也是4个流，按照数据类型分类：  字节缓">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/%E5%88%97%E5%8C%96%E6%B5%81%E3%80%81%E6%89%93%E5%8D%B0%E6%B5%81%E3%80%81%E5%8E%8B%E7%BC%A9%E6%B5%81%EF%BC%89/1_charset.jpg">
-<meta property="og:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/%E5%88%97%E5%8C%96%E6%B5%81%E3%80%81%E6%89%93%E5%8D%B0%E6%B5%81%E3%80%81%E5%8E%8B%E7%BC%A9%E6%B5%81%EF%BC%89/2_zhuanhuan.jpg">
-<meta property="og:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/%E5%88%97%E5%8C%96%E6%B5%81%E3%80%81%E6%89%93%E5%8D%B0%E6%B5%81%E3%80%81%E5%8E%8B%E7%BC%A9%E6%B5%81%EF%BC%89/3_xuliehua.jpg">
+<meta property="og:image" content="http://example.com/2024/07/28/IO%E6%B5%81%EF%BC%88%E7%BC%93%E5%86%B2%E6%B5%81%E3%80%81%E8%BD%AC%E6%8D%A2%E6%B5%81%E3%80%81%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E3%80%81%E6%89%93%E5%8D%B0%E6%B5%81%E3%80%81%E5%8E%8B%E7%BC%A9%E6%B5%81%EF%BC%89/1_charset.jpg">
+<meta property="og:image" content="http://example.com/2024/07/28/IO%E6%B5%81%EF%BC%88%E7%BC%93%E5%86%B2%E6%B5%81%E3%80%81%E8%BD%AC%E6%8D%A2%E6%B5%81%E3%80%81%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E3%80%81%E6%89%93%E5%8D%B0%E6%B5%81%E3%80%81%E5%8E%8B%E7%BC%A9%E6%B5%81%EF%BC%89/2_zhuanhuan.jpg">
+<meta property="og:image" content="http://example.com/2024/07/28/IO%E6%B5%81%EF%BC%88%E7%BC%93%E5%86%B2%E6%B5%81%E3%80%81%E8%BD%AC%E6%8D%A2%E6%B5%81%E3%80%81%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E3%80%81%E6%89%93%E5%8D%B0%E6%B5%81%E3%80%81%E5%8E%8B%E7%BC%A9%E6%B5%81%EF%BC%89/3_xuliehua.jpg">
 <meta property="article:published_time" content="2024-07-28T12:56:33.000Z">
 <meta property="article:modified_time" content="2024-07-28T13:03:02.339Z">
 <meta property="article:author" content="John Doe">
@@ -27,7 +27,7 @@
 <meta property="article:tag" content="打印流">
 <meta property="article:tag" content="压缩流">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/%E5%88%97%E5%8C%96%E6%B5%81%E3%80%81%E6%89%93%E5%8D%B0%E6%B5%81%E3%80%81%E5%8E%8B%E7%BC%A9%E6%B5%81%EF%BC%89/1_charset.jpg">
+<meta name="twitter:image" content="http://example.com/2024/07/28/IO%E6%B5%81%EF%BC%88%E7%BC%93%E5%86%B2%E6%B5%81%E3%80%81%E8%BD%AC%E6%8D%A2%E6%B5%81%E3%80%81%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E3%80%81%E6%89%93%E5%8D%B0%E6%B5%81%E3%80%81%E5%8E%8B%E7%BC%A9%E6%B5%81%EF%BC%89/1_charset.jpg">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -256,7 +256,7 @@
 <h3 id="字符集"><a href="#字符集" class="headerlink" title="字符集"></a>字符集</h3><ul>
 <li>**字符集 <code>Charset</code>**：也叫编码表。是一个系统支持的所有字符的集合，包括各国家文字、标点符号、图形符号、数字等。</li>
 </ul>
-<p>计算机要准确的存储和识别各种字符集符号，需要进行字符编码，一套字符集必然至少有一套字符编码。常见字符集有ASCII字符集、GBK字符集、Unicode字符集等。<img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/%E5%88%97%E5%8C%96%E6%B5%81%E3%80%81%E6%89%93%E5%8D%B0%E6%B5%81%E3%80%81%E5%8E%8B%E7%BC%A9%E6%B5%81%EF%BC%89/1_charset.jpg"></p>
+<p>计算机要准确的存储和识别各种字符集符号，需要进行字符编码，一套字符集必然至少有一套字符编码。常见字符集有ASCII字符集、GBK字符集、Unicode字符集等。<img src="/2024/07/28/IO%E6%B5%81%EF%BC%88%E7%BC%93%E5%86%B2%E6%B5%81%E3%80%81%E8%BD%AC%E6%8D%A2%E6%B5%81%E3%80%81%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E3%80%81%E6%89%93%E5%8D%B0%E6%B5%81%E3%80%81%E5%8E%8B%E7%BC%A9%E6%B5%81%EF%BC%89/1_charset.jpg"></p>
 <p>可见，当指定了<strong>编码</strong>，它所对应的<strong>字符集</strong>自然就指定了，所以<strong>编码</strong>才是我们最终要关心的。</p>
 <ul>
 <li><strong>ASCII字符集</strong> ：<ul>
@@ -313,7 +313,7 @@
 
 <h3 id="指定编码写出"><a href="#指定编码写出" class="headerlink" title="指定编码写出"></a>指定编码写出</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">OutputDemo</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">      	<span class="comment">// 定义文件路径</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">FileName</span> <span class="operator">=</span> <span class="string">&quot;E:\\out.txt&quot;</span>;</span><br><span class="line">      	<span class="comment">// 创建流对象,默认UTF8编码</span></span><br><span class="line">        <span class="type">OutputStreamWriter</span> <span class="variable">osw</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">OutputStreamWriter</span>(<span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(FileName));</span><br><span class="line">        <span class="comment">// 写出数据</span></span><br><span class="line">      	osw.write(<span class="string">&quot;你好&quot;</span>); <span class="comment">// 保存为6个字节</span></span><br><span class="line">        osw.close();</span><br><span class="line">      	</span><br><span class="line">		<span class="comment">// 定义文件路径</span></span><br><span class="line">		<span class="type">String</span> <span class="variable">FileName2</span> <span class="operator">=</span> <span class="string">&quot;E:\\out2.txt&quot;</span>;</span><br><span class="line">     	<span class="comment">// 创建流对象,指定GBK编码</span></span><br><span class="line">        <span class="type">OutputStreamWriter</span> <span class="variable">osw2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">OutputStreamWriter</span>(<span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(FileName2),<span class="string">&quot;GBK&quot;</span>);</span><br><span class="line">        <span class="comment">// 写出数据</span></span><br><span class="line">      	osw2.write(<span class="string">&quot;你好&quot;</span>);<span class="comment">// 保存为4个字节</span></span><br><span class="line">        osw2.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="转换流理解图解"><a href="#转换流理解图解" class="headerlink" title="转换流理解图解"></a>转换流理解图解</h3><p><strong>转换流是字节与字符间的桥梁！</strong><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/%E5%88%97%E5%8C%96%E6%B5%81%E3%80%81%E6%89%93%E5%8D%B0%E6%B5%81%E3%80%81%E5%8E%8B%E7%BC%A9%E6%B5%81%EF%BC%89/2_zhuanhuan.jpg"></p>
+<h3 id="转换流理解图解"><a href="#转换流理解图解" class="headerlink" title="转换流理解图解"></a>转换流理解图解</h3><p><strong>转换流是字节与字符间的桥梁！</strong><img src="/2024/07/28/IO%E6%B5%81%EF%BC%88%E7%BC%93%E5%86%B2%E6%B5%81%E3%80%81%E8%BD%AC%E6%8D%A2%E6%B5%81%E3%80%81%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E3%80%81%E6%89%93%E5%8D%B0%E6%B5%81%E3%80%81%E5%8E%8B%E7%BC%A9%E6%B5%81%EF%BC%89/2_zhuanhuan.jpg"></p>
 <h2 id="2-5-练习：转换文件编码"><a href="#2-5-练习：转换文件编码" class="headerlink" title="2.5 练习：转换文件编码"></a>2.5 练习：转换文件编码</h2><p>将GBK编码的文本文件，转换为UTF-8编码的文本文件。</p>
 <h3 id="案例分析-1"><a href="#案例分析-1" class="headerlink" title="案例分析"></a>案例分析</h3><ol>
 <li>指定GBK编码的转换流，读取文本文件。</li>
@@ -322,7 +322,7 @@
 <h3 id="案例实现-1"><a href="#案例实现-1" class="headerlink" title="案例实现"></a>案例实现</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TransDemo</span> &#123;</span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;      </span><br><span class="line">    	<span class="comment">// 1.定义文件路径</span></span><br><span class="line">     	<span class="type">String</span> <span class="variable">srcFile</span> <span class="operator">=</span> <span class="string">&quot;file_gbk.txt&quot;</span>;</span><br><span class="line">        <span class="type">String</span> <span class="variable">destFile</span> <span class="operator">=</span> <span class="string">&quot;file_utf8.txt&quot;</span>;</span><br><span class="line">		<span class="comment">// 2.创建流对象</span></span><br><span class="line">    	<span class="comment">// 2.1 转换输入流,指定GBK编码</span></span><br><span class="line">        <span class="type">InputStreamReader</span> <span class="variable">isr</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">InputStreamReader</span>(<span class="keyword">new</span> <span class="title class_">FileInputStream</span>(srcFile) , <span class="string">&quot;GBK&quot;</span>);</span><br><span class="line">    	<span class="comment">// 2.2 转换输出流,默认utf8编码</span></span><br><span class="line">        <span class="type">OutputStreamWriter</span> <span class="variable">osw</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">OutputStreamWriter</span>(<span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(destFile));</span><br><span class="line">		<span class="comment">// 3.读写数据</span></span><br><span class="line">    	<span class="comment">// 3.1 定义数组</span></span><br><span class="line">        <span class="type">char</span>[] cbuf = <span class="keyword">new</span> <span class="title class_">char</span>[<span class="number">1024</span>];</span><br><span class="line">    	<span class="comment">// 3.2 定义长度</span></span><br><span class="line">        <span class="type">int</span> len;</span><br><span class="line">    	<span class="comment">// 3.3 循环读取</span></span><br><span class="line">        <span class="keyword">while</span> ((len = isr.read(cbuf))!=-<span class="number">1</span>) &#123;</span><br><span class="line">            <span class="comment">// 循环写出</span></span><br><span class="line">          	osw.write(cbuf,<span class="number">0</span>,len);</span><br><span class="line">        &#125;</span><br><span class="line">    	<span class="comment">// 4.释放资源</span></span><br><span class="line">        osw.close();</span><br><span class="line">        isr.close();</span><br><span class="line">  	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h1 id="3-序列化"><a href="#3-序列化" class="headerlink" title="3. 序列化"></a>3. 序列化</h1><h2 id="3-1-概述"><a href="#3-1-概述" class="headerlink" title="3.1 概述"></a>3.1 概述</h2><p>Java 提供了一种对象<strong>序列化</strong>的机制。用一个字节序列可以表示一个对象，该字节序列包含该<code>对象的数据</code>、<code>对象的类型</code>和<code>对象中存储的属性</code>等信息。字节序列写出到文件之后，相当于文件中<strong>持久保存</strong>了一个对象的信息。 </p>
-<p>反之，该字节序列还可以从文件中读取回来，重构对象，对它进行<strong>反序列化</strong>。<code>对象的数据</code>、<code>对象的类型</code>和<code>对象中存储的数据</code>信息，都可以用来在内存中创建对象。看图理解序列化： <img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/%E5%88%97%E5%8C%96%E6%B5%81%E3%80%81%E6%89%93%E5%8D%B0%E6%B5%81%E3%80%81%E5%8E%8B%E7%BC%A9%E6%B5%81%EF%BC%89/3_xuliehua.jpg"></p>
+<p>反之，该字节序列还可以从文件中读取回来，重构对象，对它进行<strong>反序列化</strong>。<code>对象的数据</code>、<code>对象的类型</code>和<code>对象中存储的数据</code>信息，都可以用来在内存中创建对象。看图理解序列化： <img src="/2024/07/28/IO%E6%B5%81%EF%BC%88%E7%BC%93%E5%86%B2%E6%B5%81%E3%80%81%E8%BD%AC%E6%8D%A2%E6%B5%81%E3%80%81%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E3%80%81%E6%89%93%E5%8D%B0%E6%B5%81%E3%80%81%E5%8E%8B%E7%BC%A9%E6%B5%81%EF%BC%89/3_xuliehua.jpg"></p>
 <h2 id="3-2-ObjectOutputStream类"><a href="#3-2-ObjectOutputStream类" class="headerlink" title="3.2 ObjectOutputStream类"></a>3.2 ObjectOutputStream类</h2><p><code>java.io.ObjectOutputStream </code> 类，将Java对象的原始数据类型写出到文件,实现对象的持久存储。</p>
 <h3 id="构造方法-4"><a href="#构造方法-4" class="headerlink" title="构造方法"></a>构造方法</h3><ul>
 <li><code>public ObjectOutputStream(OutputStream out) </code>： 创建一个指定OutputStream的ObjectOutputStream。</li>
@@ -724,7 +724,31 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">File</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">MarkDown</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">缓冲流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">转换流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">序列化流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">打印流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">压缩流</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -733,6 +757,34 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">乐观锁</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">InputStream</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">OutputStream</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Reader</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Writer</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">缓存穿透</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">缓存雪崩</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">缓存击穿</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -768,26 +820,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">缓存穿透</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">缓存雪崩</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">缓存击穿</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Stream流</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">方法引用</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">GEO</a>
               </li>
              
@@ -800,47 +832,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">API</a>
+                <a href="javascript:void(0)" class="js-tag color3">Stream流</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Map</a>
+                <a href="javascript:void(0)" class="js-tag color5">方法引用</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">redis入门</a>
+                <a href="javascript:void(0)" class="js-tag color4">xml</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">List</a>
+                <a href="javascript:void(0)" class="js-tag color3">反射</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Set</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">面向对象</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">File</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">InputStream</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">OutputStream</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Reader</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Writer</a>
+                <a href="javascript:void(0)" class="js-tag color5">动态代理</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -848,23 +856,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">缓冲流</a>
+                <a href="javascript:void(0)" class="js-tag color4">API</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">转换流</a>
+                <a href="javascript:void(0)" class="js-tag color5">类加载器</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">序列化流</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">打印流</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">压缩流</a>
+                <a href="javascript:void(0)" class="js-tag color2">双亲委派模型</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -884,19 +884,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">反射</a>
+                <a href="javascript:void(0)" class="js-tag color3">redis入门</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">动态代理</a>
+                <a href="javascript:void(0)" class="js-tag color5">List</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">类加载器</a>
+                <a href="javascript:void(0)" class="js-tag color4">Set</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">双亲委派模型</a>
+                <a href="javascript:void(0)" class="js-tag color4">Map</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">面向对象</a>
               </li>
             
             <div class="clearfix"></div>

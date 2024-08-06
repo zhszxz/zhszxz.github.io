@@ -15,17 +15,17 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="1. 线程池1.1 线程状态介绍当线程被创建并启动以后，它既不是一启动就进入了执行状态，也不是一直处于执行状态。线程对象在不同的时期有不同的状态。那么Java中的线程存在哪几种状态呢？Java中的线程 状态被定义在了java.lang.Thread.State枚举类中，State枚举类的源码如下：">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/1941.png">
-<meta property="og:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/6516.png">
-<meta property="og:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/5857.png">
-<meta property="og:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/4280.png">
-<meta property="og:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/8256.png">
+<meta property="og:image" content="http://example.com/2024/07/28/%E7%BA%BF%E7%A8%8B%E6%B1%A0/1591163781941.png">
+<meta property="og:image" content="http://example.com/2024/07/28/%E7%BA%BF%E7%A8%8B%E6%B1%A0/1591165506516.png">
+<meta property="og:image" content="http://example.com/2024/07/28/%E7%BA%BF%E7%A8%8B%E6%B1%A0/1591168965857.png">
+<meta property="og:image" content="http://example.com/2024/07/28/%E7%BA%BF%E7%A8%8B%E6%B1%A0/1591169254280.png">
+<meta property="og:image" content="http://example.com/2024/07/28/%E7%BA%BF%E7%A8%8B%E6%B1%A0/1591169338256.png">
 <meta property="article:published_time" content="2024-07-28T13:05:46.000Z">
 <meta property="article:modified_time" content="2024-07-28T13:08:56.996Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="ThreadPool">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/1941.png">
+<meta name="twitter:image" content="http://example.com/2024/07/28/%E7%BA%BF%E7%A8%8B%E6%B1%A0/1591163781941.png">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -221,7 +221,7 @@
 </tr>
 </tbody></table>
 <p>各个状态的转换，如下图所示：</p>
-<p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/1941.png" alt="1591163781941"></p>
+<p><img src="/2024/07/28/%E7%BA%BF%E7%A8%8B%E6%B1%A0/1591163781941.png" alt="1591163781941"></p>
 <h3 id="1-2-线程池-基本原理"><a href="#1-2-线程池-基本原理" class="headerlink" title="1.2 线程池-基本原理"></a>1.2 线程池-基本原理</h3><p><strong>概述 :</strong> </p>
 <p>​	提到池，大家应该能想到的就是水池。水池就是一个容器，在该容器中存储了很多的水。那么什么是线程池呢？线程池也是可以看做成一个池子，在该池子中存储很多个线程。</p>
 <p>线程池存在的意义：</p>
@@ -256,7 +256,7 @@
 <p><strong>代码实现 :</strong> </p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.itheima.mythreadpool;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.ArrayBlockingQueue;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.Executors;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.ThreadPoolExecutor;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.TimeUnit;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyThreadPoolDemo3</span> &#123;</span><br><span class="line"><span class="comment">//    参数一：核心线程数量</span></span><br><span class="line"><span class="comment">//    参数二：最大线程数</span></span><br><span class="line"><span class="comment">//    参数三：空闲线程最大存活时间</span></span><br><span class="line"><span class="comment">//    参数四：时间单位</span></span><br><span class="line"><span class="comment">//    参数五：任务队列</span></span><br><span class="line"><span class="comment">//    参数六：创建线程工厂</span></span><br><span class="line"><span class="comment">//    参数七：任务的拒绝策略</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">ThreadPoolExecutor</span> <span class="variable">pool</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ThreadPoolExecutor</span>(<span class="number">2</span>,<span class="number">5</span>,<span class="number">2</span>,TimeUnit.SECONDS,<span class="keyword">new</span> <span class="title class_">ArrayBlockingQueue</span>&lt;&gt;(<span class="number">10</span>), Executors.defaultThreadFactory(),<span class="keyword">new</span> <span class="title class_">ThreadPoolExecutor</span>.AbortPolicy());</span><br><span class="line">        pool.submit(<span class="keyword">new</span> <span class="title class_">MyRunnable</span>());</span><br><span class="line">        pool.submit(<span class="keyword">new</span> <span class="title class_">MyRunnable</span>());</span><br><span class="line"></span><br><span class="line">        pool.shutdown();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="1-6-线程池-参数详解"><a href="#1-6-线程池-参数详解" class="headerlink" title="1.6 线程池-参数详解"></a>1.6 线程池-参数详解</h3><p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/6516.png" alt="1591165506516"></p>
+<h3 id="1-6-线程池-参数详解"><a href="#1-6-线程池-参数详解" class="headerlink" title="1.6 线程池-参数详解"></a>1.6 线程池-参数详解</h3><p><img src="/2024/07/28/%E7%BA%BF%E7%A8%8B%E6%B1%A0/1591165506516.png" alt="1591165506516"></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">ThreadPoolExecutor</span><span class="params">(<span class="type">int</span> corePoolSize,</span></span><br><span class="line"><span class="params">                              <span class="type">int</span> maximumPoolSize,</span></span><br><span class="line"><span class="params">                              <span class="type">long</span> keepAliveTime,</span></span><br><span class="line"><span class="params">                              TimeUnit unit,</span></span><br><span class="line"><span class="params">                              BlockingQueue&lt;Runnable&gt; workQueue,</span></span><br><span class="line"><span class="params">                              ThreadFactory threadFactory,</span></span><br><span class="line"><span class="params">                              RejectedExecutionHandler handler)</span></span><br><span class="line">    </span><br><span class="line">corePoolSize：   核心线程的最大值，不能小于<span class="number">0</span></span><br><span class="line">maximumPoolSize：最大线程数，不能小于等于<span class="number">0</span>，maximumPoolSize &gt;= corePoolSize</span><br><span class="line">keepAliveTime：  空闲线程最大存活时间,不能小于<span class="number">0</span></span><br><span class="line">unit：           时间单位</span><br><span class="line">workQueue：      任务队列，不能为<span class="literal">null</span></span><br><span class="line">threadFactory：  创建线程工厂,不能为<span class="literal">null</span>      </span><br><span class="line">handler：        任务的拒绝策略,不能为<span class="literal">null</span>  </span><br></pre></td></tr></table></figure>
 
 
@@ -487,7 +487,7 @@
 <h3 id="3-2-并发工具类-ConcurrentHashMap基本使用"><a href="#3-2-并发工具类-ConcurrentHashMap基本使用" class="headerlink" title="3.2 并发工具类-ConcurrentHashMap基本使用"></a>3.2 并发工具类-ConcurrentHashMap基本使用</h3><p>​	<strong>ConcurrentHashMap出现的原因 :</strong> 在集合类中HashMap是比较常用的集合对象，但是HashMap是线程不安全的(多线程环境下可能会存在问题)。为了保证数据的安全性我们可以使用Hashtable，但是Hashtable的效率低下。</p>
 <p>基于以上两个原因我们可以使用JDK1.5以后所提供的ConcurrentHashMap。</p>
 <p><strong>体系结构 :</strong> </p>
-<p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/5857.png" alt="1591168965857"></p>
+<p><img src="/2024/07/28/%E7%BA%BF%E7%A8%8B%E6%B1%A0/1591168965857.png" alt="1591168965857"></p>
 <p><strong>总结 :</strong> </p>
 <p>​	1 ，HashMap是线程不安全的。多线程环境下会有数据安全问题</p>
 <p>​	2 ，Hashtable是线程安全的，但是会将整张表锁起来，效率低下</p>
@@ -497,8 +497,8 @@
 
 
 
-<h3 id="3-3-并发工具类-ConcurrentHashMap1-7原理"><a href="#3-3-并发工具类-ConcurrentHashMap1-7原理" class="headerlink" title="3.3 并发工具类-ConcurrentHashMap1.7原理"></a>3.3 并发工具类-ConcurrentHashMap1.7原理</h3><p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/4280.png" alt="1591169254280"></p>
-<h3 id="3-4-并发工具类-ConcurrentHashMap1-8原理"><a href="#3-4-并发工具类-ConcurrentHashMap1-8原理" class="headerlink" title="3.4 并发工具类-ConcurrentHashMap1.8原理"></a>3.4 并发工具类-ConcurrentHashMap1.8原理</h3><p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/8256.png" alt="1591169338256"></p>
+<h3 id="3-3-并发工具类-ConcurrentHashMap1-7原理"><a href="#3-3-并发工具类-ConcurrentHashMap1-7原理" class="headerlink" title="3.3 并发工具类-ConcurrentHashMap1.7原理"></a>3.3 并发工具类-ConcurrentHashMap1.7原理</h3><p><img src="/2024/07/28/%E7%BA%BF%E7%A8%8B%E6%B1%A0/1591169254280.png" alt="1591169254280"></p>
+<h3 id="3-4-并发工具类-ConcurrentHashMap1-8原理"><a href="#3-4-并发工具类-ConcurrentHashMap1-8原理" class="headerlink" title="3.4 并发工具类-ConcurrentHashMap1.8原理"></a>3.4 并发工具类-ConcurrentHashMap1.8原理</h3><p><img src="/2024/07/28/%E7%BA%BF%E7%A8%8B%E6%B1%A0/1591169338256.png" alt="1591169338256"></p>
 <p><strong>总结 :</strong> </p>
 <p>​	1，如果使用空参构造创建ConcurrentHashMap对象，则什么事情都不做。     在第一次添加元素的时候创建哈希表</p>
 <p>​	2，计算当前元素应存入的索引。</p>
@@ -808,7 +808,31 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">File</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">MarkDown</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">缓冲流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">转换流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">序列化流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">打印流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">压缩流</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -817,6 +841,34 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">乐观锁</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">InputStream</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">OutputStream</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Reader</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Writer</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">缓存穿透</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">缓存雪崩</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">缓存击穿</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -852,26 +904,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">缓存穿透</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">缓存雪崩</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">缓存击穿</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Stream流</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">方法引用</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">GEO</a>
               </li>
              
@@ -884,47 +916,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">API</a>
+                <a href="javascript:void(0)" class="js-tag color3">Stream流</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Map</a>
+                <a href="javascript:void(0)" class="js-tag color5">方法引用</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">redis入门</a>
+                <a href="javascript:void(0)" class="js-tag color4">xml</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">List</a>
+                <a href="javascript:void(0)" class="js-tag color3">反射</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Set</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">面向对象</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">File</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">InputStream</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">OutputStream</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Reader</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Writer</a>
+                <a href="javascript:void(0)" class="js-tag color5">动态代理</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -932,23 +940,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">缓冲流</a>
+                <a href="javascript:void(0)" class="js-tag color4">API</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">转换流</a>
+                <a href="javascript:void(0)" class="js-tag color5">类加载器</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">序列化流</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">打印流</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">压缩流</a>
+                <a href="javascript:void(0)" class="js-tag color2">双亲委派模型</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -968,19 +968,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">反射</a>
+                <a href="javascript:void(0)" class="js-tag color3">redis入门</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">动态代理</a>
+                <a href="javascript:void(0)" class="js-tag color5">List</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">类加载器</a>
+                <a href="javascript:void(0)" class="js-tag color4">Set</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">双亲委派模型</a>
+                <a href="javascript:void(0)" class="js-tag color4">Map</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">面向对象</a>
               </li>
             
             <div class="clearfix"></div>

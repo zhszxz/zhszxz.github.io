@@ -15,16 +15,16 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="1. 异常1.1 异常概念异常，就是不正常的意思。在生活中:医生说,你的身体某个部位有异常,该部位和正常相比有点不同,该部位的功能将受影响.在程序中的意思就是：  异常 ：指的是程序在执行过程中，出现的非正常的情况，最终会导致JVM的非正常停止。  在Java等面向对象的编程语言中，异常本身是一个类，产生异常就是创建异常对象并抛出了一个异常对象。Java处理异常的方式是中断处理。  异常指的并不是">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/">
-<meta property="og:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/p">
-<meta property="og:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/">
-<meta property="og:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/">
+<meta property="og:image" content="http://example.com/2024/07/28/%E5%BC%82%E5%B8%B8/%E5%BC%82%E5%B8%B8%E4%BD%93%E7%B3%BB.png">
+<meta property="og:image" content="http://example.com/2024/07/28/%E5%BC%82%E5%B8%B8/%E7%AE%80%E5%8D%95%E7%9A%84%E5%BC%82%E5%B8%B8%E6%9F%A5%E7%9C%8B.bmp">
+<meta property="og:image" content="http://example.com/2024/07/28/%E5%BC%82%E5%B8%B8/%E5%BC%82%E5%B8%B8%E7%9A%84%E5%88%86%E7%B1%BB.png">
+<meta property="og:image" content="http://example.com/2024/07/28/%E5%BC%82%E5%B8%B8/%E5%BC%82%E5%B8%B8%E4%BA%A7%E7%94%9F%E8%BF%87%E7%A8%8B.png">
 <meta property="article:published_time" content="2024-07-28T12:13:46.000Z">
-<meta property="article:modified_time" content="2024-07-29T13:04:20.294Z">
+<meta property="article:modified_time" content="2024-07-29T13:10:45.984Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="异常">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/">
+<meta name="twitter:image" content="http://example.com/2024/07/28/%E5%BC%82%E5%B8%B8/%E5%BC%82%E5%B8%B8%E4%BD%93%E7%B3%BB.png">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -191,7 +191,7 @@
 <span id="more"></span>
 
 <h2 id="1-2-异常体系"><a href="#1-2-异常体系" class="headerlink" title="1.2 异常体系"></a>1.2 异常体系</h2><p>异常机制其实是帮助我们<strong>找到</strong>程序中的问题，异常的根类是<code>java.lang.Throwable</code>，其下有两个子类：<code>java.lang.Error</code>与<code>java.lang.Exception</code>，平常所说的异常指<code>java.lang.Exception</code>。</p>
-<p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/"></p>
+<p><img src="/2024/07/28/%E5%BC%82%E5%B8%B8/%E5%BC%82%E5%B8%B8%E4%BD%93%E7%B3%BB.png"></p>
 <p><strong>Throwable体系：</strong></p>
 <ul>
 <li><strong>Error</strong>:严重错误Error，无法通过处理的错误，只能事先避免，好比绝症。</li>
@@ -209,14 +209,14 @@
 </li>
 </ul>
 <p><em><strong>出现异常,不要紧张,把异常的简单类名,拷贝到API中去查。</strong></em></p>
-<p><img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/p"></p>
+<p><img src="/2024/07/28/%E5%BC%82%E5%B8%B8/%E7%AE%80%E5%8D%95%E7%9A%84%E5%BC%82%E5%B8%B8%E6%9F%A5%E7%9C%8B.bmp"></p>
 <h2 id="1-3-异常分类"><a href="#1-3-异常分类" class="headerlink" title="1.3 异常分类"></a>1.3 异常分类</h2><p>我们平常说的异常就是指Exception，因为这类异常一旦出现，我们就要对代码进行更正，修复程序。</p>
 <p><strong>异常(Exception)的分类</strong>:根据在编译时期还是运行时期去检查异常?</p>
 <ul>
 <li><strong>编译时期异常</strong>:checked异常。在编译时期,就会检查,如果没有处理异常,则编译失败。(如日期格式化异常)</li>
 <li><strong>运行时期异常</strong>:runtime异常。在运行时期,检查异常.在编译时期,运行异常不会编译器检测(不报错)。(如数学异常)</li>
 </ul>
-<p>​    <img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/"></p>
+<p>​    <img src="/2024/07/28/%E5%BC%82%E5%B8%B8/%E5%BC%82%E5%B8%B8%E7%9A%84%E5%88%86%E7%B1%BB.png"></p>
 <h2 id="1-4-异常的产生过程解析"><a href="#1-4-异常的产生过程解析" class="headerlink" title="1.4 异常的产生过程解析"></a>1.4 异常的产生过程解析</h2><p>先运行下面的程序，程序会产生一个数组索引越界异常ArrayIndexOfBoundsException。我们通过图解来解析下异常产生的过程。</p>
 <p> 工具类</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ArrayTools</span> &#123;</span><br><span class="line">    <span class="comment">// 对给定的数组通过给定的角标获取元素。</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">getElement</span><span class="params">(<span class="type">int</span>[] arr, <span class="type">int</span> index)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">element</span> <span class="operator">=</span> arr[index];</span><br><span class="line">        <span class="keyword">return</span> element;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -225,7 +225,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ExceptionDemo</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">int</span>[] arr = &#123; <span class="number">34</span>, <span class="number">12</span>, <span class="number">67</span> &#125;;</span><br><span class="line">        intnum = ArrayTools.getElement(arr, <span class="number">4</span>)</span><br><span class="line">        System.out.println(<span class="string">&quot;num=&quot;</span> + num);</span><br><span class="line">        System.out.println(<span class="string">&quot;over&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>上述程序执行过程图解：</p>
-<p> <img src="/2024/07/08/MarkDown%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/"></p>
+<p> <img src="/2024/07/28/%E5%BC%82%E5%B8%B8/%E5%BC%82%E5%B8%B8%E4%BA%A7%E7%94%9F%E8%BF%87%E7%A8%8B.png"></p>
 <h2 id="1-5-抛出异常throw"><a href="#1-5-抛出异常throw" class="headerlink" title="1.5 抛出异常throw"></a>1.5 抛出异常throw</h2><p>在编写程序时，我们必须要考虑程序出现问题的情况。比如，在定义方法时，方法需要接受参数。那么，当调用方法使用接受到的参数时，首先需要先对参数数据进行合法的判断，数据若不合法，就应该告诉调用者，传递合法的数据进来。这时需要使用抛出异常的方式来告诉调用者。</p>
 <p>在java中，提供了一个<strong>throw</strong>关键字，它用来抛出一个指定的异常对象。那么，抛出一个异常具体如何操作呢？</p>
 <ol>
@@ -595,7 +595,31 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">File</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">MarkDown</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">缓冲流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">转换流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">序列化流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">打印流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">压缩流</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -604,6 +628,34 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">乐观锁</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">InputStream</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">OutputStream</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Reader</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Writer</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">缓存穿透</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">缓存雪崩</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">缓存击穿</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -639,26 +691,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">缓存穿透</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">缓存雪崩</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">缓存击穿</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Stream流</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">方法引用</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">GEO</a>
               </li>
              
@@ -671,47 +703,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">API</a>
+                <a href="javascript:void(0)" class="js-tag color3">Stream流</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Map</a>
+                <a href="javascript:void(0)" class="js-tag color5">方法引用</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">redis入门</a>
+                <a href="javascript:void(0)" class="js-tag color4">xml</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">List</a>
+                <a href="javascript:void(0)" class="js-tag color3">反射</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Set</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">面向对象</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">File</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">InputStream</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">OutputStream</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Reader</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Writer</a>
+                <a href="javascript:void(0)" class="js-tag color5">动态代理</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -719,23 +727,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">缓冲流</a>
+                <a href="javascript:void(0)" class="js-tag color4">API</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">转换流</a>
+                <a href="javascript:void(0)" class="js-tag color5">类加载器</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">序列化流</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">打印流</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">压缩流</a>
+                <a href="javascript:void(0)" class="js-tag color2">双亲委派模型</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -755,19 +755,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">反射</a>
+                <a href="javascript:void(0)" class="js-tag color3">redis入门</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">动态代理</a>
+                <a href="javascript:void(0)" class="js-tag color5">List</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">类加载器</a>
+                <a href="javascript:void(0)" class="js-tag color4">Set</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">双亲委派模型</a>
+                <a href="javascript:void(0)" class="js-tag color4">Map</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">面向对象</a>
               </li>
             
             <div class="clearfix"></div>
