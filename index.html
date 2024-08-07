@@ -152,6 +152,463 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-交换机" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2024/08/06/%E4%BA%A4%E6%8D%A2%E6%9C%BA/">交换机</a>
+    </h1>
+  
+
+        
+        <a href="/2024/08/06/%E4%BA%A4%E6%8D%A2%E6%9C%BA/" class="archive-article-date">
+  	<time datetime="2024-08-06T14:40:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-08-06</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-交换机类型"><a href="#1-交换机类型" class="headerlink" title="1.交换机类型"></a>1.交换机类型</h2><p>在之前的两个测试案例中，都没有交换机，生产者直接发送消息到队列。而一旦引入交换机，消息发送的模式会有很大变化：<br><img src="https://cdn.nlark.com/yuque/0/2023/jpeg/27967491/1687264784359-de7cbc4a-ec60-461d-a6a4-3474ba52e0d0.jpeg"><br>可以看到，在订阅模型中，多了一个exchange角色，而且过程略有变化：</p>
+<ul>
+<li><strong>Publisher</strong>：生产者，不再发送消息到队列中，而是发给交换机</li>
+<li><strong>Exchange</strong>：交换机，一方面，接收生产者发送的消息。另一方面，知道如何处理消息，例如递交给某个特别队列、递交给所有队列、或是将消息丢弃。到底如何操作，取决于Exchange的类型。</li>
+<li><strong>Queue</strong>：消息队列也与以前一样，接收消息、缓存消息。不过队列一定要与交换机绑定。</li>
+<li><strong>Consumer</strong>：消费者，与以前一样，订阅队列，没有变化</li>
+</ul>
+<p><strong>Exchange（交换机）只负责转发消息，不具备存储消息的能力</strong>，因此如果没有任何队列与Exchange绑定，或者没有符合路由规则的队列，那么消息会丢失！</p>
+<p>交换机的类型有四种：</p>
+<ul>
+<li><strong>Fanout</strong>：广播，将消息交给所有绑定到交换机的队列。我们最早在控制台使用的正是Fanout交换机</li>
+<li><strong>Direct</strong>：订阅，基于RoutingKey（路由key）发送给订阅了消息的队列</li>
+<li><strong>Topic</strong>：通配符订阅，与Direct类似，只不过RoutingKey可以使用通配符</li>
+<li><strong>Headers</strong>：头匹配，基于MQ的消息头匹配，用的较少。</li>
+</ul>
+<p>课堂中，我们讲解前面的三种交换机模式。</p>
+<h2 id="2-Fanout交换机"><a href="#2-Fanout交换机" class="headerlink" title="2.Fanout交换机"></a>2.Fanout交换机</h2><p>Fanout，英文翻译是扇出，我觉得在MQ中叫广播更合适。<br>在广播模式下，消息发送流程是这样的：<br><img src="https://cdn.nlark.com/yuque/0/2023/png/27967491/1687181415478-ea4bb17b-48bf-4303-9242-27703efb39d8.png#averageHue=%23fbf6f6&clientId=u0fe93ba5-a0ba-4&from=paste&height=389&id=u41b3ec34&originHeight=482&originWidth=1598&originalType=binary&ratio=1.2395833730697632&rotation=0&showTitle=false&size=84491&status=done&style=none&taskId=u0db849d5-c734-41f3-87c2-d1fe9ec7575&title=&width=1289.1428158177346" alt="image.png"></p>
+<ul>
+<li>1）  可以有多个队列</li>
+<li>2）  每个队列都要绑定到Exchange（交换机）</li>
+<li>3）  生产者发送的消息，只能发送到交换机</li>
+<li>4）  交换机把消息发送给绑定过的所有队列</li>
+<li>5）  订阅队列的消费者都能拿到消息</li>
+</ul>
+<p>我们的计划是这样的：<br><img src="https://cdn.nlark.com/yuque/0/2023/png/27967491/1687182474076-2b479229-56a6-4163-93c4-a6a7187f3dbe.png#averageHue=%23f9f4f4&clientId=u0fe93ba5-a0ba-4&from=paste&height=248&id=ue59e0d8c&originHeight=308&originWidth=1314&originalType=binary&ratio=1.2395833730697632&rotation=0&showTitle=false&size=48827&status=done&style=none&taskId=u7d52896e-f59b-494d-bb25-b376c96414e&title=&width=1060.0335794646453" alt="image.png"></p>
+<ul>
+<li>创建一个名为<code> hmall.fanout</code>的交换机，类型是<code>Fanout</code></li>
+<li>创建两个队列<code>fanout.queue1</code>和<code>fanout.queue2</code>，绑定到交换机<code>hmall.fanout</code></li>
+</ul>
+<h3 id="2-1-声明队列和交换机"><a href="#2-1-声明队列和交换机" class="headerlink" title="2.1.声明队列和交换机"></a>2.1.声明队列和交换机</h3><p>在控制台创建队列<code>fanout.queue1</code>:<br><img src="https://cdn.nlark.com/yuque/0/2023/png/27967491/1689946886137-0bcb8641-faf1-4bea-b553-4b3bb96d224c.png#averageHue=%23f8f7f7&clientId=uf6195e90-5366-4&from=paste&height=380&id=ub435a220&originHeight=424&originWidth=1117&originalType=binary&ratio=1.115625023841858&rotation=0&showTitle=false&size=31069&status=done&style=none&taskId=uf02d05dd-b916-4d37-b2f4-dba06eff8a9&title=&width=1001.2324716000069" alt="image.png"><br>在创建一个队列<code>fanout.queue2</code>：<br><img src="https://cdn.nlark.com/yuque/0/2023/png/27967491/1689946949922-c4e442c3-568b-4164-a327-74e30aa9b9d0.png#averageHue=%23f8f6f5&clientId=uf6195e90-5366-4&from=paste&height=380&id=u452ddf31&originHeight=424&originWidth=916&originalType=binary&ratio=1.115625023841858&rotation=0&showTitle=false&size=29357&status=done&style=none&taskId=u657c70e9-017c-4339-98e0-2d408950262&title=&width=821.0644082234613" alt="image.png"><br>然后再创建一个交换机：<br><img src="https://cdn.nlark.com/yuque/0/2023/png/27967491/1689948003779-ea99bac6-6b84-48f3-9760-a719ba5f0c2e.png#averageHue=%23f8f6f6&clientId=uf6195e90-5366-4&from=paste&height=359&id=ud456637e&originHeight=401&originWidth=886&originalType=binary&ratio=1.115625023841858&rotation=0&showTitle=false&size=22862&status=done&style=none&taskId=uba3f2a17-5520-43f0-abd4-2eec22a7c3a&title=&width=794.1736524956187" alt="image.png"><br>然后绑定两个队列到交换机：<br><img src="https://cdn.nlark.com/yuque/0/2023/png/27967491/1689947064113-23e123ec-a601-4af4-a44f-70f7b4ef4063.png#averageHue=%23f8f7f7&clientId=uf6195e90-5366-4&from=paste&height=527&id=u2d63999d&originHeight=588&originWidth=978&originalType=binary&ratio=1.115625023841858&rotation=0&showTitle=false&size=34267&status=done&style=none&taskId=uc512438d-9693-44f1-9c35-33917ddbced&title=&width=876.6386367276695" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2023/png/27967491/1689947695506-5346b816-61c7-4bfe-a28d-db261b3598c5.png#averageHue=%23f8f7f7&clientId=uf6195e90-5366-4&from=paste&height=537&id=u17bcbe41&originHeight=599&originWidth=985&originalType=binary&ratio=1.115625023841858&rotation=0&showTitle=false&size=34532&status=done&style=none&taskId=u17b49cc4-004f-4e31-bd46-bdef7fe19a1&title=&width=882.9131463974993" alt="image.png"></p>
+<h3 id="2-2-消息发送"><a href="#2-2-消息发送" class="headerlink" title="2.2.消息发送"></a>2.2.消息发送</h3><p>在publisher服务的SpringAmqpTest类中添加测试方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testFanoutExchange</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">// 交换机名称</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">exchangeName</span> <span class="operator">=</span> <span class="string">&quot;hmall.fanout&quot;</span>;</span><br><span class="line">    <span class="comment">// 消息</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">message</span> <span class="operator">=</span> <span class="string">&quot;hello, everyone!&quot;</span>;</span><br><span class="line">    rabbitTemplate.convertAndSend(exchangeName, <span class="string">&quot;&quot;</span>, message);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-消息接收"><a href="#2-3-消息接收" class="headerlink" title="2.3.消息接收"></a>2.3.消息接收</h3><p>在consumer服务的SpringRabbitListener中添加两个方法，作为消费者：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RabbitListener(queues = &quot;fanout.queue1&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">listenFanoutQueue1</span><span class="params">(String msg)</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;消费者1接收到Fanout消息：【&quot;</span> + msg + <span class="string">&quot;】&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@RabbitListener(queues = &quot;fanout.queue2&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">listenFanoutQueue2</span><span class="params">(String msg)</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;消费者2接收到Fanout消息：【&quot;</span> + msg + <span class="string">&quot;】&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-4-总结"><a href="#2-4-总结" class="headerlink" title="2.4.总结"></a>2.4.总结</h3><p>交换机的作用是什么？</p>
+<ul>
+<li>接收publisher发送的消息</li>
+<li>将消息按照规则路由到与之绑定的队列</li>
+<li>不能缓存消息，路由失败，消息丢失</li>
+<li>FanoutExchange的会将消息路由到每个绑定的队列</li>
+</ul>
+<h2 id="3-Direct交换机"><a href="#3-Direct交换机" class="headerlink" title="3.Direct交换机"></a>3.Direct交换机</h2><p>在Fanout模式中，一条消息，会被所有订阅的队列都消费。但是，在某些场景下，我们希望不同的消息被不同的队列消费。这时就要用到Direct类型的Exchange。<br><img src="https://cdn.nlark.com/yuque/0/2023/png/27967491/1687182404437-027a5191-b037-4033-baab-6bafd998161d.png#averageHue=%23fbf5f5&clientId=u0fe93ba5-a0ba-4&from=paste&height=430&id=uf5b6a678&originHeight=533&originWidth=1686&originalType=binary&ratio=1.2395833730697632&rotation=0&showTitle=false&size=93278&status=done&style=none&taskId=ud6ffb209-4207-40a6-a7ab-4977cab3b5d&title=&width=1360.1344101806637" alt="image.png"><br>在Direct模型下：</p>
+<ul>
+<li>队列与交换机的绑定，不能是任意绑定了，而是要指定一个<code>RoutingKey</code>（路由key）</li>
+<li>消息的发送方在 向 Exchange发送消息时，也必须指定消息的 <code>RoutingKey</code>。</li>
+<li>Exchange不再把消息交给每一个绑定的队列，而是根据消息的<code>Routing Key</code>进行判断，只有队列的<code>Routingkey</code>与消息的 <code>Routing key</code>完全一致，才会接收到消息</li>
+</ul>
+<p><strong>案例需求如图</strong>：<br><img src="https://cdn.nlark.com/yuque/0/2023/png/27967491/1687182519270-885589ec-7f4a-492a-ab78-cddf109121cc.png#averageHue=%23fbf6f6&clientId=u0fe93ba5-a0ba-4&from=paste&height=430&id=u4dde4f59&originHeight=533&originWidth=1362&originalType=binary&ratio=1.2395833730697632&rotation=0&showTitle=false&size=64401&status=done&style=none&taskId=u62c673b4-a71b-40bf-af49-a8c1a4df0de&title=&width=1098.7562672989704" alt="image.png"></p>
+<ol>
+<li>声明一个名为<code>hmall.direct</code>的交换机</li>
+<li>声明队列<code>direct.queue1</code>，绑定<code>hmall.direct</code>，<code>bindingKey</code>为<code>blud</code>和<code>red</code></li>
+<li>声明队列<code>direct.queue2</code>，绑定<code>hmall.direct</code>，<code>bindingKey</code>为<code>yellow</code>和<code>red</code></li>
+<li>在<code>consumer</code>服务中，编写两个消费者方法，分别监听direct.queue1和direct.queue2 </li>
+<li>在publisher中编写测试方法，向<code>hmall.direct</code>发送消息</li>
+</ol>
+<h3 id="3-1-声明队列和交换机"><a href="#3-1-声明队列和交换机" class="headerlink" title="3.1.声明队列和交换机"></a>3.1.声明队列和交换机</h3><p>首先在控制台声明两个队列<code>direct.queue1</code>和<code>direct.queue2</code>，这里不再展示过程：<br><img src="https://cdn.nlark.com/yuque/0/2023/png/27967491/1689947864231-5ace5d74-fdac-4a2a-9f92-180df06fe4ad.png#averageHue=%23f2f0ef&clientId=uf6195e90-5366-4&from=paste&height=403&id=u292b8851&originHeight=450&originWidth=1157&originalType=binary&ratio=1.115625023841858&rotation=0&showTitle=false&size=56948&status=done&style=none&taskId=uf110e543-1005-4b1a-b23e-d8529df3c0c&title=&width=1037.0868125704637" alt="image.png"><br>然后声明一个direct类型的交换机，命名为<code>hmall.direct</code>:<br><img src="https://cdn.nlark.com/yuque/0/2023/png/27967491/1689948033525-e6ea1134-c2ef-4b80-86b2-b364c1301335.png#averageHue=%23f8f6f6&clientId=uf6195e90-5366-4&from=paste&height=367&id=u0964090b&originHeight=409&originWidth=871&originalType=binary&ratio=1.115625023841858&rotation=0&showTitle=false&size=22938&status=done&style=none&taskId=u127085fa-3898-488f-afef-52a7cbf9e2d&title=&width=780.7282746316974" alt="image.png"><br>然后使用<code>red</code>和<code>blue</code>作为key，绑定<code>direct.queue1</code>到<code>hmall.direct</code>：<br><img src="https://cdn.nlark.com/yuque/0/2023/png/27967491/1689948151280-bed1019d-7d60-455b-95b8-754e266edf50.png#averageHue=%23f8f6f6&clientId=uf6195e90-5366-4&from=paste&height=523&id=uf5aa7079&originHeight=583&originWidth=942&originalType=binary&ratio=1.115625023841858&rotation=0&showTitle=false&size=35339&status=done&style=none&taskId=u31d3c033-0a9a-446f-9ebc-a90405ba47d&title=&width=844.3697298542583" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2023/png/27967491/1689948181033-6b1e6556-0110-4ed8-a2cb-8bc2dd388903.png#averageHue=%23f8f6f6&clientId=uf6195e90-5366-4&from=paste&height=522&id=u4e6a2147&originHeight=582&originWidth=874&originalType=binary&ratio=1.115625023841858&rotation=0&showTitle=false&size=34608&status=done&style=none&taskId=u274e41ea-73f2-4da5-bc23-fed091d234d&title=&width=783.4173502044816" alt="image.png"></p>
+<p>同理，使用<code>red</code>和<code>yellow</code>作为key，绑定<code>direct.queue2</code>到<code>hmall.direct</code>，步骤略，最终结果：<br><img src="https://cdn.nlark.com/yuque/0/2023/png/27967491/1689948243879-c97a0e6f-807a-4bc3-ad53-032c378008f3.png#averageHue=%23f4f4f3&clientId=uf6195e90-5366-4&from=paste&height=515&id=ufb0f0d5d&originHeight=575&originWidth=834&originalType=binary&ratio=1.115625023841858&rotation=0&showTitle=false&size=37957&status=done&style=none&taskId=uaae894e6-bc07-4e01-bf1f-53561ffd05a&title=&width=747.5630092340249" alt="image.png"></p>
+<h3 id="3-2-消息接收"><a href="#3-2-消息接收" class="headerlink" title="3.2.消息接收"></a>3.2.消息接收</h3><p>在consumer服务的SpringRabbitListener中添加方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RabbitListener(queues = &quot;direct.queue1&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">listenDirectQueue1</span><span class="params">(String msg)</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;消费者1接收到direct.queue1的消息：【&quot;</span> + msg + <span class="string">&quot;】&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@RabbitListener(queues = &quot;direct.queue2&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">listenDirectQueue2</span><span class="params">(String msg)</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;消费者2接收到direct.queue2的消息：【&quot;</span> + msg + <span class="string">&quot;】&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="3-3-消息发送"><a href="#3-3-消息发送" class="headerlink" title="3.3.消息发送"></a>3.3.消息发送</h3><p>在publisher服务的SpringAmqpTest类中添加测试方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testSendDirectExchange</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">// 交换机名称</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">exchangeName</span> <span class="operator">=</span> <span class="string">&quot;hmall.direct&quot;</span>;</span><br><span class="line">    <span class="comment">// 消息</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">message</span> <span class="operator">=</span> <span class="string">&quot;红色警报！日本乱排核废水，导致海洋生物变异，惊现哥斯拉！&quot;</span>;</span><br><span class="line">    <span class="comment">// 发送消息</span></span><br><span class="line">    rabbitTemplate.convertAndSend(exchangeName, <span class="string">&quot;red&quot;</span>, message);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由于使用的red这个key，所以两个消费者都收到了消息：<br><img src="https://cdn.nlark.com/yuque/0/2023/png/27967491/1687182883516-906024ce-6ade-4dcd-8b4e-2b0cfc1bd03a.png#averageHue=%23f7f9f3&clientId=u0fe93ba5-a0ba-4&from=paste&height=136&id=uc0e2efee&originHeight=168&originWidth=1410&originalType=binary&ratio=1.2395833730697632&rotation=0&showTitle=false&size=85796&status=done&style=none&taskId=u4ab862c3-bb61-4a97-87d8-ac463218ab2&title=&width=1137.4789551332954" alt="image.png"><br>我们再切换为blue这个key：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testSendDirectExchange</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">// 交换机名称</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">exchangeName</span> <span class="operator">=</span> <span class="string">&quot;hmall.direct&quot;</span>;</span><br><span class="line">    <span class="comment">// 消息</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">message</span> <span class="operator">=</span> <span class="string">&quot;最新报道，哥斯拉是居民自治巨型气球，虚惊一场！&quot;</span>;</span><br><span class="line">    <span class="comment">// 发送消息</span></span><br><span class="line">    rabbitTemplate.convertAndSend(exchangeName, <span class="string">&quot;blue&quot;</span>, message);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>你会发现，只有消费者1收到了消息：<br><img src="https://cdn.nlark.com/yuque/0/2023/png/27967491/1687182898732-afba28a8-c57e-4ccb-a330-9e3315879b31.png#averageHue=%23f7f9f4&clientId=u0fe93ba5-a0ba-4&from=paste&height=175&id=udcac360f&originHeight=217&originWidth=1237&originalType=binary&ratio=1.2395833730697632&rotation=0&showTitle=false&size=99781&status=done&style=none&taskId=ua85a2eca-9806-4a15-997d-ee3c73528b6&title=&width=997.9159343970824" alt="image.png"></p>
+<h3 id="3-4-总结"><a href="#3-4-总结" class="headerlink" title="3.4.总结"></a>3.4.总结</h3><p>描述下Direct交换机与Fanout交换机的差异？</p>
+<ul>
+<li>Fanout交换机将消息路由给每一个与之绑定的队列</li>
+<li>Direct交换机根据RoutingKey判断路由给哪个队列</li>
+<li>如果多个队列具有相同的RoutingKey，则与Fanout功能类似</li>
+</ul>
+<h2 id="4-Topic交换机"><a href="#4-Topic交换机" class="headerlink" title="4.Topic交换机"></a>4.Topic交换机</h2><h3 id="4-1-说明"><a href="#4-1-说明" class="headerlink" title="4.1.说明"></a>4.1.说明</h3><p><code>Topic</code>类型的<code>Exchange</code>与<code>Direct</code>相比，都是可以根据<code>RoutingKey</code>把消息路由到不同的队列。<br>只不过<code>Topic</code>类型<code>Exchange</code>可以让队列在绑定<code>BindingKey</code> 的时候使用通配符！</p>
+<p><code>BindingKey</code> 一般都是有一个或多个单词组成，多个单词之间以<code>.</code>分割，例如： <code>item.insert</code></p>
+<p>通配符规则：</p>
+<ul>
+<li><code>#</code>：匹配一个或多个词</li>
+<li><code>*</code>：匹配不多不少恰好1个词</li>
+</ul>
+<p>举例：</p>
+<ul>
+<li><code>item.#</code>：能够匹配<code>item.spu.insert</code> 或者 <code>item.spu</code></li>
+<li><code>item.*</code>：只能匹配<code>item.spu</code></li>
+</ul>
+<p>图示：<br><img src="https://cdn.nlark.com/yuque/0/2023/png/27967491/1687183148068-ad50ba76-0024-460b-9b24-3cf7a0fe172e.png#averageHue=%23f9f4f3&clientId=u0fe93ba5-a0ba-4&from=paste&height=305&id=u74a65bd0&originHeight=378&originWidth=1337&originalType=binary&ratio=1.2395833730697632&rotation=0&showTitle=false&size=57084&status=done&style=none&taskId=u90f6bfb4-4f10-4ebe-8edb-70856565f27&title=&width=1078.5882007185928" alt="image.png"><br>假如此时publisher发送的消息使用的<code>RoutingKey</code>共有四种：</p>
+<ul>
+<li><code>china.news </code>代表有中国的新闻消息；</li>
+<li><code>china.weather</code> 代表中国的天气消息；</li>
+<li><code>japan.news</code> 则代表日本新闻</li>
+<li><code>japan.weather</code> 代表日本的天气消息；</li>
+</ul>
+<p>解释：</p>
+<ul>
+<li><code>topic.queue1</code>：绑定的是<code>china.#</code> ，凡是以 <code>china.</code>开头的<code>routing key</code> 都会被匹配到，包括：<ul>
+<li><code>china.news</code></li>
+<li><code>china.weather</code></li>
+</ul>
+</li>
+<li><code>topic.queue2</code>：绑定的是<code>#.news</code> ，凡是以 <code>.news</code>结尾的 <code>routing key</code> 都会被匹配。包括:<ul>
+<li><code>china.news</code></li>
+<li><code>japan.news</code></li>
+</ul>
+</li>
+</ul>
+<p>接下来，我们就按照上图所示，来演示一下Topic交换机的用法。<br>首先，在控制台按照图示例子创建队列、交换机，并利用通配符绑定队列和交换机。此处步骤略。最终结果如下：<br><img src="https://cdn.nlark.com/yuque/0/2023/png/27967491/1689948475987-05bab459-43b6-47ad-bbfc-faf9f50d776e.png#averageHue=%23f5f5f4&clientId=uf6195e90-5366-4&from=paste&height=419&id=u3d545ee6&originHeight=468&originWidth=879&originalType=binary&ratio=1.115625023841858&rotation=0&showTitle=false&size=32637&status=done&style=none&taskId=u1bf5deb0-6b33-48e6-9d9d-d273a1be805&title=&width=787.8991428257888" alt="image.png"></p>
+<h3 id="4-2-消息发送"><a href="#4-2-消息发送" class="headerlink" title="4.2.消息发送"></a>4.2.消息发送</h3><p>在publisher服务的SpringAmqpTest类中添加测试方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * topicExchange</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testSendTopicExchange</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">// 交换机名称</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">exchangeName</span> <span class="operator">=</span> <span class="string">&quot;hmall.topic&quot;</span>;</span><br><span class="line">    <span class="comment">// 消息</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">message</span> <span class="operator">=</span> <span class="string">&quot;喜报！孙悟空大战哥斯拉，胜!&quot;</span>;</span><br><span class="line">    <span class="comment">// 发送消息</span></span><br><span class="line">    rabbitTemplate.convertAndSend(exchangeName, <span class="string">&quot;china.news&quot;</span>, message);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-3-消息接收"><a href="#4-3-消息接收" class="headerlink" title="4.3.消息接收"></a>4.3.消息接收</h3><p>在consumer服务的SpringRabbitListener中添加方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RabbitListener(queues = &quot;topic.queue1&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">listenTopicQueue1</span><span class="params">(String msg)</span>&#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;消费者1接收到topic.queue1的消息：【&quot;</span> + msg + <span class="string">&quot;】&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@RabbitListener(queues = &quot;topic.queue2&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">listenTopicQueue2</span><span class="params">(String msg)</span>&#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;消费者2接收到topic.queue2的消息：【&quot;</span> + msg + <span class="string">&quot;】&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-4-总结"><a href="#4-4-总结" class="headerlink" title="4.4.总结"></a>4.4.总结</h3><p>描述下Direct交换机与Topic交换机的差异？</p>
+<ul>
+<li>Topic交换机接收的消息RoutingKey必须是多个单词，以 <code>**.**</code> 分割</li>
+<li>Topic交换机与队列绑定时的bindingKey可以指定通配符</li>
+<li><code>#</code>：代表0个或多个词</li>
+<li><code>*</code>：代表1个词</li>
+</ul>
+<h2 id="5-声明队列和交换机"><a href="#5-声明队列和交换机" class="headerlink" title="5.声明队列和交换机"></a>5.声明队列和交换机</h2><p>在之前我们都是基于RabbitMQ控制台来创建队列、交换机。但是在实际开发时，队列和交换机是程序员定义的，将来项目上线，又要交给运维去创建。那么程序员就需要把程序中运行的所有队列和交换机都写下来，交给运维。在这个过程中是很容易出现错误的。<br>因此推荐的做法是由程序启动时检查队列和交换机是否存在，如果不存在自动创建。</p>
+<h3 id="5-1-基本API"><a href="#5-1-基本API" class="headerlink" title="5.1.基本API"></a>5.1.基本API</h3><p>SpringAMQP提供了一个Queue类，用来创建队列：<br><img src="https://cdn.nlark.com/yuque/0/2023/png/27967491/1689945200636-5f4a823f-6f36-4088-9b67-7b9b3ae48079.png#averageHue=%23f9fcf7&clientId=uf6195e90-5366-4&from=paste&height=241&id=u2a7bba30&originHeight=269&originWidth=930&originalType=binary&ratio=1.115625023841858&rotation=0&showTitle=false&size=42392&status=done&style=none&taskId=uf1b5d62e-4e09-4ba8-a011-f8345dac005&title=&width=833.6134275631213" alt="image.png"></p>
+<p>SpringAMQP还提供了一个Exchange接口，来表示所有不同类型的交换机：<br><img src="https://cdn.nlark.com/yuque/0/2023/png/27967491/1687181804385-c500bc13-9f81-4071-ad8a-598fa5f57d97.png#averageHue=%23f8f8f7&clientId=u0fe93ba5-a0ba-4&from=paste&height=379&id=Qewqz&originHeight=470&originWidth=1469&originalType=binary&ratio=1.2395833730697632&rotation=0&showTitle=false&size=23466&status=done&style=none&taskId=u357861af-c5aa-43c4-aafd-97dadaf8714&title=&width=1185.0755922629864" alt="image.png"><br>我们可以自己创建队列和交换机，不过SpringAMQP还提供了ExchangeBuilder来简化这个过程：<br><img src="https://cdn.nlark.com/yuque/0/2023/png/27967491/1689945421476-fe44bf9a-d6eb-4f51-af02-374359c8e70b.png#averageHue=%23f8f7f5&clientId=uf6195e90-5366-4&from=paste&height=278&id=uae4334fe&originHeight=310&originWidth=781&originalType=binary&ratio=1.115625023841858&rotation=0&showTitle=false&size=34426&status=done&style=none&taskId=uc1b7bc5b-68b9-4ce9-afe5-9eb733e8f4b&title=&width=700.0560074481696" alt="image.png"><br>而在绑定队列和交换机时，则需要使用BindingBuilder来创建Binding对象：<br><img src="https://cdn.nlark.com/yuque/0/2023/png/27967491/1689945503733-13d2179c-f586-4de5-b18c-d3b5749f1f96.png#averageHue=%23dcab6a&clientId=uf6195e90-5366-4&from=paste&height=145&id=u91096ccd&originHeight=162&originWidth=659&originalType=binary&ratio=1.115625023841858&rotation=0&showTitle=false&size=16128&status=done&style=none&taskId=u1da153f0-6e86-45b2-900b-8f83e489358&title=&width=590.7002674882763" alt="image.png"></p>
+<h3 id="5-2-fanout示例"><a href="#5-2-fanout示例" class="headerlink" title="5.2.fanout示例"></a>5.2.fanout示例</h3><p>在consumer中创建一个类，声明队列和交换机：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.itheima.consumer.config;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.amqp.core.Binding;</span><br><span class="line"><span class="keyword">import</span> org.springframework.amqp.core.BindingBuilder;</span><br><span class="line"><span class="keyword">import</span> org.springframework.amqp.core.FanoutExchange;</span><br><span class="line"><span class="keyword">import</span> org.springframework.amqp.core.Queue;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Bean;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Configuration;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FanoutConfig</span> &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 声明交换机</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> Fanout类型交换机</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> FanoutExchange <span class="title function_">fanoutExchange</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">FanoutExchange</span>(<span class="string">&quot;hmall.fanout&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 第1个队列</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> Queue <span class="title function_">fanoutQueue1</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Queue</span>(<span class="string">&quot;fanout.queue1&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 绑定队列和交换机</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> Binding <span class="title function_">bindingQueue1</span><span class="params">(Queue fanoutQueue1, FanoutExchange fanoutExchange)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> BindingBuilder.bind(fanoutQueue1).to(fanoutExchange);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 第2个队列</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> Queue <span class="title function_">fanoutQueue2</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Queue</span>(<span class="string">&quot;fanout.queue2&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 绑定队列和交换机</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> Binding <span class="title function_">bindingQueue2</span><span class="params">(Queue fanoutQueue2, FanoutExchange fanoutExchange)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> BindingBuilder.bind(fanoutQueue2).to(fanoutExchange);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-3-direct示例"><a href="#5-3-direct示例" class="headerlink" title="5.3.direct示例"></a>5.3.direct示例</h3><p>direct模式由于要绑定多个KEY，会非常麻烦，每一个Key都要编写一个binding：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.itheima.consumer.config;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.amqp.core.*;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Bean;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Configuration;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DirectConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 声明交换机</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> Direct类型交换机</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> DirectExchange <span class="title function_">directExchange</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> ExchangeBuilder.directExchange(<span class="string">&quot;hmall.direct&quot;</span>).build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 第1个队列</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> Queue <span class="title function_">directQueue1</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Queue</span>(<span class="string">&quot;direct.queue1&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 绑定队列和交换机</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> Binding <span class="title function_">bindingQueue1WithRed</span><span class="params">(Queue directQueue1, DirectExchange directExchange)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> BindingBuilder.bind(directQueue1).to(directExchange).with(<span class="string">&quot;red&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 绑定队列和交换机</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> Binding <span class="title function_">bindingQueue1WithBlue</span><span class="params">(Queue directQueue1, DirectExchange directExchange)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> BindingBuilder.bind(directQueue1).to(directExchange).with(<span class="string">&quot;blue&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 第2个队列</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> Queue <span class="title function_">directQueue2</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Queue</span>(<span class="string">&quot;direct.queue2&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 绑定队列和交换机</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> Binding <span class="title function_">bindingQueue2WithRed</span><span class="params">(Queue directQueue2, DirectExchange directExchange)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> BindingBuilder.bind(directQueue2).to(directExchange).with(<span class="string">&quot;red&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 绑定队列和交换机</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> Binding <span class="title function_">bindingQueue2WithYellow</span><span class="params">(Queue directQueue2, DirectExchange directExchange)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> BindingBuilder.bind(directQueue2).to(directExchange).with(<span class="string">&quot;yellow&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="5-4-基于注解声明"><a href="#5-4-基于注解声明" class="headerlink" title="5.4.基于注解声明"></a>5.4.基于注解声明</h3><p>基于@Bean的方式声明队列和交换机比较麻烦，Spring还提供了基于注解方式来声明。</p>
+<p>例如，我们同样声明Direct模式的交换机和队列：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RabbitListener(bindings = @QueueBinding(</span></span><br><span class="line"><span class="meta">    value = @Queue(name = &quot;direct.queue1&quot;),</span></span><br><span class="line"><span class="meta">    exchange = @Exchange(name = &quot;hmall.direct&quot;, type = ExchangeTypes.DIRECT),</span></span><br><span class="line"><span class="meta">    key = &#123;&quot;red&quot;, &quot;blue&quot;&#125;</span></span><br><span class="line"><span class="meta">))</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">listenDirectQueue1</span><span class="params">(String msg)</span>&#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;消费者1接收到direct.queue1的消息：【&quot;</span> + msg + <span class="string">&quot;】&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@RabbitListener(bindings = @QueueBinding(</span></span><br><span class="line"><span class="meta">    value = @Queue(name = &quot;direct.queue2&quot;),</span></span><br><span class="line"><span class="meta">    exchange = @Exchange(name = &quot;hmall.direct&quot;, type = ExchangeTypes.DIRECT),</span></span><br><span class="line"><span class="meta">    key = &#123;&quot;red&quot;, &quot;yellow&quot;&#125;</span></span><br><span class="line"><span class="meta">))</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">listenDirectQueue2</span><span class="params">(String msg)</span>&#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;消费者2接收到direct.queue2的消息：【&quot;</span> + msg + <span class="string">&quot;】&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>是不是简单多了。<br>再试试Topic模式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RabbitListener(bindings = @QueueBinding(</span></span><br><span class="line"><span class="meta">    value = @Queue(name = &quot;topic.queue1&quot;),</span></span><br><span class="line"><span class="meta">    exchange = @Exchange(name = &quot;hmall.topic&quot;, type = ExchangeTypes.TOPIC),</span></span><br><span class="line"><span class="meta">    key = &quot;china.#&quot;</span></span><br><span class="line"><span class="meta">))</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">listenTopicQueue1</span><span class="params">(String msg)</span>&#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;消费者1接收到topic.queue1的消息：【&quot;</span> + msg + <span class="string">&quot;】&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@RabbitListener(bindings = @QueueBinding(</span></span><br><span class="line"><span class="meta">    value = @Queue(name = &quot;topic.queue2&quot;),</span></span><br><span class="line"><span class="meta">    exchange = @Exchange(name = &quot;hmall.topic&quot;, type = ExchangeTypes.TOPIC),</span></span><br><span class="line"><span class="meta">    key = &quot;#.news&quot;</span></span><br><span class="line"><span class="meta">))</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">listenTopicQueue2</span><span class="params">(String msg)</span>&#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;消费者2接收到topic.queue2的消息：【&quot;</span> + msg + <span class="string">&quot;】&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="6-消息转换器"><a href="#6-消息转换器" class="headerlink" title="6.消息转换器"></a>6.消息转换器</h2><p>Spring的消息发送代码接收的消息体是一个Object：<br><img src="https://cdn.nlark.com/yuque/0/2023/png/27967491/1687183652317-82b0319b-03aa-46ed-afbc-373e7a6fa0f1.png#averageHue=%23f6f9f5&clientId=u0fe93ba5-a0ba-4&from=paste&height=394&id=u2c63fbb1&originHeight=488&originWidth=1448&originalType=binary&ratio=1.2395833730697632&rotation=0&showTitle=false&size=122291&status=done&style=none&taskId=u0da81780-720e-4c27-9c2f-c24d7dc0123&title=&width=1168.1344163354693" alt="image.png"><br>而在数据传输时，它会把你发送的消息序列化为字节发送给MQ，接收消息的时候，还会把字节反序列化为Java对象。<br>只不过，默认情况下Spring采用的序列化方式是JDK序列化。众所周知，JDK序列化存在下列问题：</p>
+<ul>
+<li>数据体积过大</li>
+<li>有安全漏洞</li>
+<li>可读性差</li>
+</ul>
+<p>我们来测试一下。</p>
+<h3 id="6-1-测试默认转换器"><a href="#6-1-测试默认转换器" class="headerlink" title="6.1.测试默认转换器"></a>6.1.测试默认转换器</h3><p>1）创建测试队列<br>首先，我们在consumer服务中声明一个新的配置类：<br><img src="https://cdn.nlark.com/yuque/0/2023/png/27967491/1687183868403-242aa812-a07f-4748-8863-dc5d1e161dc1.png#averageHue=%23f9fbf8&clientId=u0fe93ba5-a0ba-4&from=paste&height=351&id=u77b665f4&originHeight=435&originWidth=1053&originalType=binary&ratio=1.2395833730697632&rotation=0&showTitle=false&size=48481&status=done&style=none&taskId=uf6d36991-ec76-497c-93d3-3e96d9d6590&title=&width=849.4789643655035" alt="image.png"><br>利用@Bean的方式创建一个队列，具体代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.itheima.consumer.config;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.amqp.core.Queue;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Bean;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Configuration;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MessageConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> Queue <span class="title function_">objectQueue</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Queue</span>(<span class="string">&quot;object.queue&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意，这里我们先不要给这个队列添加消费者，我们要查看消息体的格式。</p>
+<p>重启consumer服务以后，该队列就会被自动创建出来了：<br><img src="https://cdn.nlark.com/yuque/0/2023/png/27967491/1687184033157-c4c8e59e-a2b3-4b2b-9c20-ca3c597e556c.png#averageHue=%23f3f0ef&clientId=u0fe93ba5-a0ba-4&from=paste&height=456&id=u7c3fdb16&originHeight=565&originWidth=1196&originalType=binary&ratio=1.2395833730697632&rotation=0&showTitle=false&size=72445&status=done&style=none&taskId=u03cddb0f-41a3-483d-83c7-d53a5ecb269&title=&width=964.8403052052632" alt="image.png"></p>
+<p>2）发送消息<br>我们在publisher模块的SpringAmqpTest中新增一个消息发送的代码，发送一个Map对象：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testSendMap</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">    <span class="comment">// 准备消息</span></span><br><span class="line">    Map&lt;String,Object&gt; msg = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">    msg.put(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;柳岩&quot;</span>);</span><br><span class="line">    msg.put(<span class="string">&quot;age&quot;</span>, <span class="number">21</span>);</span><br><span class="line">    <span class="comment">// 发送消息</span></span><br><span class="line">    rabbitTemplate.convertAndSend(<span class="string">&quot;object.queue&quot;</span>, msg);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>发送消息后查看控制台：<br><img src="https://cdn.nlark.com/yuque/0/2023/png/27967491/1687184206574-69117533-5b4e-4172-b254-23130023f711.png#averageHue=%23f9f7f7&clientId=u0fe93ba5-a0ba-4&from=paste&height=528&id=u038b25c3&originHeight=654&originWidth=1244&originalType=binary&ratio=1.2395833730697632&rotation=0&showTitle=false&size=46749&status=done&style=none&taskId=u8bea522c-fa98-48f1-bd84-1acfb50fff8&title=&width=1003.5629930395882" alt="image.png"><br>可以看到消息格式非常不友好。</p>
+<h3 id="6-2-配置JSON转换器"><a href="#6-2-配置JSON转换器" class="headerlink" title="6.2.配置JSON转换器"></a>6.2.配置JSON转换器</h3><p>显然，JDK序列化方式并不合适。我们希望消息体的体积更小、可读性更高，因此可以使用JSON方式来做序列化和反序列化。</p>
+<p>在<code>publisher</code>和<code>consumer</code>两个服务中都引入依赖：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.fasterxml.jackson.dataformat<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jackson-dataformat-xml<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.9.10<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>注意，如果项目中引入了<code>spring-boot-starter-web</code>依赖，则无需再次引入<code>Jackson</code>依赖。</p>
+<p>配置消息转换器，在<code>publisher</code>和<code>consumer</code>两个服务的启动类中添加一个Bean即可：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> MessageConverter <span class="title function_">messageConverter</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="comment">// 1.定义消息转换器</span></span><br><span class="line">    <span class="type">Jackson2JsonMessageConverter</span> <span class="variable">jackson2JsonMessageConverter</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Jackson2JsonMessageConverter</span>();</span><br><span class="line">    <span class="comment">// 2.配置自动创建消息id，用于识别不同消息，也可以在业务中基于ID判断是否是重复消息</span></span><br><span class="line">    jackson2JsonMessageConverter.setCreateMessageIds(<span class="literal">true</span>);</span><br><span class="line">    <span class="keyword">return</span> jackson2JsonMessageConverter;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>消息转换器中添加的messageId可以便于我们将来做幂等性判断。</p>
+<p>此时，我们到MQ控制台<strong>删除</strong><code>object.queue</code>中的旧的消息。然后再次执行刚才的消息发送的代码，到MQ的控制台查看消息结构：<br><img src="https://cdn.nlark.com/yuque/0/2023/png/27967491/1687245684217-8b401cc5-29e6-4d08-9a9b-4fbe0dffd486.png#averageHue=%23f9f7f7&clientId=ucdd993b6-34bc-4&from=paste&height=432&id=ue5acc96b&originHeight=535&originWidth=990&originalType=binary&ratio=1.2395833730697632&rotation=0&showTitle=false&size=41352&status=done&style=none&taskId=u158a691b-c3b3-4103-993a-3064dc7139b&title=&width=798.655436582952" alt="image.png"></p>
+<h3 id="6-3-消费者接收Object"><a href="#6-3-消费者接收Object" class="headerlink" title="6.3.消费者接收Object"></a>6.3.消费者接收Object</h3><p>我们在consumer服务中定义一个新的消费者，publisher是用Map发送，那么消费者也一定要用Map接收，格式如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RabbitListener(queues = &quot;object.queue&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">listenSimpleQueueMessage</span><span class="params">(Map&lt;String, Object&gt; msg)</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;消费者接收到object.queue消息：【&quot;</span> + msg + <span class="string">&quot;】&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Fanout</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Direct</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Topic</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/RabbitMQ//" class="article-tag-list-link color4">RabbitMQ</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2024/08/06/%E4%BA%A4%E6%8D%A2%E6%9C%BA/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-SpringAMQP入门" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2024/08/06/SpringAMQP%E5%85%A5%E9%97%A8/">SpringAMQP入门</a>
+    </h1>
+  
+
+        
+        <a href="/2024/08/06/SpringAMQP%E5%85%A5%E9%97%A8/" class="archive-article-date">
+  	<time datetime="2024-08-06T14:32:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-08-06</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="1-SpringAMQP"><a href="#1-SpringAMQP" class="headerlink" title="1.SpringAMQP"></a>1.SpringAMQP</h1><p>将来我们开发业务功能的时候，肯定不会在控制台收发消息，而是应该基于编程的方式。由于<code>RabbitMQ</code>采用了AMQP协议，因此它具备跨语言的特性。任何语言只要遵循AMQP协议收发消息，都可以与<code>RabbitMQ</code>交互。并且<code>RabbitMQ</code>官方也提供了各种不同语言的客户端。<br>但是，RabbitMQ官方提供的Java客户端编码相对复杂，一般生产环境下我们更多会结合Spring来使用。而Spring的官方刚好基于RabbitMQ提供了这样一套消息收发的模板工具：SpringAMQP。并且还基于SpringBoot对其实现了自动装配，使用起来非常方便。</p>
+<p>SpringAmqp的官方地址：<br><a target="_blank" rel="noopener" href="https://spring.io/projects/spring-amqp">Spring AMQP</a><br>SpringAMQP提供了三个功能：</p>
+<ul>
+<li><p>自动声明队列、交换机及其绑定关系</p>
+</li>
+<li><p>基于注解的监听器模式，异步接收消息</p>
+</li>
+<li><p>封装了RabbitTemplate工具，用于发送消息</p>
+        
+          <a class="article-more-a" href="/2024/08/06/SpringAMQP%E5%85%A5%E9%97%A8/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">SpringAMQP</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">WorkQueues</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/RabbitMQ//" class="article-tag-list-link color4">RabbitMQ</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2024/08/06/SpringAMQP%E5%85%A5%E9%97%A8/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-初识RabbitMQ" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2024/08/06/%E5%88%9D%E8%AF%86RabbitMQ/">初识RabbitMQ</a>
+    </h1>
+  
+
+        
+        <a href="/2024/08/06/%E5%88%9D%E8%AF%86RabbitMQ/" class="archive-article-date">
+  	<time datetime="2024-08-06T13:52:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-08-06</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>微服务一旦拆分，必然涉及到服务之间的相互调用，目前我们服务之间调用采用的都是基于OpenFeign的调用。这种调用中，调用者发起请求后需要<strong>等待</strong>服务提供者执行业务返回结果后，才能继续执行后面的业务。也就是说调用者在调用过程中处于阻塞状态，因此我们成这种调用方式为<strong>同步调用</strong>，也可以叫<strong>同步通讯</strong>。但在很多场景下，我们可能需要采用<strong>异步通讯</strong>的方式，为什么呢？</p>
+<p>我们先来看看什么是同步通讯和异步通讯。如图：<br><img src="https://cdn.nlark.com/yuque/0/2023/png/27967491/1686983181054-f2bcce85-1fce-412f-95cd-1ae829f8406f.png#averageHue=%239dce6d&clientId=uf9c47826-2719-4&from=paste&height=613&id=u84c8f02e&originHeight=760&originWidth=1695&originalType=binary&ratio=1.2395833730697632&rotation=0&showTitle=false&size=112976&status=done&style=none&taskId=u779e4d59-c9a8-4b1f-a49f-59c578c4ccd&title=&width=1367.3949141495996" alt="image.png"></p>
+        
+          <a class="article-more-a" href="/2024/08/06/%E5%88%9D%E8%AF%86RabbitMQ/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">消息队列</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">同步调用</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">异步调用</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">交换机</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/RabbitMQ//" class="article-tag-list-link color4">RabbitMQ</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2024/08/06/%E5%88%9D%E8%AF%86RabbitMQ/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-xml" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -818,296 +1275,6 @@
 
 
   
-    <article id="post-IO流（字节流、字符流）" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/07/28/IO%E6%B5%81%EF%BC%88%E5%AD%97%E8%8A%82%E6%B5%81%E3%80%81%E5%AD%97%E7%AC%A6%E6%B5%81%EF%BC%89/">IO流（字节流、字符流）</a>
-    </h1>
-  
-
-        
-        <a href="/2024/07/28/IO%E6%B5%81%EF%BC%88%E5%AD%97%E8%8A%82%E6%B5%81%E3%80%81%E5%AD%97%E7%AC%A6%E6%B5%81%EF%BC%89/" class="archive-article-date">
-  	<time datetime="2024-07-28T12:50:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-07-28</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="1-IO概述"><a href="#1-IO概述" class="headerlink" title="1. IO概述"></a>1. IO概述</h1><h2 id="1-1-什么是IO"><a href="#1-1-什么是IO" class="headerlink" title="1.1 什么是IO"></a>1.1 什么是IO</h2><p>生活中，你肯定经历过这样的场景。当你编辑一个文本文件，忘记了<code>ctrl+s</code> ，可能文件就白白编辑了。当你电脑上插入一个U盘，可以把一个视频，拷贝到你的电脑硬盘里。那么数据都是在哪些设备上的呢？键盘、内存、硬盘、外接设备等等。</p>
-<p>我们把这种数据的传输，可以看做是一种数据的流动，按照流动的方向，以内存为基准，分为<code>输入input</code> 和<code>输出output</code> ，即流向内存是输入流，流出内存的输出流。</p>
-<p>Java中I&#x2F;O操作主要是指使用<code>java.io</code>包下的内容，进行输入、输出操作。<strong>输入</strong>也叫做<strong>读取</strong>数据，<strong>输出</strong>也叫做作<strong>写出</strong>数据。</p>
-        
-          <a class="article-more-a" href="/2024/07/28/IO%E6%B5%81%EF%BC%88%E5%AD%97%E8%8A%82%E6%B5%81%E3%80%81%E5%AD%97%E7%AC%A6%E6%B5%81%EF%BC%89/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">InputStream</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">OutputStream</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Reader</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Writer</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java基础//" class="article-tag-list-link color2">Java基础</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/07/28/IO%E6%B5%81%EF%BC%88%E5%AD%97%E8%8A%82%E6%B5%81%E3%80%81%E5%AD%97%E7%AC%A6%E6%B5%81%EF%BC%89/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-File" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/07/28/File/">File</a>
-    </h1>
-  
-
-        
-        <a href="/2024/07/28/File/" class="archive-article-date">
-  	<time datetime="2024-07-28T12:17:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-07-28</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="1-File类"><a href="#1-File类" class="headerlink" title="1. File类"></a>1. File类</h1><h2 id="1-1-概述"><a href="#1-1-概述" class="headerlink" title="1.1 概述"></a>1.1 概述</h2><p><code>java.io.File</code> 类是文件和目录路径名的抽象表示，主要用于文件和目录的创建、查找和删除等操作。</p>
-<h2 id="1-2-构造方法"><a href="#1-2-构造方法" class="headerlink" title="1.2 构造方法"></a>1.2 构造方法</h2><ul>
-<li><p><code>public File(String pathname) </code> ：通过将给定的<strong>路径名字符串</strong>转换为抽象路径名来创建新的 File实例。  </p>
-</li>
-<li><p><code>public File(String parent, String child) </code> ：从<strong>父路径名字符串和子路径名字符串</strong>创建新的 File实例。</p>
-</li>
-<li><p><code>public File(File parent, String child)</code> ：从<strong>父抽象路径名和子路径名字符串</strong>创建新的 File实例。  </p>
-</li>
-<li><p>构造举例，代码如下：</p>
-        
-          <a class="article-more-a" href="/2024/07/28/File/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">File</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java基础//" class="article-tag-list-link color2">Java基础</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/07/28/File/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-异常" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/07/28/%E5%BC%82%E5%B8%B8/">异常</a>
-    </h1>
-  
-
-        
-        <a href="/2024/07/28/%E5%BC%82%E5%B8%B8/" class="archive-article-date">
-  	<time datetime="2024-07-28T12:13:46.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-07-28</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="1-异常"><a href="#1-异常" class="headerlink" title="1. 异常"></a>1. 异常</h1><h2 id="1-1-异常概念"><a href="#1-1-异常概念" class="headerlink" title="1.1 异常概念"></a>1.1 异常概念</h2><p>异常，就是不正常的意思。在生活中:医生说,你的身体某个部位有异常,该部位和正常相比有点不同,该部位的功能将受影响.在程序中的意思就是：</p>
-<ul>
-<li><strong>异常</strong> ：指的是程序在执行过程中，出现的非正常的情况，最终会导致JVM的非正常停止。</li>
-</ul>
-<p>在Java等面向对象的编程语言中，异常本身是一个类，产生异常就是创建异常对象并抛出了一个异常对象。Java处理异常的方式是中断处理。</p>
-<blockquote>
-<p>异常指的并不是语法错误,语法错了,编译不通过,不会产生字节码文件,根本不能运行.</p>
-</blockquote>
-        
-          <a class="article-more-a" href="/2024/07/28/%E5%BC%82%E5%B8%B8/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">异常</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java基础//" class="article-tag-list-link color2">Java基础</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/07/28/%E5%BC%82%E5%B8%B8/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1382,6 +1549,38 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">面向对象</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">SpringAMQP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">WorkQueues</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Fanout</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Direct</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Topic</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">同步调用</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">异步调用</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">交换机</a>
               </li>
             
             <div class="clearfix"></div>
