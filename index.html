@@ -172,7 +172,9 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="1-交换机类型"><a href="#1-交换机类型" class="headerlink" title="1.交换机类型"></a>1.交换机类型</h2><p>在之前的两个测试案例中，都没有交换机，生产者直接发送消息到队列。而一旦引入交换机，消息发送的模式会有很大变化：<br><img src="https://cdn.nlark.com/yuque/0/2023/jpeg/27967491/1687264784359-de7cbc4a-ec60-461d-a6a4-3474ba52e0d0.jpeg"></p>
+        <meta name="referrer" content="no-referrer"/>
+
+<h2 id="1-交换机类型"><a href="#1-交换机类型" class="headerlink" title="1.交换机类型"></a>1.交换机类型</h2><p>在之前的两个测试案例中，都没有交换机，生产者直接发送消息到队列。而一旦引入交换机，消息发送的模式会有很大变化：<br><img src="https://cdn.nlark.com/yuque/0/2023/jpeg/27967491/1687264784359-de7cbc4a-ec60-461d-a6a4-3474ba52e0d0.jpeg"></p>
         
           <a class="article-more-a" href="/2024/08/06/%E4%BA%A4%E6%8D%A2%E6%9C%BA/#more">more >></a>
         
@@ -267,7 +269,9 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="1-SpringAMQP"><a href="#1-SpringAMQP" class="headerlink" title="1.SpringAMQP"></a>1.SpringAMQP</h1><p>将来我们开发业务功能的时候，肯定不会在控制台收发消息，而是应该基于编程的方式。由于<code>RabbitMQ</code>采用了AMQP协议，因此它具备跨语言的特性。任何语言只要遵循AMQP协议收发消息，都可以与<code>RabbitMQ</code>交互。并且<code>RabbitMQ</code>官方也提供了各种不同语言的客户端。<br>但是，RabbitMQ官方提供的Java客户端编码相对复杂，一般生产环境下我们更多会结合Spring来使用。而Spring的官方刚好基于RabbitMQ提供了这样一套消息收发的模板工具：SpringAMQP。并且还基于SpringBoot对其实现了自动装配，使用起来非常方便。</p>
+        <meta name="referrer" content="no-referrer"/>
+
+<h1 id="1-SpringAMQP"><a href="#1-SpringAMQP" class="headerlink" title="1.SpringAMQP"></a>1.SpringAMQP</h1><p>将来我们开发业务功能的时候，肯定不会在控制台收发消息，而是应该基于编程的方式。由于<code>RabbitMQ</code>采用了AMQP协议，因此它具备跨语言的特性。任何语言只要遵循AMQP协议收发消息，都可以与<code>RabbitMQ</code>交互。并且<code>RabbitMQ</code>官方也提供了各种不同语言的客户端。<br>但是，RabbitMQ官方提供的Java客户端编码相对复杂，一般生产环境下我们更多会结合Spring来使用。而Spring的官方刚好基于RabbitMQ提供了这样一套消息收发的模板工具：SpringAMQP。并且还基于SpringBoot对其实现了自动装配，使用起来非常方便。</p>
 <p>SpringAmqp的官方地址：<br><a target="_blank" rel="noopener" href="https://spring.io/projects/spring-amqp">Spring AMQP</a><br>SpringAMQP提供了三个功能：</p>
 <ul>
 <li><p>自动声明队列、交换机及其绑定关系</p>
@@ -365,7 +369,9 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>微服务一旦拆分，必然涉及到服务之间的相互调用，目前我们服务之间调用采用的都是基于OpenFeign的调用。这种调用中，调用者发起请求后需要<strong>等待</strong>服务提供者执行业务返回结果后，才能继续执行后面的业务。也就是说调用者在调用过程中处于阻塞状态，因此我们成这种调用方式为<strong>同步调用</strong>，也可以叫<strong>同步通讯</strong>。但在很多场景下，我们可能需要采用<strong>异步通讯</strong>的方式，为什么呢？</p>
+        <meta name="referrer" content="no-referrer"/>
+
+<p>微服务一旦拆分，必然涉及到服务之间的相互调用，目前我们服务之间调用采用的都是基于OpenFeign的调用。这种调用中，调用者发起请求后需要<strong>等待</strong>服务提供者执行业务返回结果后，才能继续执行后面的业务。也就是说调用者在调用过程中处于阻塞状态，因此我们成这种调用方式为<strong>同步调用</strong>，也可以叫<strong>同步通讯</strong>。但在很多场景下，我们可能需要采用<strong>异步通讯</strong>的方式，为什么呢？</p>
 <p>我们先来看看什么是同步通讯和异步通讯。如图：<br><img src="https://cdn.nlark.com/yuque/0/2023/png/27967491/1686983181054-f2bcce85-1fce-412f-95cd-1ae829f8406f.png#averageHue=%239dce6d&clientId=uf9c47826-2719-4&from=paste&height=613&id=u84c8f02e&originHeight=760&originWidth=1695&originalType=binary&ratio=1.2395833730697632&rotation=0&showTitle=false&size=112976&status=done&style=none&taskId=u779e4d59-c9a8-4b1f-a49f-59c578c4ccd&title=&width=1367.3949141495996" alt="image.png"></p>
         
           <a class="article-more-a" href="/2024/08/06/%E5%88%9D%E8%AF%86RabbitMQ/#more">more >></a>

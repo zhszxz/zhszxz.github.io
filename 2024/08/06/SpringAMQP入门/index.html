@@ -8,12 +8,12 @@
   <link rel="dns-prefetch" href="http://example.com">
   <title>SpringAMQP入门 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1.SpringAMQP将来我们开发业务功能的时候，肯定不会在控制台收发消息，而是应该基于编程的方式。由于RabbitMQ采用了AMQP协议，因此它具备跨语言的特性。任何语言只要遵循AMQP协议收发消息，都可以与RabbitMQ交互。并且RabbitMQ官方也提供了各种不同语言的客户端。但是，RabbitMQ官方提供的Java客户端编码相对复杂，一般生产环境下我们更多会结合Spring来使用。而S">
+  <meta name="description" content="1.SpringAMQP将来我们开发业务功能的时候，肯定不会在控制台收发消息，而是应该基于编程的方式。由于RabbitMQ采用了AMQP协议，因此它具备跨语言的特性。任何语言只要遵循AMQP协议收发消息，都可以与RabbitMQ交互。并且RabbitMQ官方也提供了各种不同语言的客户端。但是，RabbitMQ官方提供的Java客户端编码相对复杂，一般生产环境下我们更多会结合Spring来使用。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SpringAMQP入门">
 <meta property="og:url" content="http://example.com/2024/08/06/SpringAMQP%E5%85%A5%E9%97%A8/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="1.SpringAMQP将来我们开发业务功能的时候，肯定不会在控制台收发消息，而是应该基于编程的方式。由于RabbitMQ采用了AMQP协议，因此它具备跨语言的特性。任何语言只要遵循AMQP协议收发消息，都可以与RabbitMQ交互。并且RabbitMQ官方也提供了各种不同语言的客户端。但是，RabbitMQ官方提供的Java客户端编码相对复杂，一般生产环境下我们更多会结合Spring来使用。而S">
+<meta property="og:description" content="1.SpringAMQP将来我们开发业务功能的时候，肯定不会在控制台收发消息，而是应该基于编程的方式。由于RabbitMQ采用了AMQP协议，因此它具备跨语言的特性。任何语言只要遵循AMQP协议收发消息，都可以与RabbitMQ交互。并且RabbitMQ官方也提供了各种不同语言的客户端。但是，RabbitMQ官方提供的Java客户端编码相对复杂，一般生产环境下我们更多会结合Spring来使用。">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/png/27967491/1689939402093-e0e0a3d4-84ed-40b5-bedc-0884fcb4ae64.png#averageHue=%23f9f9f8&clientId=uf6195e90-5366-4&from=paste&height=169&id=u1dad7a09&originHeight=188&originWidth=752&originalType=binary&ratio=1.115625023841858&rotation=0&showTitle=false&size=15464&status=done&style=none&taskId=u1668b30b-b977-4fc3-89ba-6c2e029e374&title=&width=674.0616102445883">
 <meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/png/27967491/1687156248415-3fe7ae5b-302b-4a35-a520-b2419e616862.png#averageHue=%23f9fbf8&clientId=ud5bd9b1f-141b-4&from=paste&height=253&id=u53ed8a5e&originHeight=314&originWidth=664&originalType=binary&ratio=1.2395833730697632&rotation=0&showTitle=false&size=30988&status=done&style=none&taskId=u5ab16e5b-840d-4511-b27b-07f42a60f4c&title=&width=535.6638483748284">
@@ -25,7 +25,7 @@
 <meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/jpeg/27967491/1687261956699-4b3c9999-ee86-4dda-a795-1ea5f4f9eef3.jpeg">
 <meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/png/27967491/1687179664222-3e226588-63e3-4275-a9e2-cce5c8e93d4c.png#averageHue=%23f5f2f1&clientId=u0fe93ba5-a0ba-4&from=paste&height=321&id=u96998af1&originHeight=398&originWidth=1180&originalType=binary&ratio=1.2395833730697632&rotation=0&showTitle=false&size=41883&status=done&style=none&taskId=ubcca08d6-3211-435a-ae7c-10fcf4daafe&title=&width=951.9327425938216">
 <meta property="article:published_time" content="2024-08-06T14:32:20.000Z">
-<meta property="article:modified_time" content="2024-08-06T14:44:56.332Z">
+<meta property="article:modified_time" content="2024-08-07T09:01:12.322Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="SpringAMQP">
 <meta property="article:tag" content="WorkQueues">
@@ -186,7 +186,9 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="1-SpringAMQP"><a href="#1-SpringAMQP" class="headerlink" title="1.SpringAMQP"></a>1.SpringAMQP</h1><p>将来我们开发业务功能的时候，肯定不会在控制台收发消息，而是应该基于编程的方式。由于<code>RabbitMQ</code>采用了AMQP协议，因此它具备跨语言的特性。任何语言只要遵循AMQP协议收发消息，都可以与<code>RabbitMQ</code>交互。并且<code>RabbitMQ</code>官方也提供了各种不同语言的客户端。<br>但是，RabbitMQ官方提供的Java客户端编码相对复杂，一般生产环境下我们更多会结合Spring来使用。而Spring的官方刚好基于RabbitMQ提供了这样一套消息收发的模板工具：SpringAMQP。并且还基于SpringBoot对其实现了自动装配，使用起来非常方便。</p>
+        <meta name="referrer" content="no-referrer"/>
+
+<h1 id="1-SpringAMQP"><a href="#1-SpringAMQP" class="headerlink" title="1.SpringAMQP"></a>1.SpringAMQP</h1><p>将来我们开发业务功能的时候，肯定不会在控制台收发消息，而是应该基于编程的方式。由于<code>RabbitMQ</code>采用了AMQP协议，因此它具备跨语言的特性。任何语言只要遵循AMQP协议收发消息，都可以与<code>RabbitMQ</code>交互。并且<code>RabbitMQ</code>官方也提供了各种不同语言的客户端。<br>但是，RabbitMQ官方提供的Java客户端编码相对复杂，一般生产环境下我们更多会结合Spring来使用。而Spring的官方刚好基于RabbitMQ提供了这样一套消息收发的模板工具：SpringAMQP。并且还基于SpringBoot对其实现了自动装配，使用起来非常方便。</p>
 <p>SpringAmqp的官方地址：<br><a target="_blank" rel="noopener" href="https://spring.io/projects/spring-amqp">Spring AMQP</a><br>SpringAMQP提供了三个功能：</p>
 <ul>
 <li><p>自动声明队列、交换机及其绑定关系</p>
