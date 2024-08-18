@@ -152,6 +152,120 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Redis高级-最佳实践" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2024/08/18/Redis%E9%AB%98%E7%BA%A7-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/">Redis高级-最佳实践</a>
+    </h1>
+  
+
+        
+        <a href="/2024/08/18/Redis%E9%AB%98%E7%BA%A7-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/" class="archive-article-date">
+  	<time datetime="2024-08-18T14:31:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-08-18</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Redis高级篇之最佳实践"><a href="#Redis高级篇之最佳实践" class="headerlink" title="Redis高级篇之最佳实践"></a>Redis高级篇之最佳实践</h2><p><strong>今日内容</strong></p>
+<blockquote>
+<ul>
+<li>Redis键值设计</li>
+<li>批处理优化</li>
+<li>服务端优化</li>
+<li>集群最佳实践</li>
+</ul>
+</blockquote>
+<h2 id="1、Redis键值设计"><a href="#1、Redis键值设计" class="headerlink" title="1、Redis键值设计"></a>1、Redis键值设计</h2><h3 id="1-1、优雅的key结构"><a href="#1-1、优雅的key结构" class="headerlink" title="1.1、优雅的key结构"></a>1.1、优雅的key结构</h3><p>Redis的Key虽然可以自定义，但最好遵循下面的几个最佳实践约定：</p>
+<ul>
+<li><p>遵循基本格式：[业务名称]:[数据名]:[id]</p>
+</li>
+<li><p>长度不超过44字节</p>
+</li>
+<li><p>不包含特殊字符</p>
+        
+          <a class="article-more-a" href="/2024/08/18/Redis%E9%AB%98%E7%BA%A7-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">键值设计</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">BigKey</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">批处理</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">慢查询</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Redis//" class="article-tag-list-link color1">Redis</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2024/08/18/Redis%E9%AB%98%E7%BA%A7-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Redis高级-多级缓存同步" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1014,103 +1128,6 @@
 
 
   
-    <article id="post-交换机" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/08/06/%E4%BA%A4%E6%8D%A2%E6%9C%BA/">交换机</a>
-    </h1>
-  
-
-        
-        <a href="/2024/08/06/%E4%BA%A4%E6%8D%A2%E6%9C%BA/" class="archive-article-date">
-  	<time datetime="2024-08-06T14:40:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-08-06</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <meta name="referrer" content="no-referrer"/>
-
-<h2 id="1-交换机类型"><a href="#1-交换机类型" class="headerlink" title="1.交换机类型"></a>1.交换机类型</h2><p>在之前的两个测试案例中，都没有交换机，生产者直接发送消息到队列。而一旦引入交换机，消息发送的模式会有很大变化：<br><img src="https://cdn.nlark.com/yuque/0/2023/jpeg/27967491/1687264784359-de7cbc4a-ec60-461d-a6a4-3474ba52e0d0.jpeg"></p>
-        
-          <a class="article-more-a" href="/2024/08/06/%E4%BA%A4%E6%8D%A2%E6%9C%BA/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Fanout</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Direct</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Topic</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/RabbitMQ//" class="article-tag-list-link color4">RabbitMQ</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/08/06/%E4%BA%A4%E6%8D%A2%E6%9C%BA/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1497,6 +1514,22 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Canal</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">键值设计</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">BigKey</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">批处理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">慢查询</a>
               </li>
             
             <div class="clearfix"></div>
