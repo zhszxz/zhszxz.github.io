@@ -6,15 +6,29 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Hexo</title>
+  <title>认识Nginx | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/page/3/index.html">
+  <meta name="description" content="Nginx简介背景介绍Nginx（“engine x”）一个具有高性能的【HTTP】和【反向代理】的【WEB服务器】，同时也是一个【POP3&#x2F;SMTP&#x2F;IMAP代理服务器】，是由伊戈尔·赛索耶夫(俄罗斯人)使用C语言编写的，Nginx的第一个版本是2004年10月4号发布的0.1.0版本。另外值得一提的是伊戈尔·赛索耶夫将Nginx的源码进行了开源，这也为Nginx的发展提供了">
+<meta property="og:type" content="article">
+<meta property="og:title" content="认识Nginx">
+<meta property="og:url" content="http://example.com/2024/08/20/%E8%AE%A4%E8%AF%86Nginx/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Nginx简介背景介绍Nginx（“engine x”）一个具有高性能的【HTTP】和【反向代理】的【WEB服务器】，同时也是一个【POP3&#x2F;SMTP&#x2F;IMAP代理服务器】，是由伊戈尔·赛索耶夫(俄罗斯人)使用C语言编写的，Nginx的第一个版本是2004年10月4号发布的0.1.0版本。另外值得一提的是伊戈尔·赛索耶夫将Nginx的源码进行了开源，这也为Nginx的发展提供了">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/1573470187616.png">
+<meta property="og:image" content="http://example.com/1573489359728.png">
+<meta property="og:image" content="http://example.com/1573489653799.png">
+<meta property="og:image" content="http://example.com/1581394945120.png">
+<meta property="og:image" content="http://example.com/1585139995444.png">
+<meta property="og:image" content="http://example.com/1581486604517.png">
+<meta property="og:image" content="http://example.com/1586597350943.png">
+<meta property="og:image" content="http://example.com/1581563242526.png">
+<meta property="og:image" content="http://example.com/1581566971955.png">
+<meta property="article:published_time" content="2024-08-20T04:43:02.000Z">
+<meta property="article:modified_time" content="2024-08-20T05:12:31.215Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/1573470187616.png">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -150,79 +164,511 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-    <article id="post-IO流（缓冲流、转换流、序列化流、打印流、压缩流）" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+            <article id="post-认识Nginx" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/07/28/IO%E6%B5%81%EF%BC%88%E7%BC%93%E5%86%B2%E6%B5%81%E3%80%81%E8%BD%AC%E6%8D%A2%E6%B5%81%E3%80%81%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E3%80%81%E6%89%93%E5%8D%B0%E6%B5%81%E3%80%81%E5%8E%8B%E7%BC%A9%E6%B5%81%EF%BC%89/">IO流（缓冲流、转换流、序列化流、打印流、压缩流）</a>
+    <h1 class="article-title" itemprop="name">
+      认识Nginx
     </h1>
   
 
         
-        <a href="/2024/07/28/IO%E6%B5%81%EF%BC%88%E7%BC%93%E5%86%B2%E6%B5%81%E3%80%81%E8%BD%AC%E6%8D%A2%E6%B5%81%E3%80%81%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E3%80%81%E6%89%93%E5%8D%B0%E6%B5%81%E3%80%81%E5%8E%8B%E7%BC%A9%E6%B5%81%EF%BC%89/" class="archive-article-date">
-  	<time datetime="2024-07-28T12:56:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-07-28</time>
+        <a href="/2024/08/20/%E8%AE%A4%E8%AF%86Nginx/" class="archive-article-date">
+  	<time datetime="2024-08-20T04:43:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-08-20</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="1-缓冲流"><a href="#1-缓冲流" class="headerlink" title="1. 缓冲流"></a>1. 缓冲流</h1><p>昨天学习了基本的一些流，作为IO流的入门，今天我们要见识一些更强大的流。比如能够高效读写的缓冲流，能够转换编码的转换流，能够持久化存储对象的序列化流等等。这些功能更为强大的流，都是在基本的流对象基础之上创建而来的，就像穿上铠甲的武士一样，相当于是对基本流对象的一种增强。</p>
-<h2 id="1-1-概述"><a href="#1-1-概述" class="headerlink" title="1.1 概述"></a>1.1 概述</h2><p>缓冲流,也叫高效流，是对4个基本的<code>FileXxx</code> 流的增强，所以也是4个流，按照数据类型分类：</p>
-<ul>
-<li><strong>字节缓冲流</strong>：<code>BufferedInputStream</code>，<code>BufferedOutputStream</code> </li>
-<li><strong>字符缓冲流</strong>：<code>BufferedReader</code>，<code>BufferedWriter</code></li>
-</ul>
-<p>缓冲流的基本原理，是在创建流对象时，会创建一个内置的默认大小的缓冲区数组，通过缓冲区读写，减少系统IO次数，从而提高读写的效率。</p>
-        
-          <a class="article-more-a" href="/2024/07/28/IO%E6%B5%81%EF%BC%88%E7%BC%93%E5%86%B2%E6%B5%81%E3%80%81%E8%BD%AC%E6%8D%A2%E6%B5%81%E3%80%81%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E3%80%81%E6%89%93%E5%8D%B0%E6%B5%81%E3%80%81%E5%8E%8B%E7%BC%A9%E6%B5%81%EF%BC%89/#more">more >></a>
-        
+        <h2 id="Nginx简介"><a href="#Nginx简介" class="headerlink" title="Nginx简介"></a>Nginx简介</h2><h3 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h3><p>Nginx（“engine x”）一个具有高性能的【HTTP】和【反向代理】的【WEB服务器】，同时也是一个【POP3&#x2F;SMTP&#x2F;IMAP代理服务器】，是由伊戈尔·赛索耶夫(俄罗斯人)使用C语言编写的，Nginx的第一个版本是2004年10月4号发布的0.1.0版本。另外值得一提的是伊戈尔·赛索耶夫将Nginx的源码进行了开源，这也为Nginx的发展提供了良好的保障。</p>
+<p><img src="/1573470187616.png" alt="1573470187616"></p>
+<span id="more"></span>
+
+<h4 id="名词解释"><a href="#名词解释" class="headerlink" title="名词解释"></a>名词解释</h4><ol>
+<li>WEB服务器：</li>
+</ol>
+<p>WEB服务器也叫网页服务器，英文名叫Web Server，主要功能是为用户提供网上信息浏览服务。</p>
+<ol start="2">
+<li>HTTP:</li>
+</ol>
+<p>HTTP是超文本传输协议的缩写，是用于从WEB服务器传输超文本到本地浏览器的传输协议，也是互联网上应用最为广泛的一种网络协议。HTTP是一个客户端和服务器端请求和应答的标准，客户端是终端用户，服务端是网站，通过使用Web浏览器、网络爬虫或者其他工具，客户端发起一个到服务器上指定端口的HTTP请求。</p>
+<ol start="3">
+<li>POP3&#x2F;SMTP&#x2F;IMAP：</li>
+</ol>
+<p>POP3(Post Offic Protocol 3)邮局协议的第三个版本，</p>
+<p>SMTP(Simple Mail Transfer Protocol)简单邮件传输协议，</p>
+<p>IMAP(Internet Mail Access Protocol)交互式邮件存取协议，</p>
+<p>通过上述名词的解释，我们可以了解到Nginx也可以作为电子邮件代理服务器。</p>
+<ol start="4">
+<li>反向代理</li>
+</ol>
+<p>正向代理</p>
+<p><img src="/1573489359728.png" alt="1573489359728"></p>
+<p>反向代理</p>
+<p><img src="/1573489653799.png" alt="1573489653799"></p>
+<h3 id="常见服务器对比"><a href="#常见服务器对比" class="headerlink" title="常见服务器对比"></a>常见服务器对比</h3><p>在介绍这一节内容之前，我们先来认识一家公司叫Netcraft。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Netcraft公司于1994年底在英国成立，多年来一直致力于互联网市场以及在线安全方面的咨询服务，其中在国际上最具影响力的当属其针对网站服务器、SSL市场所做的客观严谨的分析研究，公司官网每月公布的调研数据（Web Server Survey）已成为当今人们了解全球网站数量以及服务器市场分额情况的主要参考依据，时常被诸如华尔街杂志，英国BBC，Slashdot等媒体报道或引用。</span><br></pre></td></tr></table></figure>
+
+<p>我们先来看一组数据，我们先打开Nginx的官方网站  <a target="_blank" rel="noopener" href="http://nginx.org/">http://nginx.org/</a>,找到Netcraft公司公布的数据，对当前主流服务器产品进行介绍。</p>
+<p><img src="/1581394945120.png" alt="1581394945120"></p>
+<p>上面这张图展示了2019年全球主流Web服务器的市场情况，其中有Apache、Microsoft-IIS、google Servers、Nginx、Tomcat等，而我们在了解新事物的时候，往往习惯通过类比来帮助自己理解事物的概貌。所以下面我们把几种常见的服务器来给大家简单介绍下：</p>
+<h4 id="IIS"><a href="#IIS" class="headerlink" title="IIS"></a>IIS</h4><p>​	全称(Internet Information Services)即互联网信息服务，是由微软公司提供的基于windows系统的互联网基本服务。windows作为服务器在稳定性与其他一些性能上都不如类UNIX操作系统，因此在需要高性能Web服务器的场合下，IIS可能就会被”冷落”.</p>
+<h4 id="Tomcat"><a href="#Tomcat" class="headerlink" title="Tomcat"></a>Tomcat</h4><p>​	Tomcat是一个运行Servlet和JSP的Web应用软件，Tomcat技术先进、性能稳定而且开放源代码，因此深受Java爱好者的喜爱并得到了部分软件开发商的认可，成为目前比较流行的Web应用服务器。但是Tomcat天生是一个重量级的Web服务器，对静态文件和高并发的处理比较弱。</p>
+<h4 id="Apache"><a href="#Apache" class="headerlink" title="Apache"></a>Apache</h4><p>​	Apache的发展时期很长，同时也有过一段辉煌的业绩。从上图可以看出大概在2014年以前都是市场份额第一的服务器。Apache有很多优点，如稳定、开源、跨平台等。但是它出现的时间太久了，在它兴起的年代，互联网的产业规模远远不如今天，所以它被设计成一个重量级的、不支持高并发的Web服务器。在Apache服务器上，如果有数以万计的并发HTTP请求同时访问，就会导致服务器上消耗大量能存，操作系统内核对成百上千的Apache进程做进程间切换也会消耗大量的CUP资源，并导致HTTP请求的平均响应速度降低，这些都决定了Apache不可能成为高性能的Web服务器。这也促使了Lighttpd和Nginx的出现。</p>
+<h4 id="Lighttpd"><a href="#Lighttpd" class="headerlink" title="Lighttpd"></a>Lighttpd</h4><p>​	Lighttpd是德国的一个开源的Web服务器软件，它和Nginx一样，都是轻量级、高性能的Web服务器，欧美的业界开发者比较钟爱Lighttpd,而国内的公司更多的青睐Nginx，同时网上Nginx的资源要更丰富些。</p>
+<h4 id="其他的服务器"><a href="#其他的服务器" class="headerlink" title="其他的服务器"></a>其他的服务器</h4><p>Google Servers，Weblogic, Webshpere(IBM)…</p>
+<p>经过各个服务器的对比，种种迹象都表明，Nginx将以性能为王。这也是我们为什么选择Nginx的理由。</p>
+<h4 id="Nginx的优点"><a href="#Nginx的优点" class="headerlink" title="Nginx的优点"></a>Nginx的优点</h4><h5 id="1-速度更快、并发更高"><a href="#1-速度更快、并发更高" class="headerlink" title="(1)速度更快、并发更高"></a>(1)速度更快、并发更高</h5><p>单次请求或者高并发请求的环境下，Nginx都会比其他Web服务器响应的速度更快。一方面在正常情况下，单次请求会得到更快的响应，另一方面，在高峰期(如有数以万计的并发请求)，Nginx比其他Web服务器更快的响应请求。Nginx之所以有这么高的并发处理能力和这么好的性能原因在于Nginx采用了多进程和I&#x2F;O多路复用(epoll)的底层实现。</p>
+<h5 id="2-配置简单，扩展性强"><a href="#2-配置简单，扩展性强" class="headerlink" title="(2)配置简单，扩展性强"></a>(2)配置简单，扩展性强</h5><p>Nginx的设计极具扩展性，它本身就是由很多模块组成，这些模块的使用可以通过配置文件的配置来添加。这些模块有官方提供的也有第三方提供的模块，如果需要完全可以开发服务自己业务特性的定制模块。</p>
+<h5 id="3-高可靠性"><a href="#3-高可靠性" class="headerlink" title="(3)高可靠性"></a>(3)高可靠性</h5><p>Nginx采用的是多进程模式运行，其中有一个master主进程和N多个worker进程，worker进程的数量我们可以手动设置，每个worker进程之间都是相互独立提供服务，并且master主进程可以在某一个worker进程出错时，快速去”拉起”新的worker进程提供服务。</p>
+<h5 id="4-热部署"><a href="#4-热部署" class="headerlink" title="(4)热部署"></a>(4)热部署</h5><p>现在互联网项目都要求以7*24小时进行服务的提供，针对于这一要求，Nginx也提供了热部署功能，即可以在Nginx不停止的情况下，对Nginx进行文件升级、更新配置和更换日志文件等功能。</p>
+<h5 id="5-成本低、BSD许可证"><a href="#5-成本低、BSD许可证" class="headerlink" title="(5)成本低、BSD许可证"></a>(5)成本低、BSD许可证</h5><p>BSD是一个开源的许可证，世界上的开源许可证有很多，现在比较流行的有六种分别是GPL、BSD、MIT、Mozilla、Apache、LGPL。这六种的区别是什么，我们可以通过下面一张图来解释下：</p>
+<p><img src="/1585139995444.png" alt="1585139995444"></p>
+<p>Nginx本身是开源的，我们不仅可以免费的将Nginx应用在商业领域，而且还可以在项目中直接修改Nginx的源码来定制自己的特殊要求。这些点也都是Nginx为什么能吸引无数开发者继续为Nginx来贡献自己的智慧和青春。OpenRestry [Nginx+Lua]   Tengine[淘宝]</p>
+<p>Nginx的核心组成</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx二进制可执行文件</span><br><span class="line">nginx.conf配置文件</span><br><span class="line">error.log错误的日志记录</span><br><span class="line">access.log访问日志记录</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Nginx服务器启停命令"><a href="#Nginx服务器启停命令" class="headerlink" title="Nginx服务器启停命令"></a>Nginx服务器启停命令</h3><p>Nginx安装完成后，接下来我们要学习的是如何启动、重启和停止Nginx的服务。</p>
+<p>通过Nginx安装目录下的sbin下的可执行文件nginx来进行Nginx状态的控制，我们可以通过<code>nginx -h</code>来查看都有哪些参数可以用：</p>
+<p><img src="/1581486604517.png" alt="1581486604517"></p>
+<p>-?和-h:显示帮助信息</p>
+<p>-v:打印版本号信息并退出</p>
+<p>-V:打印版本号信息和配置信息并退出</p>
+<p>-t:测试nginx的配置文件语法是否正确并退出</p>
+<p>-T:测试nginx的配置文件语法是否正确并列出用到的配置文件信息然后退出</p>
+<p>-q:在配置测试期间禁止显示非错误消息</p>
+<p>-s:signal信号，后面可以跟 ：</p>
+<p>​	 stop[快速关闭，类似于TERM&#x2F;INT信号的作用]</p>
+<p>​	quit[优雅的关闭，类似于QUIT信号的作用] </p>
+<p>​	reopen[重新打开日志文件类似于USR1信号的作用] </p>
+<p>​	reload[类似于HUP信号的作用]</p>
+<p>-p:prefix，指定Nginx的prefix路径，(默认为: &#x2F;usr&#x2F;local&#x2F;nginx&#x2F;)</p>
+<p>-c:filename,指定Nginx的配置文件路径,(默认为: conf&#x2F;nginx.conf)</p>
+<p>-g:用来补充Nginx配置文件，向Nginx服务指定启动时应用全局的配置</p>
+<h2 id="Nginx核心配置文件结构"><a href="#Nginx核心配置文件结构" class="headerlink" title="Nginx核心配置文件结构"></a>Nginx核心配置文件结构</h2><p>从前面的内容学习中，我们知道Nginx的核心配置文件默认是放在<code>/usr/local/nginx/conf/nginx.conf</code>，这一节，我们就来学习下nginx.conf的内容和基本配置方法。</p>
+<p>读取Nginx自带的Nginx配置文件，我们将其中的注释部分【学习一个技术点就是在Nginx的配置文件中可以使用<code>#</code>来注释】删除掉后，就剩下下面内容:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">worker_processes  1;</span><br><span class="line"></span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections  1024;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line">    sendfile        on;</span><br><span class="line">    keepalive_timeout  65;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  localhost;</span><br><span class="line">        location / &#123;</span><br><span class="line">            root   html;</span><br><span class="line">            index  index.html index.htm;</span><br><span class="line">        &#125;</span><br><span class="line">        error_page   500 502 503 504  /50x.html;</span><br><span class="line">        location = /50x.html &#123;</span><br><span class="line">            root   html;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">指令名	指令值;  #全局块，主要设置Nginx服务器整体运行的配置指令</span><br><span class="line"></span><br><span class="line"> #events块,主要设置,Nginx服务器与用户的网络连接,这一部分对Nginx服务器的性能影响较大</span><br><span class="line">events &#123;	 </span><br><span class="line">    指令名	指令值;</span><br><span class="line">&#125;</span><br><span class="line">#http块，是Nginx服务器配置中的重要部分，代理、缓存、日志记录、第三方模块配置...             </span><br><span class="line">http &#123;		</span><br><span class="line">    指令名	指令值;</span><br><span class="line">    server &#123; #server块，是Nginx配置和虚拟主机相关的内容</span><br><span class="line">        指令名	指令值;</span><br><span class="line">        location / &#123; </span><br><span class="line">        #location块，基于Nginx服务器接收请求字符串与location后面的值进行匹配，对特定请求进行处理</span><br><span class="line">            指令名	指令值;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>简单小结下:</p>
+<p>nginx.conf配置文件中默认有三大块：全局块、events块、http块</p>
+<p>http块中可以配置多个server块，每个server块又可以配置多个location块。</p>
+<h3 id="全局块"><a href="#全局块" class="headerlink" title="全局块"></a>全局块</h3><h4 id="user指令"><a href="#user指令" class="headerlink" title="user指令"></a>user指令</h4><p>（1）user:用于配置运行Nginx服务器的worker进程的用户和用户组。</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>user user [group]</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认值</td>
+<td>nobody</td>
+</tr>
+<tr>
+<td>位置</td>
+<td>全局块</td>
+</tr>
+</tbody></table>
+<p>该属性也可以在编译的时候指定，语法如下<code>./configure --user=user --group=group</code>,如果两个地方都进行了设置，最终生效的是配置文件中的配置。</p>
+<p>该指令的使用步骤:</p>
+<p>(1)设置一个用户信息”www”</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">user www;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/1586597350943.png" alt="1586597350943"></p>
+<p>(2) 创建一个用户</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">useradd www</span><br></pre></td></tr></table></figure>
+
+<p>(3)修改user属性</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">user www</span><br></pre></td></tr></table></figure>
+
+<p>(4)创建<code>/root/html/index.html</code>页面，添加如下内容</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>Welcome to nginx!<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="language-css"></span></span><br><span class="line"><span class="language-css">    <span class="selector-tag">body</span> &#123;</span></span><br><span class="line"><span class="language-css">        <span class="attribute">width</span>: <span class="number">35em</span>;</span></span><br><span class="line"><span class="language-css">        <span class="attribute">margin</span>: <span class="number">0</span> auto;</span></span><br><span class="line"><span class="language-css">        <span class="attribute">font-family</span>: Tahoma, Verdana, Arial, sans-serif;</span></span><br><span class="line"><span class="language-css">    &#125;</span></span><br><span class="line"><span class="language-css"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>Welcome to nginx!<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>If you see this page, the nginx web server is successfully installed and</span><br><span class="line">working. Further configuration is required.<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>For online documentation and support please refer to</span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;http://nginx.org/&quot;</span>&gt;</span>nginx.org<span class="tag">&lt;/<span class="name">a</span>&gt;</span>.<span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br><span class="line">Commercial support is available at</span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;http://nginx.com/&quot;</span>&gt;</span>nginx.com<span class="tag">&lt;/<span class="name">a</span>&gt;</span>.<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;<span class="name">em</span>&gt;</span>Thank you for using nginx.<span class="tag">&lt;/<span class="name">em</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;<span class="name">em</span>&gt;</span>I am WWW<span class="tag">&lt;/<span class="name">em</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>(5)修改nginx.conf</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">location / &#123;</span><br><span class="line">	root   /root/html;</span><br><span class="line">	index  index.html index.htm;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>(5)测试启动访问</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">页面会报403拒绝访问的错误</span><br></pre></td></tr></table></figure>
+
+<p>(6)分析原因</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">因为当前用户没有访问/root/html目录的权限</span><br></pre></td></tr></table></figure>
+
+<p>(7)将文件创建到 <code>/home/www/html/index.html</code>,修改配置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">location / &#123;</span><br><span class="line">	root   /home/www/html;</span><br><span class="line">	index  index.html index.htm;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>(8)再次测试启动访问</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">能正常访问。</span><br></pre></td></tr></table></figure>
+
+<p>综上所述，使用user指令可以指定启动运行工作进程的用户及用户组，这样对于系统的权限访问控制的更加精细，也更加安全。</p>
+<h4 id="work-process指令"><a href="#work-process指令" class="headerlink" title="work process指令"></a>work process指令</h4><p>master_process:用来指定是否开启工作进程。</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>master_process on|off;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认值</td>
+<td>master_process on;</td>
+</tr>
+<tr>
+<td>位置</td>
+<td>全局块</td>
+</tr>
+</tbody></table>
+<p>worker_processes:用于配置Nginx生成工作进程的数量，这个是Nginx服务器实现并发处理服务的关键所在。理论上来说workder process的值越大，可以支持的并发处理量也越多，但事实上这个值的设定是需要受到来自服务器自身的限制，建议将该值和服务器CPU的内核数保存一致。</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>worker_processes     num&#x2F;auto;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认值</td>
+<td>1</td>
+</tr>
+<tr>
+<td>位置</td>
+<td>全局块</td>
+</tr>
+</tbody></table>
+<p>如果将worker_processes设置成2，则会看到如下内容:</p>
+<p><img src="/1581563242526.png" alt="1581563242526"></p>
+<h4 id="其他指令"><a href="#其他指令" class="headerlink" title="其他指令"></a>其他指令</h4><p>daemon：设定Nginx是否以守护进程的方式启动。</p>
+<p>守护式进程是linux后台执行的一种服务进程，特点是独立于控制终端，不会随着终端关闭而停止。</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>daemon on|off;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认值</td>
+<td>daemon on;</td>
+</tr>
+<tr>
+<td>位置</td>
+<td>全局块</td>
+</tr>
+</tbody></table>
+<p>pid:用来配置Nginx当前master进程的进程号ID存储的文件路径。</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>pid file;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认值</td>
+<td>默认为:&#x2F;usr&#x2F;local&#x2F;nginx&#x2F;logs&#x2F;nginx.pid</td>
+</tr>
+<tr>
+<td>位置</td>
+<td>全局块</td>
+</tr>
+</tbody></table>
+<p>该属性可以通过<code>./configure --pid-path=PATH</code>来指定</p>
+<p>error_log:用来配置Nginx的错误日志存放路径</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>error_log  file [日志级别];</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认值</td>
+<td>error_log logs&#x2F;error.log error;</td>
+</tr>
+<tr>
+<td>位置</td>
+<td>全局块、http、server、location</td>
+</tr>
+</tbody></table>
+<p>该属性可以通过<code>./configure --error-log-path=PATH</code>来指定</p>
+<p>其中日志级别的值有：debug|info|notice|warn|error|crit|alert|emerg，翻译过来为试|信息|通知|警告|错误|临界|警报|紧急，这块建议大家设置的时候不要设置成info以下的等级，因为会带来大量的磁盘I&#x2F;O消耗，影响Nginx的性能。</p>
+<p>（5）include:用来引入其他配置文件，使Nginx的配置更加灵活</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>include file;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认值</td>
+<td>无</td>
+</tr>
+<tr>
+<td>位置</td>
+<td>any</td>
+</tr>
+</tbody></table>
+<h3 id="events块"><a href="#events块" class="headerlink" title="events块"></a>events块</h3><p>（1）accept_mutex:用来设置Nginx网络连接序列化</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>accept_mutex on|off;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认值</td>
+<td>accept_mutex on;</td>
+</tr>
+<tr>
+<td>位置</td>
+<td>events</td>
+</tr>
+</tbody></table>
+<p>这个配置主要可以用来解决常说的”惊群”问题。大致意思是在某一个时刻，客户端发来一个请求连接，Nginx后台是以多进程的工作模式，也就是说有多个worker进程会被同时唤醒，但是最终只会有一个进程可以获取到连接，如果每次唤醒的进程数目太多，就会影响Nginx的整体性能。如果将上述值设置为on(开启状态)，将会对多个Nginx进程接收连接进行序列号，一个个来唤醒接收，就防止了多个进程对连接的争抢。</p>
+<p><img src="/1581566971955.png" alt="1581566971955"></p>
+<p>（2）multi_accept:用来设置是否允许同时接收多个网络连接</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>multi_accept on|off;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认值</td>
+<td>multi_accept off;</td>
+</tr>
+<tr>
+<td>位置</td>
+<td>events</td>
+</tr>
+</tbody></table>
+<p>如果multi_accept被禁止了，nginx一个工作进程只能同时接受一个新的连接。否则，一个工作进程可以同时接受所有的新连接</p>
+<p>（3）worker_connections：用来配置单个worker进程最大的连接数</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>worker_connections number;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认值</td>
+<td>worker_commections 512;</td>
+</tr>
+<tr>
+<td>位置</td>
+<td>events</td>
+</tr>
+</tbody></table>
+<p>这里的连接数不仅仅包括和前端用户建立的连接数，而是包括所有可能的连接数。另外，number值不能大于操作系统支持打开的最大文件句柄数量。</p>
+<p>（4）use:用来设置Nginx服务器选择哪种事件驱动来处理网络消息。</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>use  method;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认值</td>
+<td>根据操作系统定</td>
+</tr>
+<tr>
+<td>位置</td>
+<td>events</td>
+</tr>
+</tbody></table>
+<p>注意：此处所选择事件处理模型是Nginx优化部分的一个重要内容，method的可选值有select&#x2F;poll&#x2F;epoll&#x2F;kqueue等，之前在准备centos环境的时候，我们强调过要使用linux内核在2.6以上，就是为了能使用epoll函数来优化Nginx。</p>
+<p>另外这些值的选择，我们也可以在编译的时候使用</p>
+<p><code>--with-select_module</code>、<code>--without-select_module</code>、</p>
+<p><code> --with-poll_module</code>、<code> --without-poll_module</code>来设置是否需要将对应的事件驱动模块编译到Nginx的内核。</p>
+<h4 id="events指令配置实例"><a href="#events指令配置实例" class="headerlink" title="events指令配置实例"></a>events指令配置实例</h4><p>打开Nginx的配置文件 nginx.conf,添加如下配置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">events&#123;</span><br><span class="line">	accept_mutex on;</span><br><span class="line">	multi_accept on;</span><br><span class="line">	worker_commections 1024;</span><br><span class="line">	use epoll;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>启动测试</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">./nginx -t</span><br><span class="line">./nginx -s reload</span><br></pre></td></tr></table></figure>
+
+<h3 id="http块"><a href="#http块" class="headerlink" title="http块"></a>http块</h3><h4 id="定义MIME-Type"><a href="#定义MIME-Type" class="headerlink" title="定义MIME-Type"></a>定义MIME-Type</h4><p>我们都知道浏览器中可以显示的内容有HTML、XML、GIF等种类繁多的文件、媒体等资源，浏览器为了区分这些资源，就需要使用MIME Type。所以说MIME Type是网络资源的媒体类型。Nginx作为web服务器，也需要能够识别前端请求的资源类型。</p>
+<p>在Nginx的配置文件中，默认有两行配置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">include mime.types;</span><br><span class="line">default_type application/octet-stream;</span><br></pre></td></tr></table></figure>
+
+<p>（1）default_type:用来配置Nginx响应前端请求默认的MIME类型。</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>default_type mime-type;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认值</td>
+<td>default_type text&#x2F;plain；</td>
+</tr>
+<tr>
+<td>位置</td>
+<td>http、server、location</td>
+</tr>
+</tbody></table>
+<p>在default_type之前还有一句<code>include mime.types</code>,include之前我们已经介绍过，相当于把mime.types文件中MIMT类型与相关类型文件的文件后缀名的对应关系加入到当前的配置文件中。</p>
+<p>举例来说明：</p>
+<p>有些时候请求某些接口的时候需要返回指定的文本字符串或者json字符串，如果逻辑非常简单或者干脆是固定的字符串，那么可以使用nginx快速实现，这样就不用编写程序响应请求了，可以减少服务器资源占用并且响应性能非常快。</p>
+<p>如何实现:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">location /get_text &#123;</span><br><span class="line">	#这里也可以设置成text/plain</span><br><span class="line">    default_type text/html;</span><br><span class="line">    return 200 &quot;This is nginx&#x27;s text&quot;;</span><br><span class="line">&#125;</span><br><span class="line">location /get_json&#123;</span><br><span class="line">    default_type application/json;</span><br><span class="line">    return 200 &#x27;&#123;&quot;name&quot;:&quot;TOM&quot;,&quot;age&quot;:18&#125;&#x27;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="自定义服务日志"><a href="#自定义服务日志" class="headerlink" title="自定义服务日志"></a>自定义服务日志</h4><p>Nginx中日志的类型分access.log、error.log。</p>
+<p>access.log:用来记录用户所有的访问请求。</p>
+<p>error.log:记录nginx本身运行时的错误信息，不会记录用户的访问请求。</p>
+<p>Nginx服务器支持对服务日志的格式、大小、输出等进行设置，需要使用到两个指令，分别是access_log和log_format指令。</p>
+<p>（1）access_log:用来设置用户访问日志的相关属性。</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>access_log path[format[buffer&#x3D;size]]</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认值</td>
+<td>access_log logs&#x2F;access.log combined;</td>
+</tr>
+<tr>
+<td>位置</td>
+<td><code>http</code>, <code>server</code>, <code>location</code></td>
+</tr>
+</tbody></table>
+<p>（2）log_format:用来指定日志的输出格式。</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>log_format name [escape&#x3D;default|json|none] string….;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认值</td>
+<td>log_format combined “…”;</td>
+</tr>
+<tr>
+<td>位置</td>
+<td>http</td>
+</tr>
+</tbody></table>
+<h4 id="其他配置指令"><a href="#其他配置指令" class="headerlink" title="其他配置指令"></a>其他配置指令</h4><p>（1）sendfile:用来设置Nginx服务器是否使用sendfile()传输文件，该属性可以大大提高Nginx处理静态资源的性能</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>sendfile on|off；</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认值</td>
+<td>sendfile off;</td>
+</tr>
+<tr>
+<td>位置</td>
+<td>http、server、location</td>
+</tr>
+</tbody></table>
+<p>（2）keepalive_timeout:用来设置长连接的超时时间。</p>
+<p>》为什么要使用keepalive？</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">我们都知道HTTP是一种无状态协议，客户端向服务端发送一个TCP请求，服务端响应完毕后断开连接。</span><br><span class="line">如何客户端向服务端发送多个请求，每个请求都需要重新创建一次连接，效率相对来说比较多，使用keepalive模式，可以告诉服务器端在处理完一个请求后保持这个TCP连接的打开状态，若接收到来自这个客户端的其他请求，服务端就会利用这个未被关闭的连接，而不需要重新创建一个新连接，提升效率，但是这个连接也不能一直保持，这样的话，连接如果过多，也会是服务端的性能下降，这个时候就需要我们进行设置其的超时时间。</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>keepalive_timeout time;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认值</td>
+<td>keepalive_timeout 75s;</td>
+</tr>
+<tr>
+<td>位置</td>
+<td>http、server、location</td>
+</tr>
+</tbody></table>
+<p>（3）keepalive_requests:用来设置一个keep-alive连接使用的次数。</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>keepalive_requests number;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认值</td>
+<td>keepalive_requests 100;</td>
+</tr>
+<tr>
+<td>位置</td>
+<td>http、server、location</td>
+</tr>
+</tbody></table>
+<h3 id="server块和location块"><a href="#server块和location块" class="headerlink" title="server块和location块"></a>server块和location块</h3><p>server块和location块都是我们要重点讲解和学习的内容，因为我们后面会对Nginx的功能进行详细讲解，所以这块内容就放到静态资源部署的地方给大家详细说明。</p>
+<p>本节我们主要来认识下Nginx默认给的nginx.conf中的相关内容，以及server块与location块在使用的时候需要注意的一些内容。</p>
+<pre><code>server &#123;
+    listen       80;
+    server_name  localhost;
+    location / &#123;
+        root   html;
+        index  index.html index.htm;
+    &#125;
+   
+    error_page   500 502 503 504 404  /50x.html;
+    location = /50x.html &#123;
+        root   html;
+    &#125;
+&#125;
+</code></pre>
+
       
 
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
       
     </div>
     <div class="article-info article-info-index">
       
       
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">缓冲流</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">转换流</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">序列化流</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">打印流</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">压缩流</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
       
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/Java基础//" class="article-tag-list-link color2">Java基础</a>
+        			<a href="/categories/Nginx//" class="article-tag-list-link color1">Nginx</a>
         		</li>
       		
 		</ul>
@@ -230,16 +676,75 @@
 
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/07/28/IO%E6%B5%81%EF%BC%88%E7%BC%93%E5%86%B2%E6%B5%81%E3%80%81%E8%BD%AC%E6%8D%A2%E6%B5%81%E3%80%81%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E3%80%81%E6%89%93%E5%8D%B0%E6%B5%81%E3%80%81%E5%8E%8B%E7%BC%A9%E6%B5%81%EF%BC%89/">展开全文 >></a>
-        </p>
-      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2024/08/20/%E8%AE%A4%E8%AF%86Nginx/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2024/08/18/Redis%E9%AB%98%E7%BA%A7-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Redis高级-最佳实践</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -259,891 +764,14 @@
 
 
 
-
-  
-    <article id="post-IO流（字节流、字符流）" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/07/28/IO%E6%B5%81%EF%BC%88%E5%AD%97%E8%8A%82%E6%B5%81%E3%80%81%E5%AD%97%E7%AC%A6%E6%B5%81%EF%BC%89/">IO流（字节流、字符流）</a>
-    </h1>
-  
-
-        
-        <a href="/2024/07/28/IO%E6%B5%81%EF%BC%88%E5%AD%97%E8%8A%82%E6%B5%81%E3%80%81%E5%AD%97%E7%AC%A6%E6%B5%81%EF%BC%89/" class="archive-article-date">
-  	<time datetime="2024-07-28T12:50:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-07-28</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="1-IO概述"><a href="#1-IO概述" class="headerlink" title="1. IO概述"></a>1. IO概述</h1><h2 id="1-1-什么是IO"><a href="#1-1-什么是IO" class="headerlink" title="1.1 什么是IO"></a>1.1 什么是IO</h2><p>生活中，你肯定经历过这样的场景。当你编辑一个文本文件，忘记了<code>ctrl+s</code> ，可能文件就白白编辑了。当你电脑上插入一个U盘，可以把一个视频，拷贝到你的电脑硬盘里。那么数据都是在哪些设备上的呢？键盘、内存、硬盘、外接设备等等。</p>
-<p>我们把这种数据的传输，可以看做是一种数据的流动，按照流动的方向，以内存为基准，分为<code>输入input</code> 和<code>输出output</code> ，即流向内存是输入流，流出内存的输出流。</p>
-<p>Java中I&#x2F;O操作主要是指使用<code>java.io</code>包下的内容，进行输入、输出操作。<strong>输入</strong>也叫做<strong>读取</strong>数据，<strong>输出</strong>也叫做作<strong>写出</strong>数据。</p>
-        
-          <a class="article-more-a" href="/2024/07/28/IO%E6%B5%81%EF%BC%88%E5%AD%97%E8%8A%82%E6%B5%81%E3%80%81%E5%AD%97%E7%AC%A6%E6%B5%81%EF%BC%89/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">InputStream</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">OutputStream</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Reader</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Writer</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java基础//" class="article-tag-list-link color2">Java基础</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/07/28/IO%E6%B5%81%EF%BC%88%E5%AD%97%E8%8A%82%E6%B5%81%E3%80%81%E5%AD%97%E7%AC%A6%E6%B5%81%EF%BC%89/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-File" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/07/28/File/">File</a>
-    </h1>
-  
-
-        
-        <a href="/2024/07/28/File/" class="archive-article-date">
-  	<time datetime="2024-07-28T12:17:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-07-28</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="1-File类"><a href="#1-File类" class="headerlink" title="1. File类"></a>1. File类</h1><h2 id="1-1-概述"><a href="#1-1-概述" class="headerlink" title="1.1 概述"></a>1.1 概述</h2><p><code>java.io.File</code> 类是文件和目录路径名的抽象表示，主要用于文件和目录的创建、查找和删除等操作。</p>
-<h2 id="1-2-构造方法"><a href="#1-2-构造方法" class="headerlink" title="1.2 构造方法"></a>1.2 构造方法</h2><ul>
-<li><p><code>public File(String pathname) </code> ：通过将给定的<strong>路径名字符串</strong>转换为抽象路径名来创建新的 File实例。  </p>
-</li>
-<li><p><code>public File(String parent, String child) </code> ：从<strong>父路径名字符串和子路径名字符串</strong>创建新的 File实例。</p>
-</li>
-<li><p><code>public File(File parent, String child)</code> ：从<strong>父抽象路径名和子路径名字符串</strong>创建新的 File实例。  </p>
-</li>
-<li><p>构造举例，代码如下：</p>
-        
-          <a class="article-more-a" href="/2024/07/28/File/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">File</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java基础//" class="article-tag-list-link color2">Java基础</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/07/28/File/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-异常" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/07/28/%E5%BC%82%E5%B8%B8/">异常</a>
-    </h1>
-  
-
-        
-        <a href="/2024/07/28/%E5%BC%82%E5%B8%B8/" class="archive-article-date">
-  	<time datetime="2024-07-28T12:13:46.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-07-28</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="1-异常"><a href="#1-异常" class="headerlink" title="1. 异常"></a>1. 异常</h1><h2 id="1-1-异常概念"><a href="#1-1-异常概念" class="headerlink" title="1.1 异常概念"></a>1.1 异常概念</h2><p>异常，就是不正常的意思。在生活中:医生说,你的身体某个部位有异常,该部位和正常相比有点不同,该部位的功能将受影响.在程序中的意思就是：</p>
-<ul>
-<li><strong>异常</strong> ：指的是程序在执行过程中，出现的非正常的情况，最终会导致JVM的非正常停止。</li>
-</ul>
-<p>在Java等面向对象的编程语言中，异常本身是一个类，产生异常就是创建异常对象并抛出了一个异常对象。Java处理异常的方式是中断处理。</p>
-<blockquote>
-<p>异常指的并不是语法错误,语法错了,编译不通过,不会产生字节码文件,根本不能运行.</p>
-</blockquote>
-        
-          <a class="article-more-a" href="/2024/07/28/%E5%BC%82%E5%B8%B8/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">异常</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java基础//" class="article-tag-list-link color2">Java基础</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/07/28/%E5%BC%82%E5%B8%B8/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Stream流、方法引用" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/07/28/Stream%E6%B5%81%E3%80%81%E6%96%B9%E6%B3%95%E5%BC%95%E7%94%A8/">Stream流、方法引用</a>
-    </h1>
-  
-
-        
-        <a href="/2024/07/28/Stream%E6%B5%81%E3%80%81%E6%96%B9%E6%B3%95%E5%BC%95%E7%94%A8/" class="archive-article-date">
-  	<time datetime="2024-07-28T08:04:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-07-28</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1-不可变集合"><a href="#1-不可变集合" class="headerlink" title="1.不可变集合"></a>1.不可变集合</h2><h3 id="1-1-什么是不可变集合"><a href="#1-1-什么是不可变集合" class="headerlink" title="1.1 什么是不可变集合"></a>1.1 什么是不可变集合</h3><p>​	是一个长度不可变，内容也无法修改的集合</p>
-<h3 id="1-2-使用场景"><a href="#1-2-使用场景" class="headerlink" title="1.2 使用场景"></a>1.2 使用场景</h3><p>​	如果某个数据不能被修改，把它防御性地拷贝到不可变集合中是个很好的实践。</p>
-<p>​	当集合对象被不可信的库调用时，不可变形式是安全的。</p>
-<p>简单理解：</p>
-<p>​	不想让别人修改集合中的内容</p>
-        
-          <a class="article-more-a" href="/2024/07/28/Stream%E6%B5%81%E3%80%81%E6%96%B9%E6%B3%95%E5%BC%95%E7%94%A8/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Stream流</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">方法引用</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java基础//" class="article-tag-list-link color2">Java基础</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/07/28/Stream%E6%B5%81%E3%80%81%E6%96%B9%E6%B3%95%E5%BC%95%E7%94%A8/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-集合-Map" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/07/28/%E9%9B%86%E5%90%88-Map/">集合-Map</a>
-    </h1>
-  
-
-        
-        <a href="/2024/07/28/%E9%9B%86%E5%90%88-Map/" class="archive-article-date">
-  	<time datetime="2024-07-28T07:00:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-07-28</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1-Map集合"><a href="#1-Map集合" class="headerlink" title="1.Map集合"></a>1.Map集合</h2><h3 id="1-1Map集合概述和特点【理解】"><a href="#1-1Map集合概述和特点【理解】" class="headerlink" title="1.1Map集合概述和特点【理解】"></a>1.1Map集合概述和特点【理解】</h3><ul>
-<li><p>Map集合概述</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">Map</span>&lt;K,V&gt;  K：键的类型；V：值的类型</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>Map集合的特点</p>
-<ul>
-<li>双列集合,一个键对应一个值</li>
-<li>键不可以重复,值可以重复</li>
-</ul>
-</li>
-<li><p>Map集合的基本使用</p>
-        
-          <a class="article-more-a" href="/2024/07/28/%E9%9B%86%E5%90%88-Map/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Map</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java基础//" class="article-tag-list-link color2">Java基础</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/07/28/%E9%9B%86%E5%90%88-Map/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-常用API（三）" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/07/27/%E5%B8%B8%E7%94%A8API%EF%BC%88%E4%B8%89%EF%BC%89/">常用API（三）</a>
-    </h1>
-  
-
-        
-        <a href="/2024/07/27/%E5%B8%B8%E7%94%A8API%EF%BC%88%E4%B8%89%EF%BC%89/" class="archive-article-date">
-  	<time datetime="2024-07-27T13:32:55.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-07-27</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="第一章-Date类"><a href="#第一章-Date类" class="headerlink" title="第一章 Date类"></a>第一章 Date类</h1><h2 id="1-1-Date概述"><a href="#1-1-Date概述" class="headerlink" title="1.1 Date概述"></a>1.1 Date概述</h2><p>java.util.Date&#96;类 表示特定的瞬间，精确到毫秒。</p>
-<p>继续查阅Date类的描述，发现Date拥有多个构造函数，只是部分已经过时，我们重点看以下两个构造函数</p>
-<ul>
-<li><code>public Date()</code>：从运行程序的此时此刻到时间原点经历的毫秒值,转换成Date对象，分配Date对象并初始化此对象，以表示分配它的时间（精确到毫秒）。</li>
-<li><code>public Date(long date)</code>：将指定参数的毫秒值date,转换成Date对象，分配Date对象并初始化此对象，以表示自从标准基准时间（称为“历元（epoch）”，即1970年1月1日00:00:00 GMT）以来的指定毫秒数。</li>
-</ul>
-<blockquote>
-<p>tips: 由于中国处于东八区（GMT+08:00）是比世界协调时间&#x2F;格林尼治时间（GMT）快8小时的时区，当格林尼治标准时间为0:00时，东八区的标准时间为08:00。</p>
-</blockquote>
-        
-          <a class="article-more-a" href="/2024/07/27/%E5%B8%B8%E7%94%A8API%EF%BC%88%E4%B8%89%EF%BC%89/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">API</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java基础//" class="article-tag-list-link color2">Java基础</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/07/27/%E5%B8%B8%E7%94%A8API%EF%BC%88%E4%B8%89%EF%BC%89/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-常用API（二）" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/07/27/%E5%B8%B8%E7%94%A8API%EF%BC%88%E4%BA%8C%EF%BC%89/">常用API（二）</a>
-    </h1>
-  
-
-        
-        <a href="/2024/07/27/%E5%B8%B8%E7%94%A8API%EF%BC%88%E4%BA%8C%EF%BC%89/" class="archive-article-date">
-  	<time datetime="2024-07-27T12:07:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-07-27</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h1><h2 id="1-1-正则表达式的概念及演示"><a href="#1-1-正则表达式的概念及演示" class="headerlink" title="1.1 正则表达式的概念及演示"></a>1.1 正则表达式的概念及演示</h2><ul>
-<li><p>在Java中，我们经常需要验证一些字符串，例如：年龄必须是2位的数字、用户名必须是8位长度而且只能包含大小写字母、数字等。正则表达式就是用来验证各种字符串的规则。它内部描述了一些规则，我们可以验证用户输入的字符串是否匹配这个规则。</p>
-</li>
-<li><p>先看一个不使用正则表达式验证的例子：下面的程序让用户输入一个QQ号码，我们要验证：</p>
-<ul>
-<li><p>QQ号码必须是5–15位长度</p>
-</li>
-<li><p>而且必须全部是数字</p>
-</li>
-<li><p>而且首位不能为0</p>
-        
-          <a class="article-more-a" href="/2024/07/27/%E5%B8%B8%E7%94%A8API%EF%BC%88%E4%BA%8C%EF%BC%89/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">API</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java基础//" class="article-tag-list-link color2">Java基础</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/07/27/%E5%B8%B8%E7%94%A8API%EF%BC%88%E4%BA%8C%EF%BC%89/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Redis实战-附近商户、用户签到、UV统计" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E9%99%84%E8%BF%91%E5%95%86%E6%88%B7%E3%80%81%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/">Redis实战-附近商户、用户签到、UV统计</a>
-    </h1>
-  
-
-        
-        <a href="/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E9%99%84%E8%BF%91%E5%95%86%E6%88%B7%E3%80%81%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/" class="archive-article-date">
-  	<time datetime="2024-07-25T14:29:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-07-25</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="10、附近商户"><a href="#10、附近商户" class="headerlink" title="10、附近商户"></a>10、附近商户</h2><h3 id="10-1、附近商户-GEO数据结构的基本用法"><a href="#10-1、附近商户-GEO数据结构的基本用法" class="headerlink" title="10.1、附近商户-GEO数据结构的基本用法"></a>10.1、附近商户-GEO数据结构的基本用法</h3><p>GEO就是Geolocation的简写形式，代表地理坐标。Redis在3.2版本中加入了对GEO的支持，允许存储地理坐标信息，帮助我们根据经纬度来检索数据。常见的命令有：</p>
-<ul>
-<li><p>GEOADD：添加一个地理空间信息，包含：经度（longitude）、纬度（latitude）、值（member）</p>
-</li>
-<li><p>GEODIST：计算指定的两个点之间的距离并返回</p>
-</li>
-<li><p>GEOHASH：将指定member的坐标转为hash字符串形式并返回</p>
-</li>
-<li><p>GEOPOS：返回指定member的坐标</p>
-</li>
-<li><p>GEORADIUS：指定圆心、半径，找到该圆内包含的所有member，并按照与圆心之间的距离排序后返回。6.以后已废弃</p>
-</li>
-<li><p>GEOSEARCH：在指定范围内搜索member，并按照与指定点之间的距离排序后返回。范围可以是圆形或矩形。6.2.新功能</p>
-</li>
-<li><p>GEOSEARCHSTORE：与GEOSEARCH功能一致，不过可以把结果存储到一个指定的key。 6.2.新功能</p>
-        
-          <a class="article-more-a" href="/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E9%99%84%E8%BF%91%E5%95%86%E6%88%B7%E3%80%81%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">GEO</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">BitMap</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">HyperLogLog</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Redis//" class="article-tag-list-link color1">Redis</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E9%99%84%E8%BF%91%E5%95%86%E6%88%B7%E3%80%81%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0%E3%80%81UV%E7%BB%9F%E8%AE%A1/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Redis实战-达人探店、好友关注" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E8%BE%BE%E4%BA%BA%E6%8E%A2%E5%BA%97%E3%80%81%E5%A5%BD%E5%8F%8B%E5%85%B3%E6%B3%A8/">Redis实战-达人探店、好友关注</a>
-    </h1>
-  
-
-        
-        <a href="/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E8%BE%BE%E4%BA%BA%E6%8E%A2%E5%BA%97%E3%80%81%E5%A5%BD%E5%8F%8B%E5%85%B3%E6%B3%A8/" class="archive-article-date">
-  	<time datetime="2024-07-25T14:16:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-07-25</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="8、达人探店"><a href="#8、达人探店" class="headerlink" title="8、达人探店"></a>8、达人探店</h2><h3 id="8-1、达人探店-发布探店笔记"><a href="#8-1、达人探店-发布探店笔记" class="headerlink" title="8.1、达人探店-发布探店笔记"></a>8.1、达人探店-发布探店笔记</h3><p>发布探店笔记</p>
-<p>探店笔记类似点评网站的评价，往往是图文结合。对应的表有两个：<br>tb_blog：探店笔记表，包含笔记中的标题、文字、图片等<br>tb_blog_comments：其他用户对探店笔记的评价</p>
-<p><strong>具体发布流程</strong></p>
-        
-          <a class="article-more-a" href="/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E8%BE%BE%E4%BA%BA%E6%8E%A2%E5%BA%97%E3%80%81%E5%A5%BD%E5%8F%8B%E5%85%B3%E6%B3%A8/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">set</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">sorted set</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Feed流</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Redis//" class="article-tag-list-link color1">Redis</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/07/25/Redis%E5%AE%9E%E6%88%98-%E8%BE%BE%E4%BA%BA%E6%8E%A2%E5%BA%97%E3%80%81%E5%A5%BD%E5%8F%8B%E5%85%B3%E6%B3%A8/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
   
   
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
-    </nav>
+  
+
+  
+
+  
+
   
 
 
@@ -1166,8 +794,8 @@
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
