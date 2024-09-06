@@ -152,6 +152,104 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Redis高级-分片集群" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2024/08/10/Redis%E9%AB%98%E7%BA%A7-%E5%88%86%E7%89%87%E9%9B%86%E7%BE%A4/">Redis高级-分片集群</a>
+    </h1>
+  
+
+        
+        <a href="/2024/08/10/Redis%E9%AB%98%E7%BA%A7-%E5%88%86%E7%89%87%E9%9B%86%E7%BE%A4/" class="archive-article-date">
+  	<time datetime="2024-08-10T11:20:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-08-10</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="4-Redis分片集群"><a href="#4-Redis分片集群" class="headerlink" title="4.Redis分片集群"></a>4.Redis分片集群</h1><h2 id="4-1-搭建分片集群"><a href="#4-1-搭建分片集群" class="headerlink" title="4.1.搭建分片集群"></a>4.1.搭建分片集群</h2><p>主从和哨兵可以解决高可用、高并发读的问题。但是依然有两个问题没有解决：</p>
+<ul>
+<li><p>海量数据存储问题</p>
+</li>
+<li><p>高并发写的问题</p>
+</li>
+</ul>
+<p>使用分片集群可以解决上述问题，如图:</p>
+        
+          <a class="article-more-a" href="/2024/08/10/Redis%E9%AB%98%E7%BA%A7-%E5%88%86%E7%89%87%E9%9B%86%E7%BE%A4/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">散列插槽</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">故障转移</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Redis//" class="article-tag-list-link color1">Redis</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2024/08/10/Redis%E9%AB%98%E7%BA%A7-%E5%88%86%E7%89%87%E9%9B%86%E7%BE%A4/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Redis高级-哨兵" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1034,102 +1132,6 @@
 
 
   
-    <article id="post-类加载器" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/08/06/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8/">类加载器</a>
-    </h1>
-  
-
-        
-        <a href="/2024/08/06/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8/" class="archive-article-date">
-  	<time datetime="2024-08-06T06:23:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-08-06</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1-类加载器"><a href="#1-类加载器" class="headerlink" title="1.类加载器"></a>1.类加载器</h2><h3 id="1-1类加载器"><a href="#1-1类加载器" class="headerlink" title="1.1类加载器"></a>1.1类加载器</h3><ul>
-<li><p>作用</p>
-<p>负责将.class文件（存储的物理文件）加载在到内存中</p>
-<p><img src="/2024/08/06/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8/01_%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8.png" alt="01_类加载器"></p>
-</li>
-</ul>
-        
-          <a class="article-more-a" href="/2024/08/06/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">类加载器</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">双亲委派模型</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java基础//" class="article-tag-list-link color2">Java基础</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/08/06/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
@@ -1555,11 +1557,35 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Ioc</a>
+                <a href="javascript:void(0)" class="js-tag color5">控制反转</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Spring容器</a>
+                <a href="javascript:void(0)" class="js-tag color5">依赖注入</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">BeanFactory</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">FactoryBean</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">bean作用域</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">bean生命周期</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Spring Framework</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">IoC容器</a>
               </li>
             
             <div class="clearfix"></div>
