@@ -152,6 +152,236 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-SpringMVC-RESTful" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2024/09/17/SpringMVC-RESTful/">SpringMVC-RESTful</a>
+    </h1>
+  
+
+        
+        <a href="/2024/09/17/SpringMVC-RESTful/" class="archive-article-date">
+  	<time datetime="2024-09-17T07:06:27.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-09-17</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="七、RESTful"><a href="#七、RESTful" class="headerlink" title="七、RESTful"></a>七、RESTful</h1><h3 id="1、RESTful简介"><a href="#1、RESTful简介" class="headerlink" title="1、RESTful简介"></a>1、RESTful简介</h3><p>REST：<strong>Re</strong>presentational <strong>S</strong>tate <strong>T</strong>ransfer，表现层资源状态转移。</p>
+<h5 id="a-资源"><a href="#a-资源" class="headerlink" title="a&gt;资源"></a>a&gt;资源</h5><p>资源是一种看待服务器的方式，即，将服务器看作是由很多离散的资源组成。每个资源是服务器上一个可命名的抽象概念。因为资源是一个抽象的概念，所以它不仅仅能代表服务器文件系统中的一个文件、数据库中的一张表等等具体的东西，可以将资源设计的要多抽象有多抽象，只要想象力允许而且客户端应用开发者能够理解。与面向对象设计类似，资源是以名词为核心来组织的，首先关注的是名词。一个资源可以由一个或多个URI来标识。URI既是资源的名称，也是资源在Web上的地址。对某个资源感兴趣的客户端应用，可以通过资源的URI与其进行交互。</p>
+<h5 id="b-资源的表述"><a href="#b-资源的表述" class="headerlink" title="b&gt;资源的表述"></a>b&gt;资源的表述</h5><p>资源的表述是一段对于资源在某个特定时刻的状态的描述。可以在客户端-服务器端之间转移（交换）。资源的表述可以有多种格式，例如HTML&#x2F;XML&#x2F;JSON&#x2F;纯文本&#x2F;图片&#x2F;视频&#x2F;音频等等。资源的表述格式可以通过协商机制来确定。请求-响应方向的表述通常使用不同的格式。</p>
+<h5 id="c-状态转移"><a href="#c-状态转移" class="headerlink" title="c&gt;状态转移"></a>c&gt;状态转移</h5><p>状态转移说的是：在客户端和服务器端之间转移（transfer）代表资源状态的表述。通过转移和操作资源的表述，来间接实现操作资源的目的。</p>
+<h3 id="2、RESTful的实现"><a href="#2、RESTful的实现" class="headerlink" title="2、RESTful的实现"></a>2、RESTful的实现</h3><p>具体说，就是 HTTP 协议里面，四个表示操作方式的动词：GET、POST、PUT、DELETE。</p>
+<p>它们分别对应四种基本操作：GET 用来获取资源，POST 用来新建资源，PUT 用来更新资源，DELETE 用来删除资源。</p>
+<p>REST 风格提倡 URL 地址使用统一的风格设计，从前到后各个单词使用斜杠分开，不使用问号键值对方式携带请求参数，而是将要发送给服务器的数据作为 URL 地址的一部分，以保证整体风格的一致性。</p>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>传统方式</th>
+<th>REST风格</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>查询操作</td>
+<td>getUserById?id&#x3D;1</td>
+<td>user&#x2F;1–&gt;get请求方式</td>
+</tr>
+<tr>
+<td>保存操作</td>
+<td>saveUser</td>
+<td>user–&gt;post请求方式</td>
+</tr>
+<tr>
+<td>删除操作</td>
+<td>deleteUser?id&#x3D;1</td>
+<td>user&#x2F;1–&gt;delete请求方式</td>
+</tr>
+<tr>
+<td>更新操作</td>
+<td>updateUser</td>
+<td>user–&gt;put请求方式</td>
+</tr>
+</tbody></table>
+<h3 id="3、HiddenHttpMethodFilter"><a href="#3、HiddenHttpMethodFilter" class="headerlink" title="3、HiddenHttpMethodFilter"></a>3、HiddenHttpMethodFilter</h3><p>由于浏览器只支持发送get和post方式的请求，那么该如何发送put和delete请求呢？</p>
+<p>SpringMVC 提供了 <strong>HiddenHttpMethodFilter</strong> 帮助我们<strong>将 POST 请求转换为 DELETE 或 PUT 请求</strong></p>
+<p><strong>HiddenHttpMethodFilter</strong> 处理put和delete请求的条件：</p>
+<p>a&gt;当前请求的请求方式必须为post</p>
+<p>b&gt;当前请求必须传输请求参数_method</p>
+<p>满足以上条件，<strong>HiddenHttpMethodFilter</strong> 过滤器就会将当前请求的请求方式转换为请求参数_method的值，因此请求参数_method的值才是最终的请求方式</p>
+<p>在web.xml中注册<strong>HiddenHttpMethodFilter</strong> </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">filter</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>HiddenHttpMethodFilter<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-class</span>&gt;</span>org.springframework.web.filter.HiddenHttpMethodFilter<span class="tag">&lt;/<span class="name">filter-class</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">filter-mapping</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>HiddenHttpMethodFilter<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>/*<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter-mapping</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注：</p>
+<p>目前为止，SpringMVC中提供了两个过滤器：CharacterEncodingFilter和HiddenHttpMethodFilter</p>
+<p>在web.xml中注册时，必须先注册CharacterEncodingFilter，再注册HiddenHttpMethodFilter</p>
+<p>原因：</p>
+<ul>
+<li><p>在 CharacterEncodingFilter 中通过 request.setCharacterEncoding(encoding) 方法设置字符集的</p>
+</li>
+<li><p>request.setCharacterEncoding(encoding) 方法要求前面不能有任何获取请求参数的操作</p>
+</li>
+<li><p>而 HiddenHttpMethodFilter 恰恰有一个获取请求方式的操作：</p>
+</li>
+<li><pre><code>String paramValue = request.getParameter(this.methodParam);
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 八、RESTful案例</span><br><span class="line"></span><br><span class="line">### 1、准备工作</span><br><span class="line"></span><br><span class="line">和传统 CRUD 一样，实现对员工信息的增删改查。</span><br><span class="line"></span><br><span class="line">- 搭建环境</span><br><span class="line"></span><br><span class="line">- 准备实体类</span><br><span class="line"></span><br><span class="line"> ```java</span><br><span class="line"> package com.atguigu.mvc.bean;</span><br><span class="line"> </span><br><span class="line"> public class Employee &#123;</span><br><span class="line"> </span><br><span class="line">    private Integer id;</span><br><span class="line">    private String lastName;</span><br><span class="line"> </span><br><span class="line">    private String email;</span><br><span class="line">    //1 male, 0 female</span><br><span class="line">    private Integer gender;</span><br><span class="line">    </span><br><span class="line">    public Integer getId() &#123;</span><br><span class="line">       return id;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    public void setId(Integer id) &#123;</span><br><span class="line">       this.id = id;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    public String getLastName() &#123;</span><br><span class="line">       return lastName;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    public void setLastName(String lastName) &#123;</span><br><span class="line">       this.lastName = lastName;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    public String getEmail() &#123;</span><br><span class="line">       return email;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    public void setEmail(String email) &#123;</span><br><span class="line">       this.email = email;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    public Integer getGender() &#123;</span><br><span class="line">       return gender;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    public void setGender(Integer gender) &#123;</span><br><span class="line">       this.gender = gender;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    public Employee(Integer id, String lastName, String email, Integer gender) &#123;</span><br><span class="line">       super();</span><br><span class="line">       this.id = id;</span><br><span class="line">       this.lastName = lastName;</span><br><span class="line">       this.email = email;</span><br><span class="line">       this.gender = gender;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    public Employee() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+</code></pre>
+</li>
+</ul>
+</blockquote>
+<ul>
+<li><p>准备dao模拟数据</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.atguigu.mvc.dao;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Collection;</span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.atguigu.mvc.bean.Employee;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Repository;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@Repository</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">EmployeeDao</span> &#123;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">static</span> Map&lt;Integer, Employee&gt; employees = <span class="literal">null</span>;</span><br><span class="line">   </span><br><span class="line">   <span class="keyword">static</span>&#123;</span><br><span class="line">      employees = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;Integer, Employee&gt;();</span><br><span class="line"></span><br><span class="line">      employees.put(<span class="number">1001</span>, <span class="keyword">new</span> <span class="title class_">Employee</span>(<span class="number">1001</span>, <span class="string">&quot;E-AA&quot;</span>, <span class="string">&quot;aa@163.com&quot;</span>, <span class="number">1</span>));</span><br><span class="line">      employees.put(<span class="number">1002</span>, <span class="keyword">new</span> <span class="title class_">Employee</span>(<span class="number">1002</span>, <span class="string">&quot;E-BB&quot;</span>, <span class="string">&quot;bb@163.com&quot;</span>, <span class="number">1</span>));</span><br><span class="line">      employees.put(<span class="number">1003</span>, <span class="keyword">new</span> <span class="title class_">Employee</span>(<span class="number">1003</span>, <span class="string">&quot;E-CC&quot;</span>, <span class="string">&quot;cc@163.com&quot;</span>, <span class="number">0</span>));</span><br><span class="line">      employees.put(<span class="number">1004</span>, <span class="keyword">new</span> <span class="title class_">Employee</span>(<span class="number">1004</span>, <span class="string">&quot;E-DD&quot;</span>, <span class="string">&quot;dd@163.com&quot;</span>, <span class="number">0</span>));</span><br><span class="line">      employees.put(<span class="number">1005</span>, <span class="keyword">new</span> <span class="title class_">Employee</span>(<span class="number">1005</span>, <span class="string">&quot;E-EE&quot;</span>, <span class="string">&quot;ee@163.com&quot;</span>, <span class="number">1</span>));</span><br><span class="line">   &#125;</span><br><span class="line">   </span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">Integer</span> <span class="variable">initId</span> <span class="operator">=</span> <span class="number">1006</span>;</span><br><span class="line">   </span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">save</span><span class="params">(Employee employee)</span>&#123;</span><br><span class="line">      <span class="keyword">if</span>(employee.getId() == <span class="literal">null</span>)&#123;</span><br><span class="line">         employee.setId(initId++);</span><br><span class="line">      &#125;</span><br><span class="line">      employees.put(employee.getId(), employee);</span><br><span class="line">   &#125;</span><br><span class="line">   </span><br><span class="line">   <span class="keyword">public</span> Collection&lt;Employee&gt; <span class="title function_">getAll</span><span class="params">()</span>&#123;</span><br><span class="line">      <span class="keyword">return</span> employees.values();</span><br><span class="line">   &#125;</span><br><span class="line">   </span><br><span class="line">   <span class="keyword">public</span> Employee <span class="title function_">get</span><span class="params">(Integer id)</span>&#123;</span><br><span class="line">      <span class="keyword">return</span> employees.get(id);</span><br><span class="line">   &#125;</span><br><span class="line">   </span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">delete</span><span class="params">(Integer id)</span>&#123;</span><br><span class="line">      employees.remove(id);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="2、功能清单"><a href="#2、功能清单" class="headerlink" title="2、功能清单"></a>2、功能清单</h3><table>
+<thead>
+<tr>
+<th>功能</th>
+<th>URL 地址</th>
+<th>请求方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>访问首页√</td>
+<td>&#x2F;</td>
+<td>GET</td>
+</tr>
+<tr>
+<td>查询全部数据√</td>
+<td>&#x2F;employee</td>
+<td>GET</td>
+</tr>
+<tr>
+<td>删除√</td>
+<td>&#x2F;employee&#x2F;2</td>
+<td>DELETE</td>
+</tr>
+<tr>
+<td>跳转到添加数据页面√</td>
+<td>&#x2F;toAdd</td>
+<td>GET</td>
+</tr>
+<tr>
+<td>执行保存√</td>
+<td>&#x2F;employee</td>
+<td>POST</td>
+</tr>
+<tr>
+<td>跳转到更新数据页面√</td>
+<td>&#x2F;employee&#x2F;2</td>
+<td>GET</td>
+</tr>
+<tr>
+<td>执行更新√</td>
+<td>&#x2F;employee</td>
+<td>PUT</td>
+</tr>
+</tbody></table>
+<h3 id="3、具体功能：访问首页"><a href="#3、具体功能：访问首页" class="headerlink" title="3、具体功能：访问首页"></a>3、具体功能：访问首页</h3><h5 id="a-配置view-controller"><a href="#a-配置view-controller" class="headerlink" title="a&gt;配置view-controller"></a>a&gt;配置view-controller</h5><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mvc:view-controller</span> <span class="attr">path</span>=<span class="string">&quot;/&quot;</span> <span class="attr">view-name</span>=<span class="string">&quot;index&quot;</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="b-创建页面"><a href="#b-创建页面" class="headerlink" title="b&gt;创建页面"></a>b&gt;创建页面</h5><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span> <span class="attr">xmlns:th</span>=<span class="string">&quot;http://www.thymeleaf.org&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span> &gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Title<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>首页<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/employee&#125;&quot;</span>&gt;</span>访问员工信息<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4、具体功能：查询所有员工数据"><a href="#4、具体功能：查询所有员工数据" class="headerlink" title="4、具体功能：查询所有员工数据"></a>4、具体功能：查询所有员工数据</h3><h5 id="a-控制器方法"><a href="#a-控制器方法" class="headerlink" title="a&gt;控制器方法"></a>a&gt;控制器方法</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(value = &quot;/employee&quot;, method = RequestMethod.GET)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">getEmployeeList</span><span class="params">(Model model)</span>&#123;</span><br><span class="line">    Collection&lt;Employee&gt; employeeList = employeeDao.getAll();</span><br><span class="line">    model.addAttribute(<span class="string">&quot;employeeList&quot;</span>, employeeList);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;employee_list&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="b-创建employee-list-html"><a href="#b-创建employee-list-html" class="headerlink" title="b&gt;创建employee_list.html"></a>b&gt;创建employee_list.html</h5><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span> <span class="attr">xmlns:th</span>=<span class="string">&quot;http://www.thymeleaf.org&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Employee Info<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">th:src</span>=<span class="string">&quot;@&#123;/static/js/vue.js&#125;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">table</span> <span class="attr">border</span>=<span class="string">&quot;1&quot;</span> <span class="attr">cellpadding</span>=<span class="string">&quot;0&quot;</span> <span class="attr">cellspacing</span>=<span class="string">&quot;0&quot;</span> <span class="attr">style</span>=<span class="string">&quot;text-align: center;&quot;</span> <span class="attr">id</span>=<span class="string">&quot;dataTable&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">tr</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">th</span> <span class="attr">colspan</span>=<span class="string">&quot;5&quot;</span>&gt;</span>Employee Info<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">tr</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">th</span>&gt;</span>id<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">th</span>&gt;</span>lastName<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">th</span>&gt;</span>email<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">th</span>&gt;</span>gender<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">th</span>&gt;</span>options(<span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/toAdd&#125;&quot;</span>&gt;</span>add<span class="tag">&lt;/<span class="name">a</span>&gt;</span>)<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">tr</span> <span class="attr">th:each</span>=<span class="string">&quot;employee : $&#123;employeeList&#125;&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">td</span> <span class="attr">th:text</span>=<span class="string">&quot;$&#123;employee.id&#125;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">td</span> <span class="attr">th:text</span>=<span class="string">&quot;$&#123;employee.lastName&#125;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">td</span> <span class="attr">th:text</span>=<span class="string">&quot;$&#123;employee.email&#125;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">td</span> <span class="attr">th:text</span>=<span class="string">&quot;$&#123;employee.gender&#125;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">td</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;deleteA&quot;</span> @<span class="attr">click</span>=<span class="string">&quot;deleteEmployee&quot;</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;&#x27;/employee/&#x27;+$&#123;employee.id&#125;&#125;&quot;</span>&gt;</span>delete<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;&#x27;/employee/&#x27;+$&#123;employee.id&#125;&#125;&quot;</span>&gt;</span>update<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">table</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="5、具体功能：删除"><a href="#5、具体功能：删除" class="headerlink" title="5、具体功能：删除"></a>5、具体功能：删除</h3><h5 id="a-创建处理delete请求方式的表单"><a href="#a-创建处理delete请求方式的表单" class="headerlink" title="a&gt;创建处理delete请求方式的表单"></a>a&gt;创建处理delete请求方式的表单</h5><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 作用：通过超链接控制表单的提交，将post请求转换为delete请求 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">id</span>=<span class="string">&quot;delete_form&quot;</span> <span class="attr">method</span>=<span class="string">&quot;post&quot;</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- HiddenHttpMethodFilter要求：必须传输_method请求参数，并且值为最终的请求方式 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">name</span>=<span class="string">&quot;_method&quot;</span> <span class="attr">value</span>=<span class="string">&quot;delete&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="b-删除超链接绑定点击事件"><a href="#b-删除超链接绑定点击事件" class="headerlink" title="b&gt;删除超链接绑定点击事件"></a>b&gt;删除超链接绑定点击事件</h5><p>引入vue.js</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">th:src</span>=<span class="string">&quot;@&#123;/static/js/vue.js&#125;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>删除超链接</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;deleteA&quot;</span> @<span class="attr">click</span>=<span class="string">&quot;deleteEmployee&quot;</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;&#x27;/employee/&#x27;+$&#123;employee.id&#125;&#125;&quot;</span>&gt;</span>delete<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>通过vue处理点击事件</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> vue = <span class="keyword">new</span> <span class="title class_">Vue</span>(&#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="attr">el</span>:<span class="string">&quot;#dataTable&quot;</span>,</span></span><br><span class="line"><span class="language-javascript">        <span class="attr">methods</span>:&#123;</span></span><br><span class="line"><span class="language-javascript">            <span class="comment">//event表示当前事件</span></span></span><br><span class="line"><span class="language-javascript">            <span class="attr">deleteEmployee</span>:<span class="keyword">function</span> (<span class="params">event</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">                <span class="comment">//通过id获取表单标签</span></span></span><br><span class="line"><span class="language-javascript">                <span class="keyword">var</span> delete_form = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;delete_form&quot;</span>);</span></span><br><span class="line"><span class="language-javascript">                <span class="comment">//将触发事件的超链接的href属性为表单的action属性赋值</span></span></span><br><span class="line"><span class="language-javascript">                delete_form.<span class="property">action</span> = event.<span class="property">target</span>.<span class="property">href</span>;</span></span><br><span class="line"><span class="language-javascript">                <span class="comment">//提交表单</span></span></span><br><span class="line"><span class="language-javascript">                delete_form.<span class="title function_">submit</span>();</span></span><br><span class="line"><span class="language-javascript">                <span class="comment">//阻止超链接的默认跳转行为</span></span></span><br><span class="line"><span class="language-javascript">                event.<span class="title function_">preventDefault</span>();</span></span><br><span class="line"><span class="language-javascript">            &#125;</span></span><br><span class="line"><span class="language-javascript">        &#125;</span></span><br><span class="line"><span class="language-javascript">    &#125;);</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="c-控制器方法"><a href="#c-控制器方法" class="headerlink" title="c&gt;控制器方法"></a>c&gt;控制器方法</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(value = &quot;/employee/&#123;id&#125;&quot;, method = RequestMethod.DELETE)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">deleteEmployee</span><span class="params">(<span class="meta">@PathVariable(&quot;id&quot;)</span> Integer id)</span>&#123;</span><br><span class="line">    employeeDao.delete(id);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;redirect:/employee&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="6、具体功能：跳转到添加数据页面"><a href="#6、具体功能：跳转到添加数据页面" class="headerlink" title="6、具体功能：跳转到添加数据页面"></a>6、具体功能：跳转到添加数据页面</h3><h5 id="a-配置view-controller-1"><a href="#a-配置view-controller-1" class="headerlink" title="a&gt;配置view-controller"></a>a&gt;配置view-controller</h5><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mvc:view-controller</span> <span class="attr">path</span>=<span class="string">&quot;/toAdd&quot;</span> <span class="attr">view-name</span>=<span class="string">&quot;employee_add&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">mvc:view-controller</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="b-创建employee-add-html"><a href="#b-创建employee-add-html" class="headerlink" title="b&gt;创建employee_add.html"></a>b&gt;创建employee_add.html</h5><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span> <span class="attr">xmlns:th</span>=<span class="string">&quot;http://www.thymeleaf.org&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Add Employee<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">th:action</span>=<span class="string">&quot;@&#123;/employee&#125;&quot;</span> <span class="attr">method</span>=<span class="string">&quot;post&quot;</span>&gt;</span></span><br><span class="line">    lastName:<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;lastName&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line">    email:<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;email&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line">    gender:<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;radio&quot;</span> <span class="attr">name</span>=<span class="string">&quot;gender&quot;</span> <span class="attr">value</span>=<span class="string">&quot;1&quot;</span>&gt;</span>male</span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;radio&quot;</span> <span class="attr">name</span>=<span class="string">&quot;gender&quot;</span> <span class="attr">value</span>=<span class="string">&quot;0&quot;</span>&gt;</span>female<span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;add&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="7、具体功能：执行保存"><a href="#7、具体功能：执行保存" class="headerlink" title="7、具体功能：执行保存"></a>7、具体功能：执行保存</h3><h5 id="a-控制器方法-1"><a href="#a-控制器方法-1" class="headerlink" title="a&gt;控制器方法"></a>a&gt;控制器方法</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(value = &quot;/employee&quot;, method = RequestMethod.POST)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">addEmployee</span><span class="params">(Employee employee)</span>&#123;</span><br><span class="line">    employeeDao.save(employee);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;redirect:/employee&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="8、具体功能：跳转到更新数据页面"><a href="#8、具体功能：跳转到更新数据页面" class="headerlink" title="8、具体功能：跳转到更新数据页面"></a>8、具体功能：跳转到更新数据页面</h3><h5 id="a-修改超链接"><a href="#a-修改超链接" class="headerlink" title="a&gt;修改超链接"></a>a&gt;修改超链接</h5><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;&#x27;/employee/&#x27;+$&#123;employee.id&#125;&#125;&quot;</span>&gt;</span>update<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="b-控制器方法"><a href="#b-控制器方法" class="headerlink" title="b&gt;控制器方法"></a>b&gt;控制器方法</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(value = &quot;/employee/&#123;id&#125;&quot;, method = RequestMethod.GET)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">getEmployeeById</span><span class="params">(<span class="meta">@PathVariable(&quot;id&quot;)</span> Integer id, Model model)</span>&#123;</span><br><span class="line">    <span class="type">Employee</span> <span class="variable">employee</span> <span class="operator">=</span> employeeDao.get(id);</span><br><span class="line">    model.addAttribute(<span class="string">&quot;employee&quot;</span>, employee);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;employee_update&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="c-创建employee-update-html"><a href="#c-创建employee-update-html" class="headerlink" title="c&gt;创建employee_update.html"></a>c&gt;创建employee_update.html</h5><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span> <span class="attr">xmlns:th</span>=<span class="string">&quot;http://www.thymeleaf.org&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Update Employee<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">th:action</span>=<span class="string">&quot;@&#123;/employee&#125;&quot;</span> <span class="attr">method</span>=<span class="string">&quot;post&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">name</span>=<span class="string">&quot;_method&quot;</span> <span class="attr">value</span>=<span class="string">&quot;put&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">name</span>=<span class="string">&quot;id&quot;</span> <span class="attr">th:value</span>=<span class="string">&quot;$&#123;employee.id&#125;&quot;</span>&gt;</span></span><br><span class="line">    lastName:<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;lastName&quot;</span> <span class="attr">th:value</span>=<span class="string">&quot;$&#123;employee.lastName&#125;&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line">    email:<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;email&quot;</span> <span class="attr">th:value</span>=<span class="string">&quot;$&#123;employee.email&#125;&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">        th:field=&quot;$&#123;employee.gender&#125;&quot;可用于单选框或复选框的回显</span></span><br><span class="line"><span class="comment">        若单选框的value和employee.gender的值一致，则添加checked=&quot;checked&quot;属性</span></span><br><span class="line"><span class="comment">    --&gt;</span></span><br><span class="line">    gender:<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;radio&quot;</span> <span class="attr">name</span>=<span class="string">&quot;gender&quot;</span> <span class="attr">value</span>=<span class="string">&quot;1&quot;</span> <span class="attr">th:field</span>=<span class="string">&quot;$&#123;employee.gender&#125;&quot;</span>&gt;</span>male</span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;radio&quot;</span> <span class="attr">name</span>=<span class="string">&quot;gender&quot;</span> <span class="attr">value</span>=<span class="string">&quot;0&quot;</span> <span class="attr">th:field</span>=<span class="string">&quot;$&#123;employee.gender&#125;&quot;</span>&gt;</span>female<span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;update&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="9、具体功能：执行更新"><a href="#9、具体功能：执行更新" class="headerlink" title="9、具体功能：执行更新"></a>9、具体功能：执行更新</h3><h5 id="a-控制器方法-2"><a href="#a-控制器方法-2" class="headerlink" title="a&gt;控制器方法"></a>a&gt;控制器方法</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(value = &quot;/employee&quot;, method = RequestMethod.PUT)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">updateEmployee</span><span class="params">(Employee employee)</span>&#123;</span><br><span class="line">    employeeDao.save(employee);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;redirect:/employee&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id=""><a href="#" class="headerlink" title=""></a></h1>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">RESTful</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/SpringMVC//" class="article-tag-list-link color5">SpringMVC</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2024/09/17/SpringMVC-RESTful/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-SpringMVC入门" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1009,96 +1239,6 @@
 
 
   
-    <article id="post-Nginx-反向代理" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/08/20/Nginx-%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/">Nginx-反向代理</a>
-    </h1>
-  
-
-        
-        <a href="/2024/08/20/Nginx-%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/" class="archive-article-date">
-  	<time datetime="2024-08-20T05:15:47.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-08-20</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="Nginx反向代理"><a href="#Nginx反向代理" class="headerlink" title="Nginx反向代理"></a>Nginx反向代理</h2><h3 id="Nginx反向代理概述"><a href="#Nginx反向代理概述" class="headerlink" title="Nginx反向代理概述"></a>Nginx反向代理概述</h3><p>关于正向代理和反向代理，我们在前面的章节已经通过一张图给大家详细的介绍过了，简而言之就是正向代理代理的对象是客户端，反向代理代理的是服务端，这是两者之间最大的区别。</p>
-<p>Nginx即可以实现正向代理，也可以实现反向代理。</p>
-<p>我们先来通过一个小案例演示下Nginx正向代理的简单应用。</p>
-<p>先提需求：</p>
-        
-          <a class="article-more-a" href="/2024/08/20/Nginx-%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">反向代理</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Nginx//" class="article-tag-list-link color1">Nginx</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/08/20/Nginx-%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1609,6 +1749,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">请求参数</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">RESTful</a>
               </li>
             
             <div class="clearfix"></div>
