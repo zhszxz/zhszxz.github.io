@@ -8,12 +8,12 @@
   <link rel="dns-prefetch" href="http://example.com">
   <title>结构型模式 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="5，结构型模式结构型模式描述如何将类或对象按某种布局组成更大的结构。它分为类结构型模式和对象结构型模式，前者采用继承机制来组织接口和类，后者釆用组合或聚合来组合对象。 由于组合关系或聚合关系比继承关系耦合度低，满足“合成复用原则”，所以对象结构型模式比类结构型模式具有更大的灵活性。 结构型模式分为以下 7 种：  代理模式  适配器模式  装饰者模式  桥接模式  外观模式  组合模式  享元模式">
+  <meta name="description" content="5，结构型模式结构型模式描述如何将类或对象按某种布局组成更大的结构。它分为类结构型模式和对象结构型模式，前者采用继承机制来组织接口和类，后者釆用组合或聚合来组合对象。 由于组合关系或聚合关系比继承关系耦合度低，满足“合成复用原则”，所以对象结构型模式比类结构型模式具有更大的灵活性。 结构型模式分为以下 7 种：">
 <meta property="og:type" content="article">
 <meta property="og:title" content="结构型模式">
 <meta property="og:url" content="http://example.com/2024/10/12/%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="5，结构型模式结构型模式描述如何将类或对象按某种布局组成更大的结构。它分为类结构型模式和对象结构型模式，前者采用继承机制来组织接口和类，后者釆用组合或聚合来组合对象。 由于组合关系或聚合关系比继承关系耦合度低，满足“合成复用原则”，所以对象结构型模式比类结构型模式具有更大的灵活性。 结构型模式分为以下 7 种：  代理模式  适配器模式  装饰者模式  桥接模式  外观模式  组合模式  享元模式">
+<meta property="og:description" content="5，结构型模式结构型模式描述如何将类或对象按某种布局组成更大的结构。它分为类结构型模式和对象结构型模式，前者采用继承机制来组织接口和类，后者釆用组合或聚合来组合对象。 由于组合关系或聚合关系比继承关系耦合度低，满足“合成复用原则”，所以对象结构型模式比类结构型模式具有更大的灵活性。 结构型模式分为以下 7 种：">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/2024/10/12/%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F/%E9%9D%99%E6%80%81%E4%BB%A3%E7%90%86.png">
 <meta property="og:image" content="http://example.com/2024/10/12/%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F/%E8%BD%AC%E6%8E%A5%E5%A4%B4.png">
@@ -37,7 +37,7 @@
 <meta property="og:image" content="http://example.com/2024/10/12/%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F/%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F.png">
 <meta property="og:image" content="http://example.com/2024/10/12/%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F/image-20200208212930857.png">
 <meta property="article:published_time" content="2024-10-12T08:15:26.000Z">
-<meta property="article:modified_time" content="2024-10-12T08:24:17.304Z">
+<meta property="article:modified_time" content="2024-10-14T09:06:13.856Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="代理模式">
 <meta property="article:tag" content="适配器模式">
@@ -206,6 +206,8 @@
         <h1 id="5，结构型模式"><a href="#5，结构型模式" class="headerlink" title="5，结构型模式"></a>5，结构型模式</h1><p>结构型模式描述如何将类或对象按某种布局组成更大的结构。它分为类结构型模式和对象结构型模式，前者采用继承机制来组织接口和类，后者釆用组合或聚合来组合对象。</p>
 <p>由于组合关系或聚合关系比继承关系耦合度低，满足“合成复用原则”，所以对象结构型模式比类结构型模式具有更大的灵活性。</p>
 <p>结构型模式分为以下 7 种：</p>
+<span id="more"></span>
+
 <ul>
 <li><p>代理模式</p>
 </li>
@@ -220,7 +222,7 @@
 <li><p>组合模式</p>
 </li>
 <li><p>享元模式</p>
-<span id="more"></span></li>
+</li>
 </ul>
 <h2 id="5-1-代理模式"><a href="#5-1-代理模式" class="headerlink" title="5.1 代理模式"></a>5.1 代理模式</h2><h3 id="5-1-1-概述"><a href="#5-1-1-概述" class="headerlink" title="5.1.1 概述"></a>5.1.1 概述</h3><p>由于某些原因需要给某对象提供一个代理以控制对该对象的访问。这时，访问对象不适合或者不能直接引用目标对象，代理对象作为访问对象和目标对象之间的中介。</p>
 <p>Java中的代理按照代理类生成时机不同又分为静态代理和动态代理。静态代理代理类在编译期就生成，而动态代理代理类则是在Java运行时动态生成。动态代理又有JDK代理和CGLib代理两种。</p>

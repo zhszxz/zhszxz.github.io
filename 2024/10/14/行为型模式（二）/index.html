@@ -27,7 +27,7 @@
 <meta property="og:image" content="http://example.com/2024/07/28/File/%EF%BC%88%E4%BA%8C%EF%BC%89/image-20200215225227616.png">
 <meta property="og:image" content="http://example.com/2024/07/28/File/%EF%BC%88%E4%BA%8C%EF%BC%89/%E8%A7%A3%E9%87%8A%E5%99%A8%E6%A8%A1%E5%BC%8F.png">
 <meta property="article:published_time" content="2024-10-14T08:51:47.000Z">
-<meta property="article:modified_time" content="2024-10-14T09:04:23.626Z">
+<meta property="article:modified_time" content="2024-10-14T09:05:11.941Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="中介者模式">
 <meta property="article:tag" content="迭代器模式">
@@ -193,6 +193,8 @@
       
         <h2 id="6-7-中介者模式"><a href="#6-7-中介者模式" class="headerlink" title="6.7 中介者模式"></a>6.7 中介者模式</h2><h3 id="6-7-1-概述"><a href="#6-7-1-概述" class="headerlink" title="6.7.1 概述"></a>6.7.1 概述</h3><p>一般来说，同事类之间的关系是比较复杂的，多个同事类之间互相关联时，他们之间的关系会呈现为复杂的网状结构，这是一种过度耦合的架构，即不利于类的复用，也不稳定。例如在下左图中，有六个同事类对象，假如对象1发生变化，那么将会有4个对象受到影响。如果对象2发生变化，那么将会有5个对象受到影响。也就是说，同事类之间直接关联的设计是不好的。</p>
 <p>如果引入中介者模式，那么同事类之间的关系将变为星型结构，从下右图中可以看到，任何一个类的变动，只会影响的类本身，以及中介者，这样就减小了系统的耦合。一个好的设计，必定不会把所有的对象关系处理逻辑封装在本类中，而是使用一个专门的类来管理那些不属于自己的行为。</p>
+<span id="more"></span>
+
 <p><img src="/2024/07/28/File/%EF%BC%88%E4%BA%8C%EF%BC%89/image-20200214110924010.png"></p>
 <p><strong>定义：</strong></p>
 <p>又叫调停模式，定义一个中介角色来封装一系列对象之间的交互，使原有对象之间的耦合松散，且可以独立地改变它们之间的交互。</p>
