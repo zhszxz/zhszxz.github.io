@@ -152,6 +152,203 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Spring-事务" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2024/09/10/Spring-%E4%BA%8B%E5%8A%A1/">Spring:事务</a>
+    </h1>
+  
+
+        
+        <a href="/2024/09/10/Spring-%E4%BA%8B%E5%8A%A1/" class="archive-article-date">
+  	<time datetime="2024-09-10T06:58:27.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-09-10</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="7、事务"><a href="#7、事务" class="headerlink" title="7、事务"></a>7、事务</h2><h3 id="7-1、JdbcTemplate"><a href="#7-1、JdbcTemplate" class="headerlink" title="7.1、JdbcTemplate"></a>7.1、JdbcTemplate</h3><h4 id="7-1-1、简介"><a href="#7-1-1、简介" class="headerlink" title="7.1.1、简介"></a>7.1.1、简介</h4><p><img src="/2024/09/10/Spring-%E4%BA%8B%E5%8A%A1/image-20221217115515670.png" alt="image-20221217115515670"></p>
+<p>Spring 框架对 JDBC 进行封装，使用 JdbcTemplate 方便实现对数据库操作</p>
+        
+          <a class="article-more-a" href="/2024/09/10/Spring-%E4%BA%8B%E5%8A%A1/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">声明式事务</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">事务属性</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Transactional</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Spring//" class="article-tag-list-link color2">Spring</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2024/09/10/Spring-%E4%BA%8B%E5%8A%A1/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Spring-面向切面编程" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2024/09/08/Spring-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/">Spring:面向切面编程</a>
+    </h1>
+  
+
+        
+        <a href="/2024/09/08/Spring-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/" class="archive-article-date">
+  	<time datetime="2024-09-08T06:56:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-09-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="5、面向切面：AOP"><a href="#5、面向切面：AOP" class="headerlink" title="5、面向切面：AOP"></a>5、面向切面：AOP</h2><h3 id="5-1、场景模拟"><a href="#5-1、场景模拟" class="headerlink" title="5.1、场景模拟"></a>5.1、场景模拟</h3><p><strong>搭建子模块：spring6-aop</strong></p>
+<h4 id="5-1-1、声明接口"><a href="#5-1-1、声明接口" class="headerlink" title="5.1.1、声明接口"></a>5.1.1、声明接口</h4><p>声明计算器接口Calculator，包含加减乘除的抽象方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Calculator</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="type">int</span> <span class="title function_">add</span><span class="params">(<span class="type">int</span> i, <span class="type">int</span> j)</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="type">int</span> <span class="title function_">sub</span><span class="params">(<span class="type">int</span> i, <span class="type">int</span> j)</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="type">int</span> <span class="title function_">mul</span><span class="params">(<span class="type">int</span> i, <span class="type">int</span> j)</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="type">int</span> <span class="title function_">div</span><span class="params">(<span class="type">int</span> i, <span class="type">int</span> j)</span>;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        
+          <a class="article-more-a" href="/2024/09/08/Spring-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">AOP</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Aspect</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">通知</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">切入点表达式</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Spring//" class="article-tag-list-link color2">Spring</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2024/09/08/Spring-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Spring-基于注解的bean管理" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -921,194 +1118,6 @@
 
 
   
-    <article id="post-Redis高级-多级缓存同步" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E5%90%8C%E6%AD%A5/">Redis高级-多级缓存同步</a>
-    </h1>
-  
-
-        
-        <a href="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E5%90%8C%E6%AD%A5/" class="archive-article-date">
-  	<time datetime="2024-08-17T13:02:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-08-17</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="5-缓存同步"><a href="#5-缓存同步" class="headerlink" title="5.缓存同步"></a>5.缓存同步</h1><p>大多数情况下，浏览器查询到的都是缓存数据，如果缓存数据与数据库数据存在较大差异，可能会产生比较严重的后果。</p>
-<p>所以我们必须保证数据库数据、缓存数据的一致性，这就是缓存与数据库的同步。</p>
-<h2 id="5-1-数据同步策略"><a href="#5-1-数据同步策略" class="headerlink" title="5.1.数据同步策略"></a>5.1.数据同步策略</h2><p>缓存数据同步的常见方式有三种：</p>
-<p><strong>设置有效期</strong>：给缓存设置有效期，到期后自动删除。再次查询时更新</p>
-<ul>
-<li><p>优势：简单、方便</p>
-</li>
-<li><p>缺点：时效性差，缓存过期之前可能不一致</p>
-</li>
-<li><p>场景：更新频率较低，时效性要求低的业务</p>
-        
-          <a class="article-more-a" href="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E5%90%8C%E6%AD%A5/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Canal</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Redis//" class="article-tag-list-link color1">Redis</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E5%90%8C%E6%AD%A5/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Redis高级-多级缓存" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/">Redis高级-多级缓存</a>
-    </h1>
-  
-
-        
-        <a href="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/" class="archive-article-date">
-  	<time datetime="2024-08-17T12:24:32.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-08-17</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="3-Lua语法入门"><a href="#3-Lua语法入门" class="headerlink" title="3.Lua语法入门"></a>3.Lua语法入门</h1><p>Nginx编程需要用到Lua语言，因此我们必须先入门Lua的基本语法。</p>
-<h2 id="3-1-初识Lua"><a href="#3-1-初识Lua" class="headerlink" title="3.1.初识Lua"></a>3.1.初识Lua</h2><p>Lua 是一种轻量小巧的脚本语言，用标准C语言编写并以源代码形式开放， 其设计目的是为了嵌入应用程序中，从而为应用程序提供灵活的扩展和定制功能。官网：<a target="_blank" rel="noopener" href="https://www.lua.org/">https://www.lua.org/</a></p>
-        
-          <a class="article-more-a" href="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Lua</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">OpenResty</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Redis//" class="article-tag-list-link color1">Redis</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
@@ -1695,6 +1704,50 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">面向对象</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">中介者模式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">迭代器模式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">访问者模式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">备忘录模式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">解释器模式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">模板方法模式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">策略模式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">命令模式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">职责链模式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">状态模式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">观察者模式</a>
               </li>
             
             <div class="clearfix"></div>
