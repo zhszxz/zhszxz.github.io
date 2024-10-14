@@ -15,27 +15,27 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="Nginx实现服务器端集群搭建Nginx与Tomcat部署前面课程已经将Nginx的大部分内容进行了讲解，我们都知道了Nginx在高并发场景和处理静态资源是非常高性能的，但是在实际项目中除了静态资源还有就是后台业务代码模块，一般后台业务都会被部署在Tomcat，weblogic或者是websphere等web服务器上。那么如何使用Nginx接收用户的请求并把请求转发到后台web服务器？">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/2024/07/28/File/-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604498725652.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604421296014.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604421312486.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604422564855.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604493947499.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604494128097.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604494156197.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604495169905.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604495442179.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604599529242.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604599616821.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604599709822.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604600079149.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604600145318.png">
+<meta property="og:image" content="http://example.com/2024/08/20/Nginx-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604498725652.png">
+<meta property="og:image" content="http://example.com/2024/08/20/Nginx-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604421296014.png">
+<meta property="og:image" content="http://example.com/2024/08/20/Nginx-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604421312486.png">
+<meta property="og:image" content="http://example.com/2024/08/20/Nginx-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604422564855.png">
+<meta property="og:image" content="http://example.com/2024/08/20/Nginx-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604493947499.png">
+<meta property="og:image" content="http://example.com/2024/08/20/Nginx-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604494128097.png">
+<meta property="og:image" content="http://example.com/2024/08/20/Nginx-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604494156197.png">
+<meta property="og:image" content="http://example.com/2024/08/20/Nginx-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604495169905.png">
+<meta property="og:image" content="http://example.com/2024/08/20/Nginx-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604495442179.png">
+<meta property="og:image" content="http://example.com/2024/08/20/Nginx-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604599529242.png">
+<meta property="og:image" content="http://example.com/2024/08/20/Nginx-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604599616821.png">
+<meta property="og:image" content="http://example.com/2024/08/20/Nginx-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604599709822.png">
+<meta property="og:image" content="http://example.com/2024/08/20/Nginx-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604600079149.png">
+<meta property="og:image" content="http://example.com/2024/08/20/Nginx-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604600145318.png">
 <meta property="article:published_time" content="2024-08-20T05:40:57.000Z">
 <meta property="article:modified_time" content="2024-08-20T05:55:17.489Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="动静分离">
 <meta property="article:tag" content="高可用">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2024/07/28/File/-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604498725652.png">
+<meta name="twitter:image" content="http://example.com/2024/08/20/Nginx-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604498725652.png">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -194,7 +194,7 @@
         <h1 id="Nginx实现服务器端集群搭建"><a href="#Nginx实现服务器端集群搭建" class="headerlink" title="Nginx实现服务器端集群搭建"></a>Nginx实现服务器端集群搭建</h1><h2 id="Nginx与Tomcat部署"><a href="#Nginx与Tomcat部署" class="headerlink" title="Nginx与Tomcat部署"></a>Nginx与Tomcat部署</h2><p>前面课程已经将Nginx的大部分内容进行了讲解，我们都知道了Nginx在高并发场景和处理静态资源是非常高性能的，但是在实际项目中除了静态资源还有就是后台业务代码模块，一般后台业务都会被部署在Tomcat，weblogic或者是websphere等web服务器上。那么如何使用Nginx接收用户的请求并把请求转发到后台web服务器？</p>
 <span id="more"></span>
 
-<p><img src="/2024/07/28/File/-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604498725652.png" alt="1604498725652"></p>
+<p><img src="/2024/08/20/Nginx-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604498725652.png" alt="1604498725652"></p>
 <p>步骤分析:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1.准备Tomcat环境，并在Tomcat上部署一个web项目</span><br><span class="line">2.准备Nginx环境，使用Nginx接收请求，并把请求分发到Tomat上</span><br></pre></td></tr></table></figure>
 
@@ -203,7 +203,7 @@
 <h3 id="环境准备-Tomcat"><a href="#环境准备-Tomcat" class="headerlink" title="环境准备(Tomcat)"></a>环境准备(Tomcat)</h3><p>浏览器访问:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.200.146:8080/demo/index.html</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2024/07/28/File/-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604421296014.png" alt="1604421296014"></p>
+<p><img src="/2024/08/20/Nginx-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604421296014.png" alt="1604421296014"></p>
 <p>获取动态资源的链接地址:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.200.146:8080/demo/getAddress</span><br></pre></td></tr></table></figure>
 
@@ -219,7 +219,7 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">upstream webservice &#123;</span><br><span class="line">	server 192.168.200.146:8080;</span><br><span class="line">&#125;</span><br><span class="line">server&#123;</span><br><span class="line">    listen		80;</span><br><span class="line">    server_name localhost;</span><br><span class="line">    location /demo &#123;</span><br><span class="line">    	proxy_pass http://webservice;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>（2）启动访问测试</p>
-<p><img src="/2024/07/28/File/-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604421312486.png" alt="1604421312486"></p>
+<p><img src="/2024/08/20/Nginx-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604421312486.png" alt="1604421312486"></p>
 <p>学习到这，可能大家会有一个困惑，明明直接通过tomcat就能访问，为什么还需要多加一个nginx，这样不是反而是系统的复杂度变高了么?<br>那接下来我们从两个方便给大家分析下这个问题，</p>
 <p>第一个使用Nginx实现动静分离</p>
 <p>第二个使用Nginx搭建Tomcat的集群</p>
@@ -232,11 +232,11 @@
 <p>​	动静分离以后，降低了动态资源和静态资源的耦合度。如动态资源宕机了也不影响静态资源的展示。</p>
 <p>如何实现动静分离?</p>
 <p>实现动静分离的方式很多，比如静态资源可以部署到CDN、Nginx等服务器上，动态资源可以部署到Tomcat,weblogic或者websphere上。本次课程只要使用Nginx+Tomcat来实现动静分离。</p>
-<h3 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h3><p><img src="/2024/07/28/File/-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604422564855.png" alt="1604422564855"></p>
+<h3 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h3><p><img src="/2024/08/20/Nginx-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604422564855.png" alt="1604422564855"></p>
 <h3 id="动静分离实现步骤"><a href="#动静分离实现步骤" class="headerlink" title="动静分离实现步骤"></a>动静分离实现步骤</h3><p>1.将demo.war项目中的静态资源都删除掉，重新打包生成一个war包，在资料中有提供。</p>
 <p>2.将war包部署到tomcat中，把之前部署的内容删除掉</p>
 <p>3.在Nginx所在服务器创建如下目录，并将对应的静态资源放入指定的位置</p>
-<p><img src="/2024/07/28/File/-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604493947499.png" alt="1604493947499"></p>
+<p><img src="/2024/08/20/Nginx-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604493947499.png" alt="1604493947499"></p>
 <p>其中index.html页面的内容如下:</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Title<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;js/jquery.min.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">        $(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">           $.<span class="title function_">get</span>(<span class="string">&#x27;http://192.168.200.133/demo/getAddress&#x27;</span>,<span class="keyword">function</span>(<span class="params">data</span>)&#123;</span></span><br><span class="line"><span class="language-javascript">               $(<span class="string">&quot;#msg&quot;</span>).<span class="title function_">html</span>(data);</span></span><br><span class="line"><span class="language-javascript">           &#125;);</span></span><br><span class="line"><span class="language-javascript">        &#125;);</span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;images/logo.png&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>Nginx如何将请求转发到后端服务器<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h3</span> <span class="attr">id</span>=<span class="string">&quot;msg&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;images/mv.png&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
@@ -244,15 +244,15 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">upstream webservice&#123;</span><br><span class="line">   server 192.168.200.146:8080;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  localhost;</span><br><span class="line"></span><br><span class="line">        #动态资源</span><br><span class="line">        location /demo &#123;</span><br><span class="line">                proxy_pass http://webservice;</span><br><span class="line">        &#125;</span><br><span class="line">        #静态资源</span><br><span class="line">        location ~/.*\.(png|jpg|gif|js)&#123;</span><br><span class="line">                root html/web;</span><br><span class="line">                gzip on;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">            root   html/web;</span><br><span class="line">            index  index.html index.htm;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>5.启动测试，访问<a target="_blank" rel="noopener" href="http://192.168.200.133/index.html">http://192.168.200.133/index.html</a></p>
-<p><img src="/2024/07/28/File/-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604494128097.png" alt="1604494128097"></p>
+<p><img src="/2024/08/20/Nginx-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604494128097.png" alt="1604494128097"></p>
 <p>假如某个时间点，由于某个原因导致Tomcat后的服务器宕机了，我们再次访问Nginx,会得到如下效果，用户还是能看到页面，只是缺失了访问次数的统计，这就是前后端耦合度降低的效果，并且整个请求只和后的服务器交互了一次，js和images都直接从Nginx返回，提供了效率，降低了后的服务器的压力。</p>
-<p><img src="/2024/07/28/File/-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604494156197.png" alt="1604494156197"></p>
-<h2 id="Nginx高可用解决方案"><a href="#Nginx高可用解决方案" class="headerlink" title="Nginx高可用解决方案"></a>Nginx高可用解决方案</h2><p><img src="/2024/07/28/File/-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604495169905.png" alt="1604495169905"></p>
+<p><img src="/2024/08/20/Nginx-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604494156197.png" alt="1604494156197"></p>
+<h2 id="Nginx高可用解决方案"><a href="#Nginx高可用解决方案" class="headerlink" title="Nginx高可用解决方案"></a>Nginx高可用解决方案</h2><p><img src="/2024/08/20/Nginx-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604495169905.png" alt="1604495169905"></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">需要两台以上的Nginx服务器对外提供服务，这样的话就可以解决其中一台宕机了，另外一台还能对外提供服务，但是如果是两台Nginx服务器的话，会有两个IP地址，用户该访问哪台服务器，用户怎么知道哪台是好的，哪台是宕机了的?</span><br></pre></td></tr></table></figure>
 
 <h3 id="Keepalived"><a href="#Keepalived" class="headerlink" title="Keepalived"></a>Keepalived</h3><p>使用Keepalived来解决，Keepalived 软件由 C 编写的，最初是专为 LVS 负载均衡软件设计的，Keepalived 软件主要是通过 VRRP 协议实现高可用功能。</p>
 <p>用了Keepalived后，解决方案如下:</p>
-<p><img src="/2024/07/28/File/-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604495442179.png" alt="1604495442179"></p>
+<p><img src="/2024/08/20/Nginx-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604495442179.png" alt="1604495442179"></p>
 <h3 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h3><p>环境准备</p>
 <table>
 <thead>
@@ -299,26 +299,26 @@
 <h3 id="访问测试"><a href="#访问测试" class="headerlink" title="访问测试"></a>访问测试</h3><ol>
 <li>启动keepalived之前，咱们先使用命令 <code>ip a</code>,查看192.168.200.133和192.168.200.122这两台服务器的IP情况。</li>
 </ol>
-<p><img src="/2024/07/28/File/-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604599529242.png" alt="1604599529242"></p>
+<p><img src="/2024/08/20/Nginx-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604599529242.png" alt="1604599529242"></p>
 <ol start="2">
 <li>分别启动两台服务器的keepalived</li>
 </ol>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/sbin</span><br><span class="line">./keepalived</span><br></pre></td></tr></table></figure>
 
 <p>再次通过 <code>ip a</code>查看ip</p>
-<p><img src="/2024/07/28/File/-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604599616821.png" alt="1604599616821"></p>
+<p><img src="/2024/08/20/Nginx-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604599616821.png" alt="1604599616821"></p>
 <ol start="3">
 <li>当把192.168.200.133服务器上的keepalived关闭后，再次查看ip</li>
 </ol>
-<p><img src="/2024/07/28/File/-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604599709822.png" alt="1604599709822"></p>
+<p><img src="/2024/08/20/Nginx-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604599709822.png" alt="1604599709822"></p>
 <p>通过上述的测试，我们会发现，虚拟IP(VIP)会在MASTER节点上，当MASTER节点上的keepalived出问题以后，因为BACKUP无法收到MASTER发出的VRRP状态通过信息，就会直接升为MASTER。VIP也会”漂移”到新的MASTER。</p>
 <p>上面测试和Nginx有什么关系?</p>
 <p>我们把192.168.200.133服务器的keepalived再次启动下，由于它的优先级高于服务器192.168.200.122的，所有它会再次成为MASTER，VIP也会”漂移”过去，然后我们再次通过浏览器访问:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.200.222/</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2024/07/28/File/-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604600079149.png" alt="1604600079149"></p>
+<p><img src="/2024/08/20/Nginx-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604600079149.png" alt="1604600079149"></p>
 <p>如果把192.168.200.133服务器的keepalived关闭掉，再次访问相同的地址</p>
-<p><img src="/2024/07/28/File/-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604600145318.png" alt="1604600145318"></p>
+<p><img src="/2024/08/20/Nginx-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/1604600145318.png" alt="1604600145318"></p>
 <p>效果实现了以后， 我们会发现要想让vip进行切换，就必须要把服务器上的keepalived进行关闭，而什么时候关闭keepalived呢?应该是在keepalived所在服务器的nginx出现问题后，把keepalived关闭掉，就可以让VIP执行另外一台服务器，但是现在这所有的操作都是通过手动来完成的，我们如何能让系统自动判断当前服务器的nginx是否正确启动，如果没有，要能让VIP自动进行”漂移”，这个问题该如何解决?</p>
 <h3 id="keepalived之vrrp-script"><a href="#keepalived之vrrp-script" class="headerlink" title="keepalived之vrrp_script"></a>keepalived之vrrp_script</h3><p>keepalived只能做到对网络故障和keepalived本身的监控，即当出现网络故障或者keepalived本身出现问题时，进行切换。但是这些还不够，我们还需要监控keepalived所在服务器上的其他业务，比如Nginx,如果Nginx出现异常了，仅仅keepalived保持正常，是无法完成系统的正常工作的，因此需要根据业务进程的运行状态决定是否需要进行主备切换，这个时候，我们可以通过编写脚本对业务进程进行检测监控。</p>
 <p>实现步骤:</p>
@@ -612,7 +612,31 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">InputStream</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">OutputStream</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Reader</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Writer</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">MarkDown</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">动静分离</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">高可用</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -636,27 +660,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">反向代理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">负载均衡</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">session</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">悲观锁</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">乐观锁</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">InputStream</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">OutputStream</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Reader</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Writer</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -672,18 +692,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">session</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">分布式锁</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Lua脚本</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">阻塞队列</a>
               </li>
              
@@ -692,15 +700,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">set</a>
+                <a href="javascript:void(0)" class="js-tag color5">分布式锁</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">sorted set</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Feed流</a>
+                <a href="javascript:void(0)" class="js-tag color1">Lua脚本</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -716,139 +720,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Stream流</a>
+                <a href="javascript:void(0)" class="js-tag color4">set</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">方法引用</a>
+                <a href="javascript:void(0)" class="js-tag color1">sorted set</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">xml</a>
+                <a href="javascript:void(0)" class="js-tag color1">Feed流</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">反射</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">动态代理</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Thread</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">API</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">类加载器</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">双亲委派模型</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">异常</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">ThreadPool</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">redis入门</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">List</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Set</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Map</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">面向对象</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">SpringAMQP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">WorkQueues</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Fanout</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Direct</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Topic</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">同步调用</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">异步调用</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">交换机</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">生产者确认</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">LazyQueue</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">消费者确认</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">幂等性</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">延迟消息</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">死信</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">RDB</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">AOF</a>
+                <a href="javascript:void(0)" class="js-tag color4">Caffeine</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -868,14 +752,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">哨兵集群</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">读写分离</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">散列插槽</a>
               </li>
              
@@ -884,7 +760,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Caffeine</a>
+                <a href="javascript:void(0)" class="js-tag color5">哨兵集群</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">读写分离</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -893,6 +773,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">OpenResty</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">RDB</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">AOF</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -916,23 +804,31 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">反向代理</a>
+                <a href="javascript:void(0)" class="js-tag color1">声明式事务</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">负载均衡</a>
+                <a href="javascript:void(0)" class="js-tag color5">事务属性</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">nginx.conf</a>
+                <a href="javascript:void(0)" class="js-tag color4">Transactional</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">动静分离</a>
+                <a href="javascript:void(0)" class="js-tag color5">Component</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">高可用</a>
+                <a href="javascript:void(0)" class="js-tag color5">Autowired</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Resource</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Validation</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -960,23 +856,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Spring Framework</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">IoC容器</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Component</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Autowired</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Resource</a>
+                <a href="javascript:void(0)" class="js-tag color3">RESTful</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -996,39 +876,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">声明式事务</a>
+                <a href="javascript:void(0)" class="js-tag color1">SpringAMQP</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">事务属性</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Transactional</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Validation</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">DispatcherServlet</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">RequestMapping</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">请求参数</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">RESTful</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">执行流程</a>
+                <a href="javascript:void(0)" class="js-tag color1">WorkQueues</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1044,11 +896,51 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">UML</a>
+                <a href="javascript:void(0)" class="js-tag color5">执行流程</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">软件设计原则</a>
+                <a href="javascript:void(0)" class="js-tag color3">DispatcherServlet</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">RequestMapping</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">请求参数</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Spring Framework</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">IoC容器</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Stream流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">方法引用</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">xml</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Fanout</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Direct</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Topic</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1069,6 +961,70 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">建造者模式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">同步调用</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">异步调用</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">交换机</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Thread</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">反射</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">动态代理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">API</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">延迟消息</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">死信</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">异常</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">类加载器</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">双亲委派模型</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">生产者确认</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">LazyQueue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">消费者确认</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">幂等性</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1097,6 +1053,50 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">享元模式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">ThreadPool</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">redis入门</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">nginx.conf</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">UML</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">软件设计原则</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Map</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">List</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Set</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">面向对象</a>
               </li>
             
             <div class="clearfix"></div>

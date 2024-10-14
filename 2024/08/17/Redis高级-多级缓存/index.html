@@ -15,44 +15,44 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="3.Lua语法入门Nginx编程需要用到Lua语言，因此我们必须先入门Lua的基本语法。 3.1.初识LuaLua 是一种轻量小巧的脚本语言，用标准C语言编写并以源代码形式开放， 其设计目的是为了嵌入应用程序中，从而为应用程序提供灵活的扩展和定制功能。官网：https:&#x2F;&#x2F;www.lua.org&#x2F;">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821091437975.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821091621308.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821091638140.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821091835406.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821091904332.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821092657918.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821092902946.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821092941139.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/yeVDlwtfMx.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821093144700.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821094447709.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821100755080.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821100801756.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821101217089.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821101433528.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821101721649.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821102235467.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821102610167.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821102959829.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821104149061.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821104857413.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821110441222.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821111023255.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821112420464.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821112444482.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821112559965.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821112637430.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821113340111.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821114528954.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821114742950.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821115108528.png">
+<meta property="og:image" content="http://example.com/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821091437975.png">
+<meta property="og:image" content="http://example.com/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821091621308.png">
+<meta property="og:image" content="http://example.com/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821091638140.png">
+<meta property="og:image" content="http://example.com/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821091835406.png">
+<meta property="og:image" content="http://example.com/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821091904332.png">
+<meta property="og:image" content="http://example.com/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821092657918.png">
+<meta property="og:image" content="http://example.com/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821092902946.png">
+<meta property="og:image" content="http://example.com/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821092941139.png">
+<meta property="og:image" content="http://example.com/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/yeVDlwtfMx.png">
+<meta property="og:image" content="http://example.com/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821093144700.png">
+<meta property="og:image" content="http://example.com/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821094447709.png">
+<meta property="og:image" content="http://example.com/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821100755080.png">
+<meta property="og:image" content="http://example.com/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821100801756.png">
+<meta property="og:image" content="http://example.com/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821101217089.png">
+<meta property="og:image" content="http://example.com/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821101433528.png">
+<meta property="og:image" content="http://example.com/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821101721649.png">
+<meta property="og:image" content="http://example.com/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821102235467.png">
+<meta property="og:image" content="http://example.com/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821102610167.png">
+<meta property="og:image" content="http://example.com/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821102959829.png">
+<meta property="og:image" content="http://example.com/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821104149061.png">
+<meta property="og:image" content="http://example.com/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821104857413.png">
+<meta property="og:image" content="http://example.com/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821110441222.png">
+<meta property="og:image" content="http://example.com/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821111023255.png">
+<meta property="og:image" content="http://example.com/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821112420464.png">
+<meta property="og:image" content="http://example.com/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821112444482.png">
+<meta property="og:image" content="http://example.com/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821112559965.png">
+<meta property="og:image" content="http://example.com/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821112637430.png">
+<meta property="og:image" content="http://example.com/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821113340111.png">
+<meta property="og:image" content="http://example.com/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821114528954.png">
+<meta property="og:image" content="http://example.com/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821114742950.png">
+<meta property="og:image" content="http://example.com/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821115108528.png">
 <meta property="article:published_time" content="2024-08-17T12:24:32.000Z">
 <meta property="article:modified_time" content="2024-08-17T12:58:42.970Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="Lua">
 <meta property="article:tag" content="OpenResty">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821091437975.png">
+<meta name="twitter:image" content="http://example.com/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821091437975.png">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -212,24 +212,24 @@
 <h2 id="3-1-初识Lua"><a href="#3-1-初识Lua" class="headerlink" title="3.1.初识Lua"></a>3.1.初识Lua</h2><p>Lua 是一种轻量小巧的脚本语言，用标准C语言编写并以源代码形式开放， 其设计目的是为了嵌入应用程序中，从而为应用程序提供灵活的扩展和定制功能。官网：<a target="_blank" rel="noopener" href="https://www.lua.org/">https://www.lua.org/</a></p>
 <span id="more"></span>
 
-<p><img src="/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821091437975.png" alt="image-20210821091437975"></p>
+<p><img src="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821091437975.png" alt="image-20210821091437975"></p>
 <p>Lua经常嵌入到C语言开发的程序中，例如游戏开发、游戏插件等。</p>
 <p>Nginx本身也是C语言开发，因此也允许基于Lua做拓展。</p>
 <h2 id="3-1-HelloWorld"><a href="#3-1-HelloWorld" class="headerlink" title="3.1.HelloWorld"></a>3.1.HelloWorld</h2><p>CentOS7默认已经安装了Lua语言环境，所以可以直接运行Lua代码。</p>
 <p>1）在Linux虚拟机的任意目录下，新建一个hello.lua文件</p>
-<p><img src="/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821091621308.png" alt="image-20210821091621308"></p>
+<p><img src="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821091621308.png" alt="image-20210821091621308"></p>
 <p>2）添加下面的内容</p>
 <figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="string">&quot;Hello World!&quot;</span>)  </span><br></pre></td></tr></table></figure>
 
 
 
 <p>3）运行</p>
-<p><img src="/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821091638140.png" alt="image-20210821091638140"></p>
+<p><img src="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821091638140.png" alt="image-20210821091638140"></p>
 <h2 id="3-2-变量和循环"><a href="#3-2-变量和循环" class="headerlink" title="3.2.变量和循环"></a>3.2.变量和循环</h2><p>学习任何语言必然离不开变量，而变量的声明必须先知道数据的类型。</p>
 <h3 id="3-2-1-Lua的数据类型"><a href="#3-2-1-Lua的数据类型" class="headerlink" title="3.2.1.Lua的数据类型"></a>3.2.1.Lua的数据类型</h3><p>Lua中支持的常见数据类型包括：</p>
-<p><img src="/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821091835406.png" alt="image-20210821091835406"></p>
+<p><img src="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821091835406.png" alt="image-20210821091835406"></p>
 <p>另外，Lua提供了type()函数来判断一个变量的数据类型：</p>
-<p><img src="/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821091904332.png" alt="image-20210821091904332"></p>
+<p><img src="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821091904332.png" alt="image-20210821091904332"></p>
 <h3 id="3-2-2-声明变量"><a href="#3-2-2-声明变量" class="headerlink" title="3.2.2.声明变量"></a>3.2.2.声明变量</h3><p>Lua声明变量的时候无需指定数据类型，而是用local来声明变量为局部变量：</p>
 <figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 声明字符串，可以用单引号或双引号，</span></span><br><span class="line"><span class="keyword">local</span> str = <span class="string">&#x27;hello&#x27;</span></span><br><span class="line"><span class="comment">-- 字符串拼接可以使用 ..</span></span><br><span class="line"><span class="keyword">local</span> str2 = <span class="string">&#x27;hello&#x27;</span> .. <span class="string">&#x27;world&#x27;</span></span><br><span class="line"><span class="comment">-- 声明数字</span></span><br><span class="line"><span class="keyword">local</span> num = <span class="number">21</span></span><br><span class="line"><span class="comment">-- 声明布尔类型</span></span><br><span class="line"><span class="keyword">local</span> flag = <span class="literal">true</span></span><br></pre></td></tr></table></figure>
 
@@ -276,7 +276,7 @@
 
 
 <p>与java不同，布尔表达式中的逻辑运算是基于英文单词：</p>
-<p><img src="/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821092657918.png" alt="image-20210821092657918"></p>
+<p><img src="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821092657918.png" alt="image-20210821092657918"></p>
 <h3 id="3-3-3-案例"><a href="#3-3-3-案例" class="headerlink" title="3.3.3.案例"></a>3.3.3.案例</h3><p>需求：自定义一个函数，可以打印table，当参数为nil时，打印错误信息</p>
 <figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">printArr</span><span class="params">(arr)</span></span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> arr <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;数组不能为空！&#x27;</span>)</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">for</span> index, value <span class="keyword">in</span> <span class="built_in">ipairs</span>(arr) <span class="keyword">do</span></span><br><span class="line">        <span class="built_in">print</span>(value)</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
 
@@ -292,11 +292,11 @@
 <li>允许使用Lua<strong>自定义业务逻辑</strong>、<strong>自定义库</strong></li>
 </ul>
 <p>官方网站： <a target="_blank" rel="noopener" href="https://openresty.org/cn/">https://openresty.org/cn/</a></p>
-<p><img src="/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821092902946.png" alt="image-20210821092902946"></p>
+<p><img src="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821092902946.png" alt="image-20210821092902946"></p>
 <p>安装Lua可以参考课前资料提供的《安装OpenResty.md》：</p>
-<p><img src="/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821092941139.png" alt="image-20210821092941139"> </p>
+<p><img src="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821092941139.png" alt="image-20210821092941139"> </p>
 <h2 id="4-2-OpenResty快速入门"><a href="#4-2-OpenResty快速入门" class="headerlink" title="4.2.OpenResty快速入门"></a>4.2.OpenResty快速入门</h2><p>我们希望达到的多级缓存架构如图：</p>
-<p><img src="/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/yeVDlwtfMx.png" alt="yeVDlwtfMx"></p>
+<p><img src="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/yeVDlwtfMx.png" alt="yeVDlwtfMx"></p>
 <p>其中：</p>
 <ul>
 <li><p>windows上的nginx用来做反向代理服务，将前端的查询商品的ajax请求代理到OpenResty集群</p>
@@ -306,9 +306,9 @@
 </ul>
 <h3 id="4-2-1-反向代理流程"><a href="#4-2-1-反向代理流程" class="headerlink" title="4.2.1.反向代理流程"></a>4.2.1.反向代理流程</h3><p>现在，商品详情页使用的是假的商品数据。不过在浏览器中，可以看到页面有发起ajax请求查询真实商品数据。</p>
 <p>这个请求如下：</p>
-<p><img src="/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821093144700.png" alt="image-20210821093144700"></p>
+<p><img src="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821093144700.png" alt="image-20210821093144700"></p>
 <p>请求地址是localhost，端口是80，就被windows上安装的Nginx服务给接收到了。然后代理给了OpenResty集群：</p>
-<p><img src="/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821094447709.png" alt="image-20210821094447709"></p>
+<p><img src="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821094447709.png" alt="image-20210821094447709"></p>
 <p>我们需要在OpenResty中编写业务，查询商品数据并返回到浏览器。</p>
 <p>但是这次，我们先在OpenResty接收请求，返回假的商品数据。</p>
 <h3 id="4-2-2-OpenResty监听请求"><a href="#4-2-2-OpenResty监听请求" class="headerlink" title="4.2.2.OpenResty监听请求"></a>4.2.2.OpenResty监听请求</h3><p>OpenResty的很多功能都依赖于其目录下的Lua库，需要在nginx.conf中指定依赖库的目录，并导入依赖：</p>
@@ -327,9 +327,9 @@
 <p>这个监听，就类似于SpringMVC中的<code>@GetMapping(&quot;/api/item&quot;)</code>做路径映射。</p>
 <p>而<code>content_by_lua_file lua/item.lua</code>则相当于调用item.lua这个文件，执行其中的业务，把结果返回给用户。相当于java中调用service。</p>
 <h3 id="4-2-3-编写item-lua"><a href="#4-2-3-编写item-lua" class="headerlink" title="4.2.3.编写item.lua"></a>4.2.3.编写item.lua</h3><p>1）在<code>/usr/loca/openresty/nginx</code>目录创建文件夹：lua</p>
-<p><img src="/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821100755080.png" alt="image-20210821100755080"></p>
+<p><img src="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821100755080.png" alt="image-20210821100755080"></p>
 <p>2）在<code>/usr/loca/openresty/nginx/lua</code>文件夹下，新建文件：item.lua</p>
-<p><img src="/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821100801756.png" alt="image-20210821100801756"></p>
+<p><img src="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821100801756.png" alt="image-20210821100801756"></p>
 <p>3）编写item.lua，返回假数据</p>
 <p>item.lua中，利用ngx.say()函数返回数据到Response中</p>
 <figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ngx.say(<span class="string">&#x27;&#123;&quot;id&quot;:10001,&quot;name&quot;:&quot;SALSA AIR&quot;,&quot;title&quot;:&quot;RIMOWA 21寸托运箱拉杆箱 SALSA AIR系列果绿色 820.70.36.4&quot;,&quot;price&quot;:17900,&quot;image&quot;:&quot;https://m.360buyimg.com/mobilecms/s720x720_jfs/t6934/364/1195375010/84676/e9f2c55f/597ece38N0ddcbc77.jpg!q70.jpg.webp&quot;,&quot;category&quot;:&quot;拉杆箱&quot;,&quot;brand&quot;:&quot;RIMOWA&quot;,&quot;spec&quot;:&quot;&quot;,&quot;status&quot;:1,&quot;createTime&quot;:&quot;2019-04-30T16:00:00.000+00:00&quot;,&quot;updateTime&quot;:&quot;2019-04-30T16:00:00.000+00:00&quot;,&quot;stock&quot;:2999,&quot;sold&quot;:31290&#125;&#x27;</span>)</span><br></pre></td></tr></table></figure>
@@ -342,14 +342,14 @@
 
 
 <p>刷新商品页面：<a target="_blank" rel="noopener" href="http://localhost/item.html?id=1001%EF%BC%8C%E5%8D%B3%E5%8F%AF%E7%9C%8B%E5%88%B0%E6%95%88%E6%9E%9C%EF%BC%9A">http://localhost/item.html?id=1001，即可看到效果：</a></p>
-<p><img src="/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821101217089.png" alt="image-20210821101217089"></p>
+<p><img src="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821101217089.png" alt="image-20210821101217089"></p>
 <h2 id="4-3-请求参数处理"><a href="#4-3-请求参数处理" class="headerlink" title="4.3.请求参数处理"></a>4.3.请求参数处理</h2><p>上一节中，我们在OpenResty接收前端请求，但是返回的是假数据。</p>
 <p>要返回真实数据，必须根据前端传递来的商品id，查询商品信息才可以。</p>
 <p>那么如何获取前端传递的商品参数呢？</p>
 <h3 id="4-3-1-获取参数的API"><a href="#4-3-1-获取参数的API" class="headerlink" title="4.3.1.获取参数的API"></a>4.3.1.获取参数的API</h3><p>OpenResty中提供了一些API用来获取不同类型的前端请求参数：</p>
-<p><img src="/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821101433528.png" alt="image-20210821101433528"></p>
+<p><img src="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821101433528.png" alt="image-20210821101433528"></p>
 <h3 id="4-3-2-获取参数并返回"><a href="#4-3-2-获取参数并返回" class="headerlink" title="4.3.2.获取参数并返回"></a>4.3.2.获取参数并返回</h3><p>在前端发起的ajax请求如图：</p>
-<p><img src="/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821101721649.png" alt="image-20210821101721649"></p>
+<p><img src="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821101721649.png" alt="image-20210821101721649"></p>
 <p>可以看到商品id是以路径占位符方式传递的，因此可以利用正则表达式匹配的方式来获取ID</p>
 <p>1）获取商品id</p>
 <p>修改<code>/usr/loca/openresty/nginx/nginx.conf</code>文件中监听&#x2F;api&#x2F;item的代码，利用正则表达式获取ID：</p>
@@ -370,11 +370,11 @@
 
 
 <p>刷新页面可以看到结果中已经带上了ID：</p>
-<p><img src="/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821102235467.png" alt="image-20210821102235467"> </p>
+<p><img src="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821102235467.png" alt="image-20210821102235467"> </p>
 <h2 id="4-4-查询Tomcat"><a href="#4-4-查询Tomcat" class="headerlink" title="4.4.查询Tomcat"></a>4.4.查询Tomcat</h2><p>拿到商品ID后，本应去缓存中查询商品信息，不过目前我们还未建立nginx、redis缓存。因此，这里我们先根据商品id去tomcat查询商品信息。我们实现如图部分：</p>
-<p><img src="/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821102610167.png" alt="image-20210821102610167"></p>
+<p><img src="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821102610167.png" alt="image-20210821102610167"></p>
 <p>需要注意的是，我们的OpenResty是在虚拟机，Tomcat是在Windows电脑上。两者IP一定不要搞错了。</p>
-<p><img src="/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821102959829.png" alt="image-20210821102959829"></p>
+<p><img src="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821102959829.png" alt="image-20210821102959829"></p>
 <h3 id="4-4-1-发送http请求的API"><a href="#4-4-1-发送http请求的API" class="headerlink" title="4.4.1.发送http请求的API"></a>4.4.1.发送http请求的API</h3><p>nginx提供了内部API用以发送http请求：</p>
 <figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> resp = ngx.location.capture(<span class="string">&quot;/path&quot;</span>,&#123;</span><br><span class="line">    method = ngx.HTTP_GET,   <span class="comment">-- 请求方式</span></span><br><span class="line">    args = &#123;a=<span class="number">1</span>,b=<span class="number">2</span>&#125;,  <span class="comment">-- get方式传参数</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
@@ -391,7 +391,7 @@
 
 
 <p>原理如图：</p>
-<p><img src="/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821104149061.png" alt="image-20210821104149061"></p>
+<p><img src="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821104149061.png" alt="image-20210821104149061"></p>
 <h3 id="4-4-2-封装http工具"><a href="#4-4-2-封装http工具" class="headerlink" title="4.4.2.封装http工具"></a>4.4.2.封装http工具</h3><p>下面，我们封装一个发送Http请求的工具，基于ngx.location.capture来实现查询tomcat。</p>
 <p>1）添加反向代理，到windows的Java服务</p>
 <p>因为item-service中的接口都是&#x2F;item开头，所以我们监听&#x2F;item路径，代理到windows上的tomcat服务。</p>
@@ -403,7 +403,7 @@
 <p>以后，只要我们调用<code>ngx.location.capture(&quot;/item&quot;)</code>，就一定能发送请求到windows的tomcat服务。</p>
 <p>2）封装工具类</p>
 <p>之前我们说过，OpenResty启动时会加载以下两个目录中的工具文件：</p>
-<p><img src="/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821104857413.png" alt="image-20210821104857413"></p>
+<p><img src="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821104857413.png" alt="image-20210821104857413"></p>
 <p>所以，自定义的http工具也需要放到这个目录下。</p>
 <p>在<code>/usr/local/openresty/lualib</code>目录下，新建一个common.lua文件：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /usr/local/openresty/lualib/common.lua</span><br></pre></td></tr></table></figure>
@@ -422,7 +422,7 @@
 
 
 <p>这里查询到的结果是json字符串，并且包含商品、库存两个json字符串，页面最终需要的是把两个json拼接为一个json：</p>
-<p><img src="/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821110441222.png" alt="image-20210821110441222"></p>
+<p><img src="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821110441222.png" alt="image-20210821110441222"></p>
 <p>这就需要我们先把JSON变为lua的table，完成数据整合后，再转为JSON。</p>
 <h3 id="4-4-3-CJSON工具类"><a href="#4-4-3-CJSON工具类" class="headerlink" title="4.4.3.CJSON工具类"></a>4.4.3.CJSON工具类</h3><p>OpenResty提供了一个cjson的模块用来处理JSON的序列化和反序列化。</p>
 <p>官方地址： <a target="_blank" rel="noopener" href="https://github.com/openresty/lua-cjson/">https://github.com/openresty/lua-cjson/</a></p>
@@ -449,7 +449,7 @@
 
 
 <h3 id="4-4-5-基于ID负载均衡"><a href="#4-4-5-基于ID负载均衡" class="headerlink" title="4.4.5.基于ID负载均衡"></a>4.4.5.基于ID负载均衡</h3><p>刚才的代码中，我们的tomcat是单机部署。而实际开发中，tomcat一定是集群模式：</p>
-<p><img src="/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821111023255.png" alt="image-20210821111023255"></p>
+<p><img src="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821111023255.png" alt="image-20210821111023255"></p>
 <p>因此，OpenResty需要对tomcat集群做负载均衡。</p>
 <p>而默认的负载均衡规则是轮询模式，当我们查询&#x2F;item&#x2F;10001时：</p>
 <ul>
@@ -486,12 +486,12 @@
 
 
 <h4 id="3）测试"><a href="#3）测试" class="headerlink" title="3）测试"></a>3）测试</h4><p>启动两台tomcat服务：</p>
-<p><img src="/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821112420464.png" alt="image-20210821112420464"></p>
+<p><img src="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821112420464.png" alt="image-20210821112420464"></p>
 <p>同时启动：</p>
-<p><img src="/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821112444482.png" alt="image-20210821112444482"> </p>
+<p><img src="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821112444482.png" alt="image-20210821112444482"> </p>
 <p>清空日志后，再次访问页面，可以看到不同id的商品，访问到了不同的tomcat服务：</p>
-<p><img src="/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821112559965.png" alt="image-20210821112559965"></p>
-<p><img src="/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821112637430.png" alt="image-20210821112637430"></p>
+<p><img src="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821112559965.png" alt="image-20210821112559965"></p>
+<p><img src="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821112637430.png" alt="image-20210821112637430"></p>
 <h2 id="4-5-Redis缓存预热"><a href="#4-5-Redis缓存预热" class="headerlink" title="4.5.Redis缓存预热"></a>4.5.Redis缓存预热</h2><p>Redis缓存会面临冷启动问题：</p>
 <p><strong>冷启动</strong>：服务刚刚启动时，Redis中并没有缓存，如果所有商品数据都在第一次查询时添加缓存，可能会给数据库带来较大压力。</p>
 <p><strong>缓存预热</strong>：在实际开发中，我们可以利用大数据统计用户访问的热点数据，在项目启动时将这些热点数据提前查询并保存到Redis中。</p>
@@ -521,7 +521,7 @@
 
 
 <h2 id="4-6-查询Redis缓存"><a href="#4-6-查询Redis缓存" class="headerlink" title="4.6.查询Redis缓存"></a>4.6.查询Redis缓存</h2><p>现在，Redis缓存已经准备就绪，我们可以再OpenResty中实现查询Redis的逻辑了。如下图红框所示：</p>
-<p><img src="/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821113340111.png" alt="image-20210821113340111"></p>
+<p><img src="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821113340111.png" alt="image-20210821113340111"></p>
 <p>当请求进入OpenResty之后：</p>
 <ul>
 <li>优先查询Redis缓存</li>
@@ -569,7 +569,7 @@
 
 
 <p>2）而后修改商品查询、库存查询的业务：</p>
-<p><img src="/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821114528954.png" alt="image-20210821114528954"></p>
+<p><img src="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821114528954.png" alt="image-20210821114528954"></p>
 <p>3）完整的item.lua代码：</p>
 <figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 导入common函数库</span></span><br><span class="line"><span class="keyword">local</span> common = <span class="built_in">require</span>(<span class="string">&#x27;common&#x27;</span>)</span><br><span class="line"><span class="keyword">local</span> read_http = common.read_http</span><br><span class="line"><span class="keyword">local</span> read_redis = common.read_redis</span><br><span class="line"><span class="comment">-- 导入cjson库</span></span><br><span class="line"><span class="keyword">local</span> cjson = <span class="built_in">require</span>(<span class="string">&#x27;cjson&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 封装查询函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">read_data</span><span class="params">(key, path, params)</span></span></span><br><span class="line">    <span class="comment">-- 查询本地缓存</span></span><br><span class="line">    <span class="keyword">local</span> val = read_redis(<span class="string">&quot;127.0.0.1&quot;</span>, <span class="number">6379</span>, key)</span><br><span class="line">    <span class="comment">-- 判断查询结果</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> val <span class="keyword">then</span></span><br><span class="line">        ngx.<span class="built_in">log</span>(ngx.ERR, <span class="string">&quot;redis查询失败，尝试查询http， key: &quot;</span>, key)</span><br><span class="line">        <span class="comment">-- redis查询失败，去查询http</span></span><br><span class="line">        val = read_http(<span class="built_in">path</span>, params)</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    <span class="comment">-- 返回数据</span></span><br><span class="line">    <span class="keyword">return</span> val</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 获取路径参数</span></span><br><span class="line"><span class="keyword">local</span> id = ngx.var[<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 查询商品信息</span></span><br><span class="line"><span class="keyword">local</span> itemJSON = read_data(<span class="string">&quot;item:id:&quot;</span> .. id,  <span class="string">&quot;/item/&quot;</span> .. id, <span class="literal">nil</span>)</span><br><span class="line"><span class="comment">-- 查询库存信息</span></span><br><span class="line"><span class="keyword">local</span> stockJSON = read_data(<span class="string">&quot;item:stock:id:&quot;</span> .. id, <span class="string">&quot;/item/stock/&quot;</span> .. id, <span class="literal">nil</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">-- JSON转化为lua的table</span></span><br><span class="line"><span class="keyword">local</span> item = cjson.decode(itemJSON)</span><br><span class="line"><span class="keyword">local</span> stock = cjson.decode(stockJSON)</span><br><span class="line"><span class="comment">-- 组合数据</span></span><br><span class="line">item.stock = stock.stock</span><br><span class="line">item.sold = stock.sold</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 把item序列化为json 返回结果</span></span><br><span class="line">ngx.say(cjson.encode(item))</span><br></pre></td></tr></table></figure>
 
@@ -578,7 +578,7 @@
 
 
 <h2 id="4-7-Nginx本地缓存"><a href="#4-7-Nginx本地缓存" class="headerlink" title="4.7.Nginx本地缓存"></a>4.7.Nginx本地缓存</h2><p>现在，整个多级缓存中只差最后一环，也就是nginx的本地缓存了。如图：</p>
-<p><img src="/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821114742950.png" alt="image-20210821114742950"></p>
+<p><img src="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821114742950.png" alt="image-20210821114742950"></p>
 <h3 id="4-7-1-本地缓存API"><a href="#4-7-1-本地缓存API" class="headerlink" title="4.7.1.本地缓存API"></a>4.7.1.本地缓存API</h3><p>OpenResty为Nginx提供了<strong>shard dict</strong>的功能，可以在nginx的多个worker之间共享数据，实现缓存功能。</p>
 <p>1）开启共享字典，在nginx.conf的http下添加配置：</p>
 <figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 共享字典，也就是本地缓存，名称叫做：item_cache，大小150m</span></span><br><span class="line"><span class="attribute">lua_shared_dict</span> item_cache <span class="number">150m</span>; </span><br></pre></td></tr></table></figure>
@@ -598,7 +598,7 @@
 
 
 <p>2）修改item.lua中查询商品和库存的业务，实现最新的read_data函数：</p>
-<p><img src="/2024/07/28/File/%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821115108528.png" alt="image-20210821115108528"></p>
+<p><img src="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/image-20210821115108528.png" alt="image-20210821115108528"></p>
 <p>其实就是多了缓存时间参数，过期后nginx缓存会自动删除，下次访问即可更新缓存。</p>
 <p>这里给商品基本信息设置超时时间为30分钟，库存为1分钟。</p>
 <p>因为库存更新频率较高，如果缓存时间过长，可能与数据库差异较大。</p>
@@ -867,7 +867,31 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">InputStream</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">OutputStream</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Reader</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Writer</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">MarkDown</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">动静分离</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">高可用</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -891,27 +915,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">反向代理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">负载均衡</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">session</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">悲观锁</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">乐观锁</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">InputStream</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">OutputStream</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Reader</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Writer</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -927,18 +947,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">session</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">分布式锁</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Lua脚本</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">阻塞队列</a>
               </li>
              
@@ -947,15 +955,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">set</a>
+                <a href="javascript:void(0)" class="js-tag color5">分布式锁</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">sorted set</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Feed流</a>
+                <a href="javascript:void(0)" class="js-tag color1">Lua脚本</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -971,139 +975,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Stream流</a>
+                <a href="javascript:void(0)" class="js-tag color4">set</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">方法引用</a>
+                <a href="javascript:void(0)" class="js-tag color1">sorted set</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">xml</a>
+                <a href="javascript:void(0)" class="js-tag color1">Feed流</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">反射</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">动态代理</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Thread</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">API</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">类加载器</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">双亲委派模型</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">异常</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">ThreadPool</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">redis入门</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">List</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Set</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Map</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">面向对象</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">SpringAMQP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">WorkQueues</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Fanout</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Direct</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Topic</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">同步调用</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">异步调用</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">交换机</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">生产者确认</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">LazyQueue</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">消费者确认</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">幂等性</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">延迟消息</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">死信</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">RDB</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">AOF</a>
+                <a href="javascript:void(0)" class="js-tag color4">Caffeine</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1123,14 +1007,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">哨兵集群</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">读写分离</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">散列插槽</a>
               </li>
              
@@ -1139,7 +1015,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Caffeine</a>
+                <a href="javascript:void(0)" class="js-tag color5">哨兵集群</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">读写分离</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1148,6 +1028,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">OpenResty</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">RDB</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">AOF</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1171,23 +1059,31 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">反向代理</a>
+                <a href="javascript:void(0)" class="js-tag color1">声明式事务</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">负载均衡</a>
+                <a href="javascript:void(0)" class="js-tag color5">事务属性</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">nginx.conf</a>
+                <a href="javascript:void(0)" class="js-tag color4">Transactional</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">动静分离</a>
+                <a href="javascript:void(0)" class="js-tag color5">Component</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">高可用</a>
+                <a href="javascript:void(0)" class="js-tag color5">Autowired</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Resource</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Validation</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1215,23 +1111,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Spring Framework</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">IoC容器</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Component</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Autowired</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Resource</a>
+                <a href="javascript:void(0)" class="js-tag color3">RESTful</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1251,39 +1131,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">声明式事务</a>
+                <a href="javascript:void(0)" class="js-tag color1">SpringAMQP</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">事务属性</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Transactional</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Validation</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">DispatcherServlet</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">RequestMapping</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">请求参数</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">RESTful</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">执行流程</a>
+                <a href="javascript:void(0)" class="js-tag color1">WorkQueues</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1299,11 +1151,51 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">UML</a>
+                <a href="javascript:void(0)" class="js-tag color5">执行流程</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">软件设计原则</a>
+                <a href="javascript:void(0)" class="js-tag color3">DispatcherServlet</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">RequestMapping</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">请求参数</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Spring Framework</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">IoC容器</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Stream流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">方法引用</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">xml</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Fanout</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Direct</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Topic</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1324,6 +1216,70 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">建造者模式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">同步调用</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">异步调用</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">交换机</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Thread</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">反射</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">动态代理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">API</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">延迟消息</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">死信</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">异常</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">类加载器</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">双亲委派模型</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">生产者确认</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">LazyQueue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">消费者确认</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">幂等性</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1352,6 +1308,50 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">享元模式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">ThreadPool</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">redis入门</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">nginx.conf</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">UML</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">软件设计原则</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Map</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">List</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Set</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">面向对象</a>
               </li>
             
             <div class="clearfix"></div>

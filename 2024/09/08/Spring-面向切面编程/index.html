@@ -15,21 +15,21 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="5、面向切面：AOP5.1、场景模拟搭建子模块：spring6-aop 5.1.1、声明接口声明计算器接口Calculator，包含加减乘除的抽象方法 1234567891011public interface Calculator &#123;        int add(int i, int j);        int sub(int i, int j);        int mul(i">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/2024/07/28/File/g-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img014.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/g-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img015.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/g-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img016.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/g-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img017.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/g-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img018.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/g-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img019.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/g-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img020.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/g-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img021.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/g-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img022.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/g-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img023.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/g-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/image-20221216132844066.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/g-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/image-20221102155523983.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/g-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img024.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/g-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img025.png">
-<meta property="og:image" content="http://example.com/2024/07/28/File/g-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img026.png">
+<meta property="og:image" content="http://example.com/2024/09/08/Spring-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img014.png">
+<meta property="og:image" content="http://example.com/2024/09/08/Spring-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img015.png">
+<meta property="og:image" content="http://example.com/2024/09/08/Spring-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img016.png">
+<meta property="og:image" content="http://example.com/2024/09/08/Spring-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img017.png">
+<meta property="og:image" content="http://example.com/2024/09/08/Spring-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img018.png">
+<meta property="og:image" content="http://example.com/2024/09/08/Spring-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img019.png">
+<meta property="og:image" content="http://example.com/2024/09/08/Spring-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img020.png">
+<meta property="og:image" content="http://example.com/2024/09/08/Spring-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img021.png">
+<meta property="og:image" content="http://example.com/2024/09/08/Spring-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img022.png">
+<meta property="og:image" content="http://example.com/2024/09/08/Spring-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img023.png">
+<meta property="og:image" content="http://example.com/2024/09/08/Spring-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/image-20221216132844066.png">
+<meta property="og:image" content="http://example.com/2024/09/08/Spring-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/image-20221102155523983.png">
+<meta property="og:image" content="http://example.com/2024/09/08/Spring-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img024.png">
+<meta property="og:image" content="http://example.com/2024/09/08/Spring-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img025.png">
+<meta property="og:image" content="http://example.com/2024/09/08/Spring-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img026.png">
 <meta property="article:published_time" content="2024-09-08T06:56:13.000Z">
 <meta property="article:modified_time" content="2024-09-10T07:45:04.651Z">
 <meta property="article:author" content="John Doe">
@@ -38,7 +38,7 @@
 <meta property="article:tag" content="通知">
 <meta property="article:tag" content="切入点表达式">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2024/07/28/File/g-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img014.png">
+<meta name="twitter:image" content="http://example.com/2024/09/08/Spring-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img014.png">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -200,10 +200,10 @@
 
 <span id="more"></span>
 
-<h4 id="5-1-2、创建实现类"><a href="#5-1-2、创建实现类" class="headerlink" title="5.1.2、创建实现类"></a>5.1.2、创建实现类</h4><p><img src="/2024/07/28/File/g-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img014.png" alt="images"></p>
+<h4 id="5-1-2、创建实现类"><a href="#5-1-2、创建实现类" class="headerlink" title="5.1.2、创建实现类"></a>5.1.2、创建实现类</h4><p><img src="/2024/09/08/Spring-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img014.png" alt="images"></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CalculatorImpl</span> <span class="keyword">implements</span> <span class="title class_">Calculator</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">add</span><span class="params">(<span class="type">int</span> i, <span class="type">int</span> j)</span> &#123;</span><br><span class="line">    </span><br><span class="line">        <span class="type">int</span> <span class="variable">result</span> <span class="operator">=</span> i + j;</span><br><span class="line">    </span><br><span class="line">        System.out.println(<span class="string">&quot;方法内部 result = &quot;</span> + result);</span><br><span class="line">    </span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">sub</span><span class="params">(<span class="type">int</span> i, <span class="type">int</span> j)</span> &#123;</span><br><span class="line">    </span><br><span class="line">        <span class="type">int</span> <span class="variable">result</span> <span class="operator">=</span> i - j;</span><br><span class="line">    </span><br><span class="line">        System.out.println(<span class="string">&quot;方法内部 result = &quot;</span> + result);</span><br><span class="line">    </span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">mul</span><span class="params">(<span class="type">int</span> i, <span class="type">int</span> j)</span> &#123;</span><br><span class="line">    </span><br><span class="line">        <span class="type">int</span> <span class="variable">result</span> <span class="operator">=</span> i * j;</span><br><span class="line">    </span><br><span class="line">        System.out.println(<span class="string">&quot;方法内部 result = &quot;</span> + result);</span><br><span class="line">    </span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">div</span><span class="params">(<span class="type">int</span> i, <span class="type">int</span> j)</span> &#123;</span><br><span class="line">    </span><br><span class="line">        <span class="type">int</span> <span class="variable">result</span> <span class="operator">=</span> i / j;</span><br><span class="line">    </span><br><span class="line">        System.out.println(<span class="string">&quot;方法内部 result = &quot;</span> + result);</span><br><span class="line">    </span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="5-1-3、创建带日志功能的实现类"><a href="#5-1-3、创建带日志功能的实现类" class="headerlink" title="5.1.3、创建带日志功能的实现类"></a>5.1.3、创建带日志功能的实现类</h4><p><img src="/2024/07/28/File/g-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img015.png" alt="images"></p>
+<h4 id="5-1-3、创建带日志功能的实现类"><a href="#5-1-3、创建带日志功能的实现类" class="headerlink" title="5.1.3、创建带日志功能的实现类"></a>5.1.3、创建带日志功能的实现类</h4><p><img src="/2024/09/08/Spring-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img015.png" alt="images"></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CalculatorLogImpl</span> <span class="keyword">implements</span> <span class="title class_">Calculator</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">add</span><span class="params">(<span class="type">int</span> i, <span class="type">int</span> j)</span> &#123;</span><br><span class="line">    </span><br><span class="line">        System.out.println(<span class="string">&quot;[日志] add 方法开始了，参数是：&quot;</span> + i + <span class="string">&quot;,&quot;</span> + j);</span><br><span class="line">    </span><br><span class="line">        <span class="type">int</span> <span class="variable">result</span> <span class="operator">=</span> i + j;</span><br><span class="line">    </span><br><span class="line">        System.out.println(<span class="string">&quot;方法内部 result = &quot;</span> + result);</span><br><span class="line">    </span><br><span class="line">        System.out.println(<span class="string">&quot;[日志] add 方法结束了，结果是：&quot;</span> + result);</span><br><span class="line">    </span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">sub</span><span class="params">(<span class="type">int</span> i, <span class="type">int</span> j)</span> &#123;</span><br><span class="line">    </span><br><span class="line">        System.out.println(<span class="string">&quot;[日志] sub 方法开始了，参数是：&quot;</span> + i + <span class="string">&quot;,&quot;</span> + j);</span><br><span class="line">    </span><br><span class="line">        <span class="type">int</span> <span class="variable">result</span> <span class="operator">=</span> i - j;</span><br><span class="line">    </span><br><span class="line">        System.out.println(<span class="string">&quot;方法内部 result = &quot;</span> + result);</span><br><span class="line">    </span><br><span class="line">        System.out.println(<span class="string">&quot;[日志] sub 方法结束了，结果是：&quot;</span> + result);</span><br><span class="line">    </span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">mul</span><span class="params">(<span class="type">int</span> i, <span class="type">int</span> j)</span> &#123;</span><br><span class="line">    </span><br><span class="line">        System.out.println(<span class="string">&quot;[日志] mul 方法开始了，参数是：&quot;</span> + i + <span class="string">&quot;,&quot;</span> + j);</span><br><span class="line">    </span><br><span class="line">        <span class="type">int</span> <span class="variable">result</span> <span class="operator">=</span> i * j;</span><br><span class="line">    </span><br><span class="line">        System.out.println(<span class="string">&quot;方法内部 result = &quot;</span> + result);</span><br><span class="line">    </span><br><span class="line">        System.out.println(<span class="string">&quot;[日志] mul 方法结束了，结果是：&quot;</span> + result);</span><br><span class="line">    </span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">div</span><span class="params">(<span class="type">int</span> i, <span class="type">int</span> j)</span> &#123;</span><br><span class="line">    </span><br><span class="line">        System.out.println(<span class="string">&quot;[日志] div 方法开始了，参数是：&quot;</span> + i + <span class="string">&quot;,&quot;</span> + j);</span><br><span class="line">    </span><br><span class="line">        <span class="type">int</span> <span class="variable">result</span> <span class="operator">=</span> i / j;</span><br><span class="line">    </span><br><span class="line">        System.out.println(<span class="string">&quot;方法内部 result = &quot;</span> + result);</span><br><span class="line">    </span><br><span class="line">        System.out.println(<span class="string">&quot;[日志] div 方法结束了，结果是：&quot;</span> + result);</span><br><span class="line">    </span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h4 id="5-1-4、提出问题"><a href="#5-1-4、提出问题" class="headerlink" title="5.1.4、提出问题"></a>5.1.4、提出问题</h4><p><strong>①现有代码缺陷</strong></p>
@@ -218,9 +218,9 @@
 <p>解决问题的困难：要抽取的代码在方法内部，靠以前把子类中的重复代码抽取到父类的方式没法解决。所以需要引入新的技术。</p>
 <h3 id="5-2、代理模式"><a href="#5-2、代理模式" class="headerlink" title="5.2、代理模式"></a>5.2、代理模式</h3><h4 id="5-2-1、概念"><a href="#5-2-1、概念" class="headerlink" title="5.2.1、概念"></a>5.2.1、概念</h4><p><strong>①介绍</strong></p>
 <p>二十三种设计模式中的一种，属于结构型模式。它的作用就是通过提供一个代理类，让我们在调用目标方法的时候，不再是直接对目标方法进行调用，而是通过代理类<strong>间接</strong>调用。让不属于目标方法核心逻辑的代码从目标方法中剥离出来——<strong>解耦</strong>。调用目标方法时先调用代理对象的方法，减少对目标方法的调用和打扰，同时让附加功能能够集中在一起也有利于统一维护。</p>
-<p><img src="/2024/07/28/File/g-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img016.png" alt="images"></p>
+<p><img src="/2024/09/08/Spring-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img016.png" alt="images"></p>
 <p>使用代理后：</p>
-<p><img src="/2024/07/28/File/g-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img017.png" alt="images"></p>
+<p><img src="/2024/09/08/Spring-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img017.png" alt="images"></p>
 <p><strong>②生活中的代理</strong></p>
 <ul>
 <li>广告商找大明星拍广告需要经过经纪人</li>
@@ -239,7 +239,7 @@
 <p>静态代理确实实现了解耦，但是由于代码都写死了，完全不具备任何的灵活性。就拿日志功能来说，将来其他地方也需要附加日志，那还得再声明更多个静态代理类，那就产生了大量重复的代码，日志功能还是分散的，没有统一管理。</p>
 <p>提出进一步的需求：将日志功能集中到一个代理类中，将来有任何日志需求，都通过这一个代理类来实现。这就需要使用动态代理技术了。</p>
 </blockquote>
-<h4 id="5-2-3、动态代理"><a href="#5-2-3、动态代理" class="headerlink" title="5.2.3、动态代理"></a>5.2.3、动态代理</h4><p><img src="/2024/07/28/File/g-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img018.png" alt="images"></p>
+<h4 id="5-2-3、动态代理"><a href="#5-2-3、动态代理" class="headerlink" title="5.2.3、动态代理"></a>5.2.3、动态代理</h4><p><img src="/2024/09/08/Spring-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img018.png" alt="images"></p>
 <p>生产代理对象的工厂类：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ProxyFactory</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Object target;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">ProxyFactory</span><span class="params">(Object target)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.target = target;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">getProxy</span><span class="params">()</span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * newProxyInstance()：创建一个代理实例</span></span><br><span class="line"><span class="comment">         * 其中有三个参数：</span></span><br><span class="line"><span class="comment">         * 1、classLoader：加载动态生成的代理类的类加载器</span></span><br><span class="line"><span class="comment">         * 2、interfaces：目标对象实现的所有接口的class对象所组成的数组</span></span><br><span class="line"><span class="comment">         * 3、invocationHandler：设置代理对象实现目标对象方法的过程，即代理类中如何重写接口中的抽象方法</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="type">ClassLoader</span> <span class="variable">classLoader</span> <span class="operator">=</span> target.getClass().getClassLoader();</span><br><span class="line">        Class&lt;?&gt;[] interfaces = target.getClass().getInterfaces();</span><br><span class="line">        <span class="type">InvocationHandler</span> <span class="variable">invocationHandler</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">InvocationHandler</span>() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> Object <span class="title function_">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable &#123;</span><br><span class="line">                <span class="comment">/**</span></span><br><span class="line"><span class="comment">                 * proxy：代理对象</span></span><br><span class="line"><span class="comment">                 * method：代理对象需要实现的方法，即其中需要重写的方法</span></span><br><span class="line"><span class="comment">                 * args：method所对应方法的参数</span></span><br><span class="line"><span class="comment">                 */</span></span><br><span class="line">                <span class="type">Object</span> <span class="variable">result</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    System.out.println(<span class="string">&quot;[动态代理][日志] &quot;</span>+method.getName()+<span class="string">&quot;，参数：&quot;</span>+ Arrays.toString(args));</span><br><span class="line">                    result = method.invoke(target, args);</span><br><span class="line">                    System.out.println(<span class="string">&quot;[动态代理][日志] &quot;</span>+method.getName()+<span class="string">&quot;，结果：&quot;</span>+ result);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                    System.out.println(<span class="string">&quot;[动态代理][日志] &quot;</span>+method.getName()+<span class="string">&quot;，异常：&quot;</span>+e.getMessage());</span><br><span class="line">                &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                    System.out.println(<span class="string">&quot;[动态代理][日志] &quot;</span>+method.getName()+<span class="string">&quot;，方法执行完毕&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> result;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> Proxy.newProxyInstance(classLoader, interfaces, invocationHandler);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -253,7 +253,7 @@
 <h4 id="5-3-2、相关术语"><a href="#5-3-2、相关术语" class="headerlink" title="5.3.2、相关术语"></a>5.3.2、相关术语</h4><h5 id="①横切关注点"><a href="#①横切关注点" class="headerlink" title="①横切关注点"></a>①横切关注点</h5><p>分散在每个各个模块中解决同一样的问题，如用户验证、日志管理、事务处理、数据缓存都属于横切关注点。</p>
 <p>从每个方法中抽取出来的同一类非核心业务。在同一个项目中，我们可以使用多个横切关注点对相关方法进行多个不同方面的增强。</p>
 <p>这个概念不是语法层面的，而是根据附加功能的逻辑上的需要：有十个附加功能，就有十个横切关注点。</p>
-<p><img src="/2024/07/28/File/g-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img019.png" alt="images"></p>
+<p><img src="/2024/09/08/Spring-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img019.png" alt="images"></p>
 <h5 id="②通知（增强）"><a href="#②通知（增强）" class="headerlink" title="②通知（增强）"></a>②通知（增强）</h5><p><strong>增强，通俗说，就是你想要增强的功能，比如 安全，事务，日志等。</strong></p>
 <p>每一个横切关注点上要做的事情都需要写一个方法来实现，这样的方法就叫通知方法。</p>
 <ul>
@@ -263,14 +263,14 @@
 <li>后置通知：在被代理的目标方法<strong>最终结束</strong>后执行（<strong>盖棺定论</strong>）</li>
 <li>环绕通知：使用try…catch…finally结构围绕<strong>整个</strong>被代理的目标方法，包括上面四种通知对应的所有位置</li>
 </ul>
-<p><img src="/2024/07/28/File/g-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img020.png" alt="images"></p>
+<p><img src="/2024/09/08/Spring-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img020.png" alt="images"></p>
 <h5 id="③切面"><a href="#③切面" class="headerlink" title="③切面"></a>③切面</h5><p>封装通知方法的类。</p>
-<p><img src="/2024/07/28/File/g-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img021.png" alt="images"></p>
+<p><img src="/2024/09/08/Spring-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img021.png" alt="images"></p>
 <h5 id="④目标"><a href="#④目标" class="headerlink" title="④目标"></a>④目标</h5><p>被代理的目标对象。</p>
 <h5 id="⑤代理"><a href="#⑤代理" class="headerlink" title="⑤代理"></a>⑤代理</h5><p>向目标对象应用通知之后创建的代理对象。</p>
 <h5 id="⑥连接点"><a href="#⑥连接点" class="headerlink" title="⑥连接点"></a>⑥连接点</h5><p>这也是一个纯逻辑概念，不是语法定义的。</p>
 <p>把方法排成一排，每一个横切位置看成x轴方向，把方法从上到下执行的顺序看成y轴，x轴和y轴的交叉点就是连接点。<strong>通俗说，就是spring允许你使用通知的地方</strong></p>
-<p><img src="/2024/07/28/File/g-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img022.png" alt="images"></p>
+<p><img src="/2024/09/08/Spring-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img022.png" alt="images"></p>
 <h5 id="⑦切入点"><a href="#⑦切入点" class="headerlink" title="⑦切入点"></a>⑦切入点</h5><p>定位连接点的方式。</p>
 <p>每个类的方法中都包含多个连接点，所以连接点是类中客观存在的事物（从逻辑上来说）。</p>
 <p>如果把连接点看作数据库中的记录，那么切入点就是查询记录的 SQL 语句。</p>
@@ -282,8 +282,8 @@
 <li><p>代码增强：把特定的功能封装到切面类中，看哪里有需要，就往上套，被<strong>套用</strong>了切面逻辑的方法就被切面给增强了。</p>
 </li>
 </ul>
-<h3 id="5-4、基于注解的AOP"><a href="#5-4、基于注解的AOP" class="headerlink" title="5.4、基于注解的AOP"></a>5.4、基于注解的AOP</h3><h4 id="5-4-1、技术说明"><a href="#5-4-1、技术说明" class="headerlink" title="5.4.1、技术说明"></a>5.4.1、技术说明</h4><p><img src="/2024/07/28/File/g-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img023.png" alt="images"></p>
-<p><img src="/2024/07/28/File/g-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/image-20221216132844066.png" alt="image-20221216132844066"></p>
+<h3 id="5-4、基于注解的AOP"><a href="#5-4、基于注解的AOP" class="headerlink" title="5.4、基于注解的AOP"></a>5.4、基于注解的AOP</h3><h4 id="5-4-1、技术说明"><a href="#5-4-1、技术说明" class="headerlink" title="5.4.1、技术说明"></a>5.4.1、技术说明</h4><p><img src="/2024/09/08/Spring-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img023.png" alt="images"></p>
+<p><img src="/2024/09/08/Spring-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/image-20221216132844066.png" alt="image-20221216132844066"></p>
 <ul>
 <li>动态代理分为JDK动态代理和cglib动态代理</li>
 <li>当目标类有接口的情况使用JDK动态代理和cglib动态代理，没有接口时只能使用cglib动态代理</li>
@@ -315,7 +315,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CalculatorTest</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">Logger</span> <span class="variable">logger</span> <span class="operator">=</span> LoggerFactory.getLogger(CalculatorTest.class);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testAdd</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="type">ApplicationContext</span> <span class="variable">ac</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ClassPathXmlApplicationContext</span>(<span class="string">&quot;beans.xml&quot;</span>);</span><br><span class="line">        <span class="type">Calculator</span> <span class="variable">calculator</span> <span class="operator">=</span> ac.getBean( Calculator.class);</span><br><span class="line">        <span class="type">int</span> <span class="variable">add</span> <span class="operator">=</span> calculator.add(<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line">        logger.info(<span class="string">&quot;执行成功:&quot;</span>+add);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>执行结果：</p>
-<p><img src="/2024/07/28/File/g-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/image-20221102155523983.png" alt="image-20221102155523983"></p>
+<p><img src="/2024/09/08/Spring-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/image-20221102155523983.png" alt="image-20221102155523983"></p>
 <h4 id="5-4-4、各种通知"><a href="#5-4-4、各种通知" class="headerlink" title="5.4.4、各种通知"></a>5.4.4、各种通知</h4><ul>
 <li>前置通知：使用@Before注解标识，在被代理的目标方法<strong>前</strong>执行</li>
 <li>返回通知：使用@AfterReturning注解标识，在被代理的目标方法<strong>成功结束</strong>后执行（<strong>寿终正寝</strong>）</li>
@@ -343,7 +343,7 @@
 </ul>
 </blockquote>
 <h4 id="5-4-5、切入点表达式语法"><a href="#5-4-5、切入点表达式语法" class="headerlink" title="5.4.5、切入点表达式语法"></a>5.4.5、切入点表达式语法</h4><p><strong>①作用</strong></p>
-<p><img src="/2024/07/28/File/g-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img024.png" alt="images"></p>
+<p><img src="/2024/09/08/Spring-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img024.png" alt="images"></p>
 <p><strong>②语法细节</strong></p>
 <ul>
 <li><p>用*号代替“权限修饰符”和“返回值”部分表示“权限修饰符”和“返回值”不限</p>
@@ -384,7 +384,7 @@
 </ul>
 </li>
 </ul>
-<p><img src="/2024/07/28/File/g-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img025.png" alt="images"></p>
+<p><img src="/2024/09/08/Spring-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img025.png" alt="images"></p>
 <h4 id="5-4-6、重用切入点表达式"><a href="#5-4-6、重用切入点表达式" class="headerlink" title="5.4.6、重用切入点表达式"></a>5.4.6、重用切入点表达式</h4><p><strong>①声明</strong></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Pointcut(&quot;execution(* com.atguigu.aop.annotation.*.*(..))&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">pointCut</span><span class="params">()</span>&#123;&#125;</span><br></pre></td></tr></table></figure>
 
@@ -424,7 +424,7 @@
 <li>@Order(较小的数)：优先级高</li>
 <li>@Order(较大的数)：优先级低</li>
 </ul>
-<p><img src="/2024/07/28/File/g-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img026.png" alt="images"></p>
+<p><img src="/2024/09/08/Spring-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/img026.png" alt="images"></p>
 <h3 id="5-5、基于XML的AOP"><a href="#5-5、基于XML的AOP" class="headerlink" title="5.5、基于XML的AOP"></a>5.5、基于XML的AOP</h3><h4 id="5-5-1、准备工作"><a href="#5-5-1、准备工作" class="headerlink" title="5.5.1、准备工作"></a>5.5.1、准备工作</h4><p>参考基于注解的AOP环境</p>
 <h4 id="5-5-2、实现"><a href="#5-5-2、实现" class="headerlink" title="5.5.2、实现"></a>5.5.2、实现</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">context:component-scan</span> <span class="attr">base-package</span>=<span class="string">&quot;com.atguigu.aop.xml&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">context:component-scan</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">aop:config</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--配置切面类--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">aop:aspect</span> <span class="attr">ref</span>=<span class="string">&quot;loggerAspect&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">aop:pointcut</span> <span class="attr">id</span>=<span class="string">&quot;pointCut&quot;</span> </span></span><br><span class="line"><span class="tag">                   <span class="attr">expression</span>=<span class="string">&quot;execution(* com.atguigu.aop.xml.CalculatorImpl.*(..))&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">aop:before</span> <span class="attr">method</span>=<span class="string">&quot;beforeMethod&quot;</span> <span class="attr">pointcut-ref</span>=<span class="string">&quot;pointCut&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">aop:before</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">aop:after</span> <span class="attr">method</span>=<span class="string">&quot;afterMethod&quot;</span> <span class="attr">pointcut-ref</span>=<span class="string">&quot;pointCut&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">aop:after</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">aop:after-returning</span> <span class="attr">method</span>=<span class="string">&quot;afterReturningMethod&quot;</span> <span class="attr">returning</span>=<span class="string">&quot;result&quot;</span> <span class="attr">pointcut-ref</span>=<span class="string">&quot;pointCut&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">aop:after-returning</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">aop:after-throwing</span> <span class="attr">method</span>=<span class="string">&quot;afterThrowingMethod&quot;</span> <span class="attr">throwing</span>=<span class="string">&quot;ex&quot;</span> <span class="attr">pointcut-ref</span>=<span class="string">&quot;pointCut&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">aop:after-throwing</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">aop:around</span> <span class="attr">method</span>=<span class="string">&quot;aroundMethod&quot;</span> <span class="attr">pointcut-ref</span>=<span class="string">&quot;pointCut&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">aop:around</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">aop:aspect</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">aop:config</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
@@ -696,7 +696,31 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">InputStream</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">OutputStream</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Reader</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Writer</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">MarkDown</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">动静分离</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">高可用</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -720,27 +744,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">反向代理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">负载均衡</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">session</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">悲观锁</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">乐观锁</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">InputStream</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">OutputStream</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Reader</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Writer</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -756,18 +776,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">session</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">分布式锁</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Lua脚本</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">阻塞队列</a>
               </li>
              
@@ -776,15 +784,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">set</a>
+                <a href="javascript:void(0)" class="js-tag color5">分布式锁</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">sorted set</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Feed流</a>
+                <a href="javascript:void(0)" class="js-tag color1">Lua脚本</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -800,139 +804,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Stream流</a>
+                <a href="javascript:void(0)" class="js-tag color4">set</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">方法引用</a>
+                <a href="javascript:void(0)" class="js-tag color1">sorted set</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">xml</a>
+                <a href="javascript:void(0)" class="js-tag color1">Feed流</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">反射</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">动态代理</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Thread</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">API</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">类加载器</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">双亲委派模型</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">异常</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">ThreadPool</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">redis入门</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">List</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Set</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Map</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">面向对象</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">SpringAMQP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">WorkQueues</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Fanout</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Direct</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Topic</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">同步调用</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">异步调用</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">交换机</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">生产者确认</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">LazyQueue</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">消费者确认</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">幂等性</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">延迟消息</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">死信</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">RDB</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">AOF</a>
+                <a href="javascript:void(0)" class="js-tag color4">Caffeine</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -952,14 +836,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">哨兵集群</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">读写分离</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">散列插槽</a>
               </li>
              
@@ -968,7 +844,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Caffeine</a>
+                <a href="javascript:void(0)" class="js-tag color5">哨兵集群</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">读写分离</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -977,6 +857,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">OpenResty</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">RDB</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">AOF</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1000,23 +888,31 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">反向代理</a>
+                <a href="javascript:void(0)" class="js-tag color1">声明式事务</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">负载均衡</a>
+                <a href="javascript:void(0)" class="js-tag color5">事务属性</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">nginx.conf</a>
+                <a href="javascript:void(0)" class="js-tag color4">Transactional</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">动静分离</a>
+                <a href="javascript:void(0)" class="js-tag color5">Component</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">高可用</a>
+                <a href="javascript:void(0)" class="js-tag color5">Autowired</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Resource</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Validation</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1044,23 +940,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Spring Framework</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">IoC容器</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Component</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Autowired</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Resource</a>
+                <a href="javascript:void(0)" class="js-tag color3">RESTful</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1080,39 +960,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">声明式事务</a>
+                <a href="javascript:void(0)" class="js-tag color1">SpringAMQP</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">事务属性</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Transactional</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Validation</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">DispatcherServlet</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">RequestMapping</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">请求参数</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">RESTful</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">执行流程</a>
+                <a href="javascript:void(0)" class="js-tag color1">WorkQueues</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1128,11 +980,51 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">UML</a>
+                <a href="javascript:void(0)" class="js-tag color5">执行流程</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">软件设计原则</a>
+                <a href="javascript:void(0)" class="js-tag color3">DispatcherServlet</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">RequestMapping</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">请求参数</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Spring Framework</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">IoC容器</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Stream流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">方法引用</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">xml</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Fanout</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Direct</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Topic</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1153,6 +1045,70 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">建造者模式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">同步调用</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">异步调用</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">交换机</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Thread</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">反射</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">动态代理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">API</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">延迟消息</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">死信</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">异常</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">类加载器</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">双亲委派模型</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">生产者确认</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">LazyQueue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">消费者确认</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">幂等性</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1181,6 +1137,50 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">享元模式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">ThreadPool</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">UDP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">redis入门</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">nginx.conf</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">UML</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">软件设计原则</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Map</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">List</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Set</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">面向对象</a>
               </li>
             
             <div class="clearfix"></div>
