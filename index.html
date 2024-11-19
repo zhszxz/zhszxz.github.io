@@ -152,6 +152,114 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Redis原理-数据结构" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2024/11/19/Redis%E5%8E%9F%E7%90%86-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">Redis原理-数据结构</a>
+    </h1>
+  
+
+        
+        <a href="/2024/11/19/Redis%E5%8E%9F%E7%90%86-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" class="archive-article-date">
+  	<time datetime="2024-11-19T03:36:27.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-11-19</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1、原理篇-Redis数据结构"><a href="#1、原理篇-Redis数据结构" class="headerlink" title="1、原理篇-Redis数据结构"></a>1、原理篇-Redis数据结构</h2><h3 id="1-1-Redis数据结构-动态字符串"><a href="#1-1-Redis数据结构-动态字符串" class="headerlink" title="1.1 Redis数据结构-动态字符串"></a>1.1 Redis数据结构-动态字符串</h3><p>我们都知道Redis中保存的Key是字符串，value往往是字符串或者字符串的集合。可见字符串是Redis中最常用的一种数据结构。</p>
+<p>不过Redis没有直接使用C语言中的字符串，因为C语言字符串存在很多问题：<br>获取字符串长度的需要通过运算<br>非二进制安全<br>不可修改<br>Redis构建了一种新的字符串结构，称为简单动态字符串（Simple Dynamic String），简称SDS。</p>
+        
+          <a class="article-more-a" href="/2024/11/19/Redis%E5%8E%9F%E7%90%86-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">SDS</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">IntSet</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Dict</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">ZipList</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">QuickList</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">SkipList</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Redis//" class="article-tag-list-link color1">Redis</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2024/11/19/Redis%E5%8E%9F%E7%90%86-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-行为型模式（二）" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -497,7 +605,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="4，创建者模式"><a href="#4，创建者模式" class="headerlink" title="4，创建者模式"></a>4，创建者模式</h1><p>创建型模式的主要关注点是“怎样创建对象？”，它的主要特点是“将对象的创建与使用分离”。</p>
+        <h1 id="4，创建型模式"><a href="#4，创建型模式" class="headerlink" title="4，创建型模式"></a>4，创建型模式</h1><p>创建型模式的主要关注点是“怎样创建对象？”，它的主要特点是“将对象的创建与使用分离”。</p>
 <p>这样可以降低系统的耦合度，使用者不需要关注对象的创建细节。</p>
 <p>创建型模式分为：</p>
         
@@ -1021,93 +1129,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2024/09/17/SpringMVC%E5%85%A5%E9%97%A8/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Spring-数据校验" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/09/12/Spring-%E6%95%B0%E6%8D%AE%E6%A0%A1%E9%AA%8C/">Spring:数据校验</a>
-    </h1>
-  
-
-        
-        <a href="/2024/09/12/Spring-%E6%95%B0%E6%8D%AE%E6%A0%A1%E9%AA%8C/" class="archive-article-date">
-  	<time datetime="2024-09-12T07:44:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-09-12</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="10、数据校验：Validation"><a href="#10、数据校验：Validation" class="headerlink" title="10、数据校验：Validation"></a>10、数据校验：Validation</h2><p><img src="/2024/09/12/Spring-%E6%95%B0%E6%8D%AE%E6%A0%A1%E9%AA%8C/image-20221218154808754.png" alt="image-20221218154808754"></p>
-        
-          <a class="article-more-a" href="/2024/09/12/Spring-%E6%95%B0%E6%8D%AE%E6%A0%A1%E9%AA%8C/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Validation</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Spring//" class="article-tag-list-link color2">Spring</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/09/12/Spring-%E6%95%B0%E6%8D%AE%E6%A0%A1%E9%AA%8C/">展开全文 >></a>
         </p>
       
 
@@ -1767,6 +1788,30 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">观察者模式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">SDS</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">IntSet</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Dict</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">ZipList</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">QuickList</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">SkipList</a>
               </li>
             
             <div class="clearfix"></div>
