@@ -152,6 +152,98 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Redis原理-内存回收" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2024/12/04/Redis%E5%8E%9F%E7%90%86-%E5%86%85%E5%AD%98%E5%9B%9E%E6%94%B6/">Redis原理-内存回收</a>
+    </h1>
+  
+
+        
+        <a href="/2024/12/04/Redis%E5%8E%9F%E7%90%86-%E5%86%85%E5%AD%98%E5%9B%9E%E6%94%B6/" class="archive-article-date">
+  	<time datetime="2024-12-04T09:13:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-12-04</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="3、原理篇-Redis内存回收"><a href="#3、原理篇-Redis内存回收" class="headerlink" title="3、原理篇-Redis内存回收"></a>3、原理篇-Redis内存回收</h2><h3 id="3-1、过期key处理"><a href="#3-1、过期key处理" class="headerlink" title="3.1、过期key处理"></a>3.1、过期key处理</h3><p>Redis之所以性能强，最主要的原因就是基于内存存储。然而单节点的Redis其内存大小不宜过大，会影响持久化或主从同步性能。<br>我们可以通过修改配置文件来设置Redis的最大内存：</p>
+<p><img src="/2024/07/28/File/%E5%8E%9F%E7%90%86-%E5%86%85%E5%AD%98%E5%9B%9E%E6%94%B6/1653983341150.png" alt="1653983341150"></p>
+        
+          <a class="article-more-a" href="/2024/12/04/Redis%E5%8E%9F%E7%90%86-%E5%86%85%E5%AD%98%E5%9B%9E%E6%94%B6/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">过期key处理</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">内存淘汰</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Redis//" class="article-tag-list-link color1">Redis</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2024/12/04/Redis%E5%8E%9F%E7%90%86-%E5%86%85%E5%AD%98%E5%9B%9E%E6%94%B6/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Redis原理-网络模型" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1070,94 +1162,6 @@
 
 
   
-    <article id="post-SpringMVC-RESTful" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/09/17/SpringMVC-RESTful/">SpringMVC-RESTful</a>
-    </h1>
-  
-
-        
-        <a href="/2024/09/17/SpringMVC-RESTful/" class="archive-article-date">
-  	<time datetime="2024-09-17T07:06:27.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-09-17</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="七、RESTful"><a href="#七、RESTful" class="headerlink" title="七、RESTful"></a>七、RESTful</h1><h3 id="1、RESTful简介"><a href="#1、RESTful简介" class="headerlink" title="1、RESTful简介"></a>1、RESTful简介</h3><p>REST：<strong>Re</strong>presentational <strong>S</strong>tate <strong>T</strong>ransfer，表现层资源状态转移。</p>
-<h5 id="a-资源"><a href="#a-资源" class="headerlink" title="a&gt;资源"></a>a&gt;资源</h5><p>资源是一种看待服务器的方式，即，将服务器看作是由很多离散的资源组成。每个资源是服务器上一个可命名的抽象概念。因为资源是一个抽象的概念，所以它不仅仅能代表服务器文件系统中的一个文件、数据库中的一张表等等具体的东西，可以将资源设计的要多抽象有多抽象，只要想象力允许而且客户端应用开发者能够理解。与面向对象设计类似，资源是以名词为核心来组织的，首先关注的是名词。一个资源可以由一个或多个URI来标识。URI既是资源的名称，也是资源在Web上的地址。对某个资源感兴趣的客户端应用，可以通过资源的URI与其进行交互。</p>
-        
-          <a class="article-more-a" href="/2024/09/17/SpringMVC-RESTful/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">RESTful</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/SpringMVC//" class="article-tag-list-link color5">SpringMVC</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/09/17/SpringMVC-RESTful/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1824,6 +1828,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">IO多路复用</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">过期key处理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">内存淘汰</a>
               </li>
             
             <div class="clearfix"></div>
