@@ -152,6 +152,102 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Spring-事务" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2024/09/10/Spring-%E4%BA%8B%E5%8A%A1/">Spring:事务</a>
+    </h1>
+  
+
+        
+        <a href="/2024/09/10/Spring-%E4%BA%8B%E5%8A%A1/" class="archive-article-date">
+  	<time datetime="2024-09-10T06:58:27.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-09-10</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="7、事务"><a href="#7、事务" class="headerlink" title="7、事务"></a>7、事务</h2><h3 id="7-1、JdbcTemplate"><a href="#7-1、JdbcTemplate" class="headerlink" title="7.1、JdbcTemplate"></a>7.1、JdbcTemplate</h3><h4 id="7-1-1、简介"><a href="#7-1-1、简介" class="headerlink" title="7.1.1、简介"></a>7.1.1、简介</h4><p><img src="/2024/09/10/Spring-%E4%BA%8B%E5%8A%A1/image-20221217115515670.png" alt="image-20221217115515670"></p>
+<p>Spring 框架对 JDBC 进行封装，使用 JdbcTemplate 方便实现对数据库操作</p>
+        
+          <a class="article-more-a" href="/2024/09/10/Spring-%E4%BA%8B%E5%8A%A1/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">声明式事务</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">事务属性</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Transactional</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Spring//" class="article-tag-list-link color2">Spring</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2024/09/10/Spring-%E4%BA%8B%E5%8A%A1/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Spring-面向切面编程" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1022,102 +1118,6 @@
 
 
   
-    <article id="post-Redis高级-多级缓存同步" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E5%90%8C%E6%AD%A5/">Redis高级-多级缓存同步</a>
-    </h1>
-  
-
-        
-        <a href="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E5%90%8C%E6%AD%A5/" class="archive-article-date">
-  	<time datetime="2024-08-17T13:02:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-08-17</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="5-缓存同步"><a href="#5-缓存同步" class="headerlink" title="5.缓存同步"></a>5.缓存同步</h1><p>大多数情况下，浏览器查询到的都是缓存数据，如果缓存数据与数据库数据存在较大差异，可能会产生比较严重的后果。</p>
-<p>所以我们必须保证数据库数据、缓存数据的一致性，这就是缓存与数据库的同步。</p>
-<h2 id="5-1-数据同步策略"><a href="#5-1-数据同步策略" class="headerlink" title="5.1.数据同步策略"></a>5.1.数据同步策略</h2><p>缓存数据同步的常见方式有三种：</p>
-<p><strong>设置有效期</strong>：给缓存设置有效期，到期后自动删除。再次查询时更新</p>
-<ul>
-<li><p>优势：简单、方便</p>
-</li>
-<li><p>缺点：时效性差，缓存过期之前可能不一致</p>
-</li>
-<li><p>场景：更新频率较低，时效性要求低的业务</p>
-        
-          <a class="article-more-a" href="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E5%90%8C%E6%AD%A5/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Canal</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Redis//" class="article-tag-list-link color1">Redis</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E5%90%8C%E6%AD%A5/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
@@ -1836,6 +1836,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">文档</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">RestFul</a>
               </li>
             
             <div class="clearfix"></div>
