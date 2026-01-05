@@ -6,13 +6,17 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Hexo</title>
+  <title>LangChain4j之会话记忆 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/index.html">
+  <meta name="description" content="聊天记忆手动维护和管理ChatMessage是很麻烦的。 因此，LangChain4j提供了ChatMemory抽象以及多种开箱即用的实现。 ChatMemory可以作为独立的低级组件使用， 或者作为高级组件（如AI服务）的一部分。 ChatMemory作为ChatMessage的容器（由List支持），具有以下额外功能：  淘汰策略 持久化 对SystemMessage的特殊处理 对工具消息的特">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LangChain4j之会话记忆">
+<meta property="og:url" content="http://example.com/2026/01/05/LangChain4j%E4%B9%8B%E4%BC%9A%E8%AF%9D%E8%AE%B0%E5%BF%86/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="聊天记忆手动维护和管理ChatMessage是很麻烦的。 因此，LangChain4j提供了ChatMemory抽象以及多种开箱即用的实现。 ChatMemory可以作为独立的低级组件使用， 或者作为高级组件（如AI服务）的一部分。 ChatMemory作为ChatMessage的容器（由List支持），具有以下额外功能：  淘汰策略 持久化 对SystemMessage的特殊处理 对工具消息的特">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-01-05T06:53:06.000Z">
+<meta property="article:modified_time" content="2026-01-05T07:34:39.048Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -150,16 +154,14 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-    <article id="post-LangChain4j之会话记忆" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+            <article id="post-LangChain4j之会话记忆" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2026/01/05/LangChain4j%E4%B9%8B%E4%BC%9A%E8%AF%9D%E8%AE%B0%E5%BF%86/">LangChain4j之会话记忆</a>
+    <h1 class="article-title" itemprop="name">
+      LangChain4j之会话记忆
     </h1>
   
 
@@ -181,11 +183,71 @@
 <li>对<code>SystemMessage</code>的特殊处理</li>
 <li>对<a target="_blank" rel="noopener" href="https://docs.langchain4j.info/tutorials/tools">工具</a>消息的特殊处理</li>
 </ul>
-        
-          <a class="article-more-a" href="/2026/01/05/LangChain4j%E4%B9%8B%E4%BC%9A%E8%AF%9D%E8%AE%B0%E5%BF%86/#more">more >></a>
-        
+<span id="more"></span>
+
+
+
+<h2 id="记忆与历史"><a href="#记忆与历史" class="headerlink" title="记忆与历史"></a>记忆与历史</h2><p>请注意，”记忆”和”历史”是不同的概念。</p>
+<ul>
+<li>历史保持用户和AI之间的<strong>所有</strong>消息<strong>完整无缺</strong>。历史是用户在UI中看到的内容。它代表实际对话内容。</li>
+<li>记忆保存<strong>一些信息</strong>，这些信息呈现给LLM，使其表现得好像”记住”了对话。 记忆与历史有很大不同。根据使用的记忆算法，它可以以各种方式修改历史： 淘汰一些消息，总结多条消息，总结单独的消息，从消息中删除不重要的细节， 向消息中注入额外信息（例如，用于RAG）或指令（例如，用于结构化输出）等等。</li>
+</ul>
+<p>LangChain4j目前只提供”记忆”，而不是”历史”。如果您需要保存完整的历史记录，请手动进行。</p>
+<h2 id="淘汰策略"><a href="#淘汰策略" class="headerlink" title="淘汰策略"></a>淘汰策略</h2><p>淘汰策略是必要的，原因如下：</p>
+<ul>
+<li>为了适应LLM的上下文窗口。LLM一次可以处理的令牌数量是有上限的。 在某些时候，对话可能会超过这个限制。在这种情况下，应该淘汰一些消息。 通常，最旧的消息会被淘汰，但如果需要，可以实现更复杂的算法。</li>
+<li>控制成本。每个令牌都有成本，使每次调用LLM的费用逐渐增加。 淘汰不必要的消息可以降低成本。</li>
+<li>控制延迟。发送给LLM的令牌越多，处理它们所需的时间就越长。</li>
+</ul>
+<p>目前，LangChain4j提供了2种开箱即用的实现：</p>
+<ul>
+<li><p>较简单的一种，<code>MessageWindowChatMemory</code>，作为滑动窗口运行， 保留最近的<code>N</code>条消息，并淘汰不再适合的旧消息。 然而，由于每条消息可能包含不同数量的令牌， <code>MessageWindowChatMemory</code>主要用于快速原型设计。</p>
+</li>
+<li><p>更复杂的选项是<code>TokenWindowChatMemory</code>， 它也作为滑动窗口运行，但专注于保留最近的<code>N</code>个<strong>令牌</strong>， 根据需要淘汰旧消息。 消息是不可分割的。如果一条消息不适合，它会被完全淘汰。 <code>TokenWindowChatMemory</code>需要一个<code>Tokenizer</code>来计算每个<code>ChatMessage</code>中的令牌数。</p>
+</li>
+</ul>
+<h2 id="持久化"><a href="#持久化" class="headerlink" title="持久化"></a>持久化</h2><p>默认情况下，<code>ChatMemory</code>实现在内存中存储<code>ChatMessage</code>。</p>
+<p>如果需要持久化，可以实现自定义的<code>ChatMemoryStore</code>， 将<code>ChatMessage</code>存储在您选择的任何持久化存储中：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">PersistentChatMemoryStore</span> <span class="keyword">implements</span> <span class="title class_">ChatMemoryStore</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> List&lt;ChatMessage&gt; <span class="title function_">getMessages</span><span class="params">(Object memoryId)</span> &#123;</span><br><span class="line">          <span class="comment">// <span class="doctag">TODO:</span> 实现通过内存ID从持久化存储中获取所有消息。</span></span><br><span class="line">          <span class="comment">// 可以使用ChatMessageDeserializer.messageFromJson(String)和</span></span><br><span class="line">          <span class="comment">// ChatMessageDeserializer.messagesFromJson(String)辅助方法</span></span><br><span class="line">          <span class="comment">// 轻松地从JSON反序列化聊天消息。</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">updateMessages</span><span class="params">(Object memoryId, List&lt;ChatMessage&gt; messages)</span> &#123;</span><br><span class="line">            <span class="comment">// <span class="doctag">TODO:</span> 实现通过内存ID更新持久化存储中的所有消息。</span></span><br><span class="line">            <span class="comment">// 可以使用ChatMessageSerializer.messageToJson(ChatMessage)和</span></span><br><span class="line">            <span class="comment">// ChatMessageSerializer.messagesToJson(List&lt;ChatMessage&gt;)辅助方法</span></span><br><span class="line">            <span class="comment">// 轻松地将聊天消息序列化为JSON。</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">deleteMessages</span><span class="params">(Object memoryId)</span> &#123;</span><br><span class="line">          <span class="comment">// <span class="doctag">TODO:</span> 实现通过内存ID删除持久化存储中的所有消息。</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="type">ChatMemory</span> <span class="variable">chatMemory</span> <span class="operator">=</span> MessageWindowChatMemory.builder()</span><br><span class="line">        .id(<span class="string">&quot;12345&quot;</span>)</span><br><span class="line">        .maxMessages(<span class="number">10</span>)</span><br><span class="line">        .chatMemoryStore(<span class="keyword">new</span> <span class="title class_">PersistentChatMemoryStore</span>())</span><br><span class="line">        .build();</span><br></pre></td></tr></table></figure>
+
+
+
+<p>每当向<code>ChatMemory</code>添加新的<code>ChatMessage</code>时，都会调用<code>updateMessages()</code>方法。 这通常在与LLM的每次交互中发生两次： 一次是添加新的<code>UserMessage</code>时，另一次是添加新的<code>AiMessage</code>时。 <code>updateMessages()</code>方法预期会更新与给定内存ID关联的所有消息。 <code>ChatMessage</code>可以单独存储（例如，每条消息一条记录&#x2F;行&#x2F;对象） 或一起存储（例如，整个<code>ChatMemory</code>一条记录&#x2F;行&#x2F;对象）。</p>
+<p>请注意，从<code>ChatMemory</code>中淘汰的消息也将从<code>ChatMemoryStore</code>中淘汰。 当消息被淘汰时，会调用<code>updateMessages()</code>方法， 传入不包含被淘汰消息的消息列表。</p>
+<p>当<code>ChatMemory</code>的用户请求所有消息时，会调用<code>getMessages()</code>方法。 这通常在与LLM的每次交互中发生一次。 <code>Object memoryId</code>参数的值对应于创建<code>ChatMemory</code>时指定的<code>id</code>。 它可以用来区分多个用户和&#x2F;或对话。 <code>getMessages()</code>方法预期会返回与给定内存ID关联的所有消息。</p>
+<p>当调用<code>ChatMemory.clear()</code>时，会调用<code>deleteMessages()</code>方法。 如果您不使用此功能，可以将此方法留空。</p>
+<h2 id="对SystemMessage的特殊处理"><a href="#对SystemMessage的特殊处理" class="headerlink" title="对SystemMessage的特殊处理"></a>对<code>SystemMessage</code>的特殊处理</h2><p><code>SystemMessage</code>是一种特殊类型的消息，因此它的处理方式与其他消息类型不同：</p>
+<ul>
+<li>一旦添加，<code>SystemMessage</code>总是被保留。</li>
+<li>一次只能保存一条<code>SystemMessage</code>。</li>
+<li>如果添加了具有相同内容的新<code>SystemMessage</code>，它会被忽略。</li>
+<li>如果添加了具有不同内容的新<code>SystemMessage</code>，它会替换之前的消息。</li>
+</ul>
+<h2 id="对工具消息的特殊处理"><a href="#对工具消息的特殊处理" class="headerlink" title="对工具消息的特殊处理"></a>对工具消息的特殊处理</h2><p>如果包含<code>ToolExecutionRequest</code>的<code>AiMessage</code>被淘汰， 随后的孤立<code>ToolExecutionResultMessage</code>也会自动被淘汰， 以避免与某些LLM提供商（如OpenAI）出现问题， 这些提供商禁止在请求中发送孤立的<code>ToolExecutionResultMessage</code>。</p>
+<h2 id="案例：实现会话记忆"><a href="#案例：实现会话记忆" class="headerlink" title="案例：实现会话记忆"></a>案例：实现会话记忆</h2>
       
 
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
       
     </div>
     <div class="article-info article-info-index">
@@ -205,16 +267,75 @@
 
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2026/01/05/LangChain4j%E4%B9%8B%E4%BC%9A%E8%AF%9D%E8%AE%B0%E5%BF%86/">展开全文 >></a>
-        </p>
-      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2026/01/05/LangChain4j%E4%B9%8B%E4%BC%9A%E8%AF%9D%E8%AE%B0%E5%BF%86/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2026/01/05/LangChain4j%E5%85%A5%E9%97%A8/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">LangChain4j入门</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -234,845 +355,14 @@
 
 
 
-
-  
-    <article id="post-LangChain4j入门" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2026/01/05/LangChain4j%E5%85%A5%E9%97%A8/">LangChain4j入门</a>
-    </h1>
-  
-
-        
-        <a href="/2026/01/05/LangChain4j%E5%85%A5%E9%97%A8/" class="archive-article-date">
-  	<time datetime="2026-01-05T01:08:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2026-01-05</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1-什么是LangChain4J"><a href="#1-什么是LangChain4J" class="headerlink" title="1.什么是LangChain4J"></a>1.什么是LangChain4J</h2><p>LangChain4j 的目标是简化将 LLM 集成到 Java 应用程序中的过程。</p>
-<p>具体方式如下：</p>
-<ol>
-<li><strong>统一 API：</strong> LLM 提供商（如 OpenAI 或 Google Vertex AI）和嵌入（向量）存储（如 Pinecone 或 Milvus） 使用专有 API。LangChain4j 提供统一的 API，避免了学习和实现每个特定 API 的需求。 要尝试不同的 LLM 或嵌入存储，您可以在它们之间轻松切换，无需重写代码。 LangChain4j 目前支持 <a target="_blank" rel="noopener" href="https://docs.langchain4j.info/integrations/language-models/">15+ 个流行的 LLM 提供商</a> 和 <a target="_blank" rel="noopener" href="https://docs.langchain4j.info/integrations/embedding-stores/">20+ 个嵌入存储</a>。</li>
-<li><strong>全面的工具箱：</strong> 自 2023 年初以来，社区一直在构建众多 LLM 驱动的应用程序， 识别常见的抽象、模式和技术。LangChain4j 将这些提炼成一个即用型包。 我们的工具箱包含从低级提示模板、聊天记忆管理和函数调用 到高级模式如代理和 RAG 的工具。 对于每个抽象，我们提供一个接口以及基于常见技术的多个即用型实现。 无论您是在构建聊天机器人还是开发包含从数据摄取到检索完整管道的 RAG， LangChain4j 都提供多种选择。</li>
-<li><strong>丰富的示例：</strong> 这些<a target="_blank" rel="noopener" href="https://github.com/langchain4j/langchain4j-examples">示例</a>展示了如何开始创建各种 LLM 驱动的应用程序， 提供灵感并使您能够快速开始构建。</li>
-</ol>
-<p>LangChain4j 始于 2023 年初 ChatGPT 热潮期间。 我们注意到与众多 Python 和 JavaScript LLM 库和框架相比，缺少 Java 对应物， 我们必须解决这个问题！ 虽然我们的名字中有”LangChain”，但该项目是 LangChain、Haystack、 LlamaIndex 和更广泛社区的想法和概念的融合，并加入了我们自己的创新。</p>
-        
-          <a class="article-more-a" href="/2026/01/05/LangChain4j%E5%85%A5%E9%97%A8/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">ChatLanguageModel</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">多模态</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/LangChain4j//" class="article-tag-list-link color2">LangChain4j</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2026/01/05/LangChain4j%E5%85%A5%E9%97%A8/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Springboot集成ES" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2025/10/11/Springboot%E9%9B%86%E6%88%90ES/">Springboot集成ES</a>
-    </h1>
-  
-
-        
-        <a href="/2025/10/11/Springboot%E9%9B%86%E6%88%90ES/" class="archive-article-date">
-  	<time datetime="2025-10-11T02:58:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2025-10-11</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="Springboot集成ES"><a href="#Springboot集成ES" class="headerlink" title="Springboot集成ES"></a>Springboot集成ES</h1><h2 id="ES的Java客户端"><a href="#ES的Java客户端" class="headerlink" title="ES的Java客户端"></a>ES的Java客户端</h2><h2 id="1-早期阶段：Transport-Client（基于-TCP）"><a href="#1-早期阶段：Transport-Client（基于-TCP）" class="headerlink" title="1. 早期阶段：Transport Client（基于 TCP）"></a>1. 早期阶段：Transport Client（基于 TCP）</h2>
-        
-          <a class="article-more-a" href="/2025/10/11/Springboot%E9%9B%86%E6%88%90ES/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/ElasticSearch//" class="article-tag-list-link color4">ElasticSearch</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2025/10/11/Springboot%E9%9B%86%E6%88%90ES/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-ElasticSearch基本操作" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2025/09/22/ElasticSearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/">ElasticSearch基本操作</a>
-    </h1>
-  
-
-        
-        <a href="/2025/09/22/ElasticSearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/" class="archive-article-date">
-  	<time datetime="2025-09-22T08:06:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2025-09-22</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="ElasticSearch基本操作"><a href="#ElasticSearch基本操作" class="headerlink" title="ElasticSearch基本操作"></a>ElasticSearch基本操作</h1><blockquote>
-<p>es对文档的基本RestFul操作汇总</p>
-</blockquote>
-        
-          <a class="article-more-a" href="/2025/09/22/ElasticSearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">RestFul</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/ElasticSearch//" class="article-tag-list-link color4">ElasticSearch</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2025/09/22/ElasticSearch%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-ElasticSearch核心概念" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2025/09/22/ElasticSearch%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/">ElasticSearch核心概念</a>
-    </h1>
-  
-
-        
-        <a href="/2025/09/22/ElasticSearch%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/" class="archive-article-date">
-  	<time datetime="2025-09-22T07:04:39.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2025-09-22</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="ES核心概念"><a href="#ES核心概念" class="headerlink" title="ES核心概念"></a>ES核心概念</h1><blockquote>
-<p>ElasticSearch是面向文档的，与关系型数据库对比如下</p>
-</blockquote>
-<table>
-<thead>
-<tr>
-<th>关系型数据库</th>
-<th>es</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>数据库（databases）</td>
-<td>索引（indices）</td>
-</tr>
-<tr>
-<td>表（tables）</td>
-<td>types</td>
-</tr>
-<tr>
-<td>行（rows）</td>
-<td>documents</td>
-</tr>
-<tr>
-<td>字段（columns）</td>
-<td>fields</td>
-</tr>
-</tbody></table>
-        
-          <a class="article-more-a" href="/2025/09/22/ElasticSearch%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">倒排索引</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">分词</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">文档</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/ElasticSearch//" class="article-tag-list-link color4">ElasticSearch</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2025/09/22/ElasticSearch%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Linux" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2025/06/30/Linux/">Linux</a>
-    </h1>
-  
-
-        
-        <a href="/2025/06/30/Linux/" class="archive-article-date">
-  	<time datetime="2025-06-30T13:53:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2025-06-30</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="Linux基础命令"><a href="#Linux基础命令" class="headerlink" title="Linux基础命令"></a>Linux基础命令</h1><h2 id="Linux的目录结构"><a href="#Linux的目录结构" class="headerlink" title="Linux的目录结构"></a>Linux的目录结构</h2><p><img src="https://image-set.oss-cn-zhangjiakou.aliyuncs.com/img-out/2022/10/27/20221027214128.png" alt="image-20221027214128453"></p>
-        
-          <a class="article-more-a" href="/2025/06/30/Linux/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Linux</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2025/06/30/Linux/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-MyBatisPlus扩展功能" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2025/02/19/MyBatisPlus%E6%89%A9%E5%B1%95%E5%8A%9F%E8%83%BD/">MyBatisPlus扩展功能</a>
-    </h1>
-  
-
-        
-        <a href="/2025/02/19/MyBatisPlus%E6%89%A9%E5%B1%95%E5%8A%9F%E8%83%BD/" class="archive-article-date">
-  	<time datetime="2025-02-19T09:03:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2025-02-19</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="3-扩展功能"><a href="#3-扩展功能" class="headerlink" title="3.扩展功能"></a><strong>3.扩展功能</strong></h1><h2 id="3-1-代码生成"><a href="#3-1-代码生成" class="headerlink" title="3.1.代码生成"></a><strong>3.1.代码生成</strong></h2><p>在使用MybatisPlus以后，基础的<code>Mapper</code>、<code>Service</code>、<code>PO</code>代码相对固定，重复编写也比较麻烦。因此MybatisPlus官方提供了代码生成器根据数据库表结构生成<code>PO</code>、<code>Mapper</code>、<code>Service</code>等相关代码。只不过代码生成器同样要编码使用，也很麻烦。</p>
-<p>这里推荐大家使用一款<code>MybatisPlus</code>的插件，它可以基于图形化界面完成<code>MybatisPlus</code>的代码生成，非常简单。</p>
-        
-          <a class="article-more-a" href="/2025/02/19/MyBatisPlus%E6%89%A9%E5%B1%95%E5%8A%9F%E8%83%BD/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">静态工具</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">枚举处理</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Json处理</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">分页插件</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/MybatisPlus//" class="article-tag-list-link color2">MybatisPlus</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2025/02/19/MyBatisPlus%E6%89%A9%E5%B1%95%E5%8A%9F%E8%83%BD/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-MyBatisPlus核心功能" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2025/02/19/MyBatisPlus%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD/">MyBatisPlus核心功能</a>
-    </h1>
-  
-
-        
-        <a href="/2025/02/19/MyBatisPlus%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD/" class="archive-article-date">
-  	<time datetime="2025-02-19T08:18:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2025-02-19</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="2-核心功能"><a href="#2-核心功能" class="headerlink" title="2.核心功能"></a><strong>2.核心功能</strong></h1><p>刚才的案例中都是以id为条件的简单CRUD，一些复杂条件的SQL语句就要用到一些更高级的功能了。</p>
-<h2 id="2-1-条件构造器"><a href="#2-1-条件构造器" class="headerlink" title="**2.1.**条件构造器"></a>**2.1.**<strong>条件构造器</strong></h2><p>除了新增以外，修改、删除、查询的SQL语句都需要指定where条件。因此BaseMapper中提供的相关方法除了以<code>id</code>作为<code>where</code>条件以外，还支持更加复杂的<code>where</code>条件。</p>
-        
-          <a class="article-more-a" href="/2025/02/19/MyBatisPlus%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Wrapper</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">IService</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/MybatisPlus//" class="article-tag-list-link color2">MybatisPlus</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2025/02/19/MyBatisPlus%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-MyBatisPlus快速入门" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2025/02/19/MyBatisPlus%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">MyBatisPlus快速入门</a>
-    </h1>
-  
-
-        
-        <a href="/2025/02/19/MyBatisPlus%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/" class="archive-article-date">
-  	<time datetime="2025-02-19T07:09:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2025-02-19</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="1-快速入门"><a href="#1-快速入门" class="headerlink" title="1.快速入门"></a><strong>1.快速入门</strong></h1><p>大家在日常开发中应该能发现，单表的CRUD功能代码重复度很高，也没有什么难度。而这部分代码量往往比较大，开发起来比较费时。</p>
-<p>因此，目前企业中都会使用一些组件来简化或省略单表的CRUD开发工作。目前在国内使用较多的一个组件就是MybatisPlus。</p>
-<p>当然，MybatisPlus不仅仅可以简化单表操作，而且还对Mybatis的功能有很多的增强。可以让我们的开发更加的简单，高效。</p>
-        
-          <a class="article-more-a" href="/2025/02/19/MyBatisPlus%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">BaseMapper</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/MybatisPlus//" class="article-tag-list-link color2">MybatisPlus</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2025/02/19/MyBatisPlus%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Redis原理-内存回收" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/12/04/Redis%E5%8E%9F%E7%90%86-%E5%86%85%E5%AD%98%E5%9B%9E%E6%94%B6/">Redis原理-内存回收</a>
-    </h1>
-  
-
-        
-        <a href="/2024/12/04/Redis%E5%8E%9F%E7%90%86-%E5%86%85%E5%AD%98%E5%9B%9E%E6%94%B6/" class="archive-article-date">
-  	<time datetime="2024-12-04T09:13:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-12-04</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="3、原理篇-Redis内存回收"><a href="#3、原理篇-Redis内存回收" class="headerlink" title="3、原理篇-Redis内存回收"></a>3、原理篇-Redis内存回收</h2><h3 id="3-1、过期key处理"><a href="#3-1、过期key处理" class="headerlink" title="3.1、过期key处理"></a>3.1、过期key处理</h3><p>Redis之所以性能强，最主要的原因就是基于内存存储。然而单节点的Redis其内存大小不宜过大，会影响持久化或主从同步性能。<br>我们可以通过修改配置文件来设置Redis的最大内存：</p>
-<p><img src="/2024/07/28/File/%E5%8E%9F%E7%90%86-%E5%86%85%E5%AD%98%E5%9B%9E%E6%94%B6/1653983341150.png" alt="1653983341150"></p>
-        
-          <a class="article-more-a" href="/2024/12/04/Redis%E5%8E%9F%E7%90%86-%E5%86%85%E5%AD%98%E5%9B%9E%E6%94%B6/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">过期key处理</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">内存淘汰</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Redis//" class="article-tag-list-link color1">Redis</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/12/04/Redis%E5%8E%9F%E7%90%86-%E5%86%85%E5%AD%98%E5%9B%9E%E6%94%B6/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
   
   
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
-    </nav>
+  
+
+  
+
+  
+
   
 
 
@@ -1095,8 +385,8 @@
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,

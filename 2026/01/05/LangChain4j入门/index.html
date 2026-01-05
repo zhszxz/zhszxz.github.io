@@ -8,21 +8,22 @@
   <link rel="dns-prefetch" href="http://example.com">
   <title>LangChain4j入门 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="LangChain4j入门1.什么是LangChain4JLangChain4j 的目标是简化将 LLM 集成到 Java 应用程序中的过程。 具体方式如下：  统一 API： LLM 提供商（如 OpenAI 或 Google Vertex AI）和嵌入（向量）存储（如 Pinecone 或 Milvus） 使用专有 API。LangChain4j 提供统一的 API，避免了学习和实现每个特定">
+  <meta name="description" content="1.什么是LangChain4JLangChain4j 的目标是简化将 LLM 集成到 Java 应用程序中的过程。 具体方式如下：  统一 API： LLM 提供商（如 OpenAI 或 Google Vertex AI）和嵌入（向量）存储（如 Pinecone 或 Milvus） 使用专有 API。LangChain4j 提供统一的 API，避免了学习和实现每个特定 API 的需求。 要尝试不">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LangChain4j入门">
 <meta property="og:url" content="http://example.com/2026/01/05/LangChain4j%E5%85%A5%E9%97%A8/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="LangChain4j入门1.什么是LangChain4JLangChain4j 的目标是简化将 LLM 集成到 Java 应用程序中的过程。 具体方式如下：  统一 API： LLM 提供商（如 OpenAI 或 Google Vertex AI）和嵌入（向量）存储（如 Pinecone 或 Milvus） 使用专有 API。LangChain4j 提供统一的 API，避免了学习和实现每个特定">
+<meta property="og:description" content="1.什么是LangChain4JLangChain4j 的目标是简化将 LLM 集成到 Java 应用程序中的过程。 具体方式如下：  统一 API： LLM 提供商（如 OpenAI 或 Google Vertex AI）和嵌入（向量）存储（如 Pinecone 或 Milvus） 使用专有 API。LangChain4j 提供统一的 API，避免了学习和实现每个特定 API 的需求。 要尝试不">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/1.png">
+<meta property="og:image" content="http://example.com/2024/07/28/File/hain4j%E5%85%A5%E9%97%A8/01.png">
+<meta property="og:image" content="http://example.com/2024/07/28/File/hain4j%E5%85%A5%E9%97%A8/02.png">
 <meta property="article:published_time" content="2026-01-05T01:08:25.000Z">
-<meta property="article:modified_time" content="2026-01-05T06:50:17.851Z">
+<meta property="article:modified_time" content="2026-01-05T08:30:31.889Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="ChatLanguageModel">
 <meta property="article:tag" content="多模态">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/1.png">
+<meta name="twitter:image" content="http://example.com/2024/07/28/File/hain4j%E5%85%A5%E9%97%A8/01.png">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -178,7 +179,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="LangChain4j入门"><a href="#LangChain4j入门" class="headerlink" title="LangChain4j入门"></a>LangChain4j入门</h1><h2 id="1-什么是LangChain4J"><a href="#1-什么是LangChain4J" class="headerlink" title="1.什么是LangChain4J"></a>1.什么是LangChain4J</h2><p>LangChain4j 的目标是简化将 LLM 集成到 Java 应用程序中的过程。</p>
+        <h2 id="1-什么是LangChain4J"><a href="#1-什么是LangChain4J" class="headerlink" title="1.什么是LangChain4J"></a>1.什么是LangChain4J</h2><p>LangChain4j 的目标是简化将 LLM 集成到 Java 应用程序中的过程。</p>
 <p>具体方式如下：</p>
 <ol>
 <li><strong>统一 API：</strong> LLM 提供商（如 OpenAI 或 Google Vertex AI）和嵌入（向量）存储（如 Pinecone 或 Milvus） 使用专有 API。LangChain4j 提供统一的 API，避免了学习和实现每个特定 API 的需求。 要尝试不同的 LLM 或嵌入存储，您可以在它们之间轻松切换，无需重写代码。 LangChain4j 目前支持 <a target="_blank" rel="noopener" href="https://docs.langchain4j.info/integrations/language-models/">15+ 个流行的 LLM 提供商</a> 和 <a target="_blank" rel="noopener" href="https://docs.langchain4j.info/integrations/embedding-stores/">20+ 个嵌入存储</a>。</li>
@@ -195,7 +196,7 @@
 <li>低层次。在这个层次上，您拥有最大的自由度和访问所有低级组件的权限，如 <a target="_blank" rel="noopener" href="https://docs.langchain4j.info/tutorials/chat-and-language-models">ChatLanguageModel</a>、<code>UserMessage</code>、<code>AiMessage</code>、<code>EmbeddingStore</code>、<code>Embedding</code> 等。 这些是您的 LLM 驱动应用程序的”原语”。 您可以完全控制如何组合它们，但需要编写更多的粘合代码。</li>
 <li>高层次。在这个层次上，您使用高级 API（如 <a target="_blank" rel="noopener" href="https://docs.langchain4j.info/tutorials/ai-services">AI 服务</a>）与 LLM 交互， 它隐藏了所有复杂性和样板代码。 您仍然可以灵活地调整和微调行为，但是以声明式方式完成。</li>
 </ul>
-<h2 id="2-为什么选择LangChain4J"><a href="#2-为什么选择LangChain4J" class="headerlink" title="2.为什么选择LangChain4J"></a>2.为什么选择LangChain4J</h2><p><img src="/1.png" alt="img"></p>
+<h2 id="2-为什么选择LangChain4J"><a href="#2-为什么选择LangChain4J" class="headerlink" title="2.为什么选择LangChain4J"></a>2.为什么选择LangChain4J</h2><p><img src="/2024/07/28/File/hain4j%E5%85%A5%E9%97%A8/01.png" alt="img"></p>
 <h2 id="3-快速入门"><a href="#3-快速入门" class="headerlink" title="3.快速入门"></a>3.快速入门</h2><p>LangChain4j 提供<a target="_blank" rel="noopener" href="https://docs.langchain4j.info/integrations/language-models/">与多种 LLM 提供商的集成</a>。 每种集成都有自己的 Maven 依赖项。 最简单的开始方式是使用 OpenAI 集成：</p>
 <ul>
 <li>对于 Maven 在 <code>pom.xml</code> 中：</li>
@@ -308,6 +309,17 @@
 <h4 id="其他模态"><a href="#其他模态" class="headerlink" title="其他模态"></a>其他模态</h4><p><code>AudioContent</code> 类似于 <code>ImageContent</code>，但表示音频内容。</p>
 <p><code>VideoContent</code> 类似于 <code>ImageContent</code>，但表示视频内容。</p>
 <p><code>PdfFileContent</code> 类似于 <code>ImageContent</code>，但表示 PDF 文件的二进制内容。</p>
+<h2 id="5-流式输出"><a href="#5-流式输出" class="headerlink" title="5.流式输出"></a>5.流式输出</h2><p>LLM 一次生成一个标记（token），因此许多 LLM 提供商提供了一种方式，可以逐个标记地流式传输响应，而不是等待整个文本生成完毕。 这显著改善了用户体验，因为用户不需要等待未知的时间，几乎可以立即开始阅读响应。</p>
+<p>对于 <code>ChatLanguageModel</code> 接口，有相应的 <code>StreamingChatLanguageModel</code> 。 这些接口有类似的 API，但可以流式传输响应。 它们接受 <code>StreamingChatResponseHandler</code> 接口的实现作为参数。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">StreamingChatResponseHandler</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">onPartialResponse</span><span class="params">(String partialResponse)</span>;<span class="comment">//LLM每生成一个token后调用</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">onCompleteResponse</span><span class="params">(ChatResponse completeResponse)</span>;<span class="comment">//LLM token生成完成后调用</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">onError</span><span class="params">(Throwable error)</span>;<span class="comment">//出现异常时调用</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="案例：StreamingChatLanguageModel-加-SseEmitter-实现流式输出"><a href="#案例：StreamingChatLanguageModel-加-SseEmitter-实现流式输出" class="headerlink" title="案例：StreamingChatLanguageModel 加 SseEmitter 实现流式输出"></a>案例：StreamingChatLanguageModel 加 SseEmitter 实现流式输出</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean(&quot;streamingChatLanguageModel&quot;)</span></span><br><span class="line"><span class="keyword">public</span> StreamingChatLanguageModel <span class="title function_">StreamingChatLanguageModel</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">OpenAiStreamingChatModel</span> <span class="variable">model</span> <span class="operator">=</span> OpenAiStreamingChatModel.builder()</span><br><span class="line">            .baseUrl(baseUrl)</span><br><span class="line">            .apiKey(apiKey)</span><br><span class="line">            .modelName(modelName)</span><br><span class="line">            .build();</span><br><span class="line">    <span class="keyword">return</span> model;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@GetMapping(&quot;/chat4/stream&quot;)</span></span><br><span class="line"><span class="keyword">public</span> SseEmitter <span class="title function_">chatStream</span><span class="params">(<span class="meta">@RequestParam</span> String question)</span> &#123;</span><br><span class="line">    <span class="type">SseEmitter</span> <span class="variable">sseEmitter</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SseEmitter</span>(<span class="number">0L</span>);<span class="comment">//不超时</span></span><br><span class="line">    streamingChatLanguageModel.chat(question, <span class="keyword">new</span> <span class="title class_">StreamingChatResponseHandler</span>() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onPartialResponse</span><span class="params">(String s)</span> &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                sseEmitter.send(s);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                sseEmitter.completeWithError(e);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onCompleteResponse</span><span class="params">(ChatResponse chatResponse)</span> &#123;</span><br><span class="line">            sseEmitter.complete();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onError</span><span class="params">(Throwable throwable)</span> &#123;</span><br><span class="line">            sseEmitter.completeWithError(throwable);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> sseEmitter;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/2024/07/28/File/hain4j%E5%85%A5%E9%97%A8/02.png" alt="img"></p>
 
       
 
@@ -426,6 +438,15 @@
 
   
 <nav id="article-nav">
+  
+    <a href="/2026/01/05/LangChain4j%E4%B9%8B%E4%BC%9A%E8%AF%9D%E8%AE%B0%E5%BF%86/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          LangChain4j之会话记忆
+        
+      </div>
+    </a>
   
   
     <a href="/2025/10/11/Springboot%E9%9B%86%E6%88%90ES/" id="article-nav-older" class="article-nav-link-wrap">
