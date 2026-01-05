@@ -17,9 +17,10 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/1.png">
 <meta property="article:published_time" content="2026-01-05T01:08:25.000Z">
-<meta property="article:modified_time" content="2026-01-05T02:29:38.509Z">
+<meta property="article:modified_time" content="2026-01-05T06:43:52.414Z">
 <meta property="article:author" content="John Doe">
-<meta property="article:tag" content="LangChain4j">
+<meta property="article:tag" content="ChatLanguageModel">
+<meta property="article:tag" content="多模态">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/1.png">
   
@@ -225,6 +226,89 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="keyword">public</span> ChatLanguageModel chatLanguageModel;</span><br><span class="line"></span><br><span class="line"><span class="meta">@GetMapping(&quot;/chat/&#123;question&#125;&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">chat</span><span class="params">(<span class="meta">@PathVariable(value = &quot;question&quot;)</span> String question)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> chatLanguageModel.chat(question);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
+
+<h2 id="4-聊天和语言模型：低阶API"><a href="#4-聊天和语言模型：低阶API" class="headerlink" title="4.聊天和语言模型：低阶API"></a>4.聊天和语言模型：低阶API</h2><p>LLM 目前有两种 API 类型：</p>
+<ul>
+<li><code>LanguageModel</code>。它们的 API 非常简单 - 接受 <code>String</code> 作为输入并返回 <code>String</code> 作为输出。 这种 API 现在正在被聊天 API（第二种 API 类型）所取代。</li>
+<li><code>ChatLanguageModel</code>。这些接受多个 <code>ChatMessage</code> 作为输入并返回单个 <code>AiMessage</code> 作为输出。 <code>ChatMessage</code> 通常包含文本，但某些 LLM 也支持其他模态（例如，图像、音频等）。</li>
+</ul>
+<p>LangChain4j 不会再扩展对 <code>LanguageModel</code> 的支持， 因此在所有新功能中，我们将使用 <code>ChatLanguageModel</code> API。</p>
+<p><code>ChatLanguageModel</code> 是 LangChain4j 中与 LLM 交互的低级 API，提供最大的能力和灵活性。</p>
+<p>除了 <code>ChatLanguageModel</code> 和 <code>LanguageModel</code> 外，LangChain4j 还支持以下类型的模型：</p>
+<ul>
+<li><p><code>EmbeddingModel</code> - 这种模型可以将文本转换为 <code>Embedding</code>。</p>
+</li>
+<li><p><code>ImageModel</code> - 这种模型可以生成和编辑 <code>Image</code>。</p>
+</li>
+<li><p><code>ModerationModel</code> - 这种模型可以检查文本是否包含有害内容。</p>
+</li>
+<li><p><code>ScoringModel</code> - 这种模型可以对查询的多个文本片段进行评分（或排名）， 本质上确定每个文本片段与查询的相关性。这对 <a target="_blank" rel="noopener" href="https://docs.langchain4j.info/tutorials/rag">RAG</a> 很有用。 这些将在后面介绍。</p>
+</li>
+</ul>
+<p>现在，让我们仔细看看 <code>ChatLanguageModel</code> API。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">ChatLanguageModel</span> &#123;</span><br><span class="line"></span><br><span class="line">    String <span class="title function_">chat</span><span class="params">(String userMessage)</span>;</span><br><span class="line">    </span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>简单的 <code>chat</code> 方法，它接受 <code>String</code> 作为输入并返回 <code>String</code> 作为输出。</p>
+<p>以下是其他聊天 API 方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"></span><br><span class="line">ChatResponse <span class="title function_">chat</span><span class="params">(ChatMessage... messages)</span>;</span><br><span class="line"></span><br><span class="line">ChatResponse <span class="title function_">chat</span><span class="params">(List&lt;ChatMessage&gt; messages)</span>;</span><br><span class="line">    </span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>这些版本的 <code>chat</code> 方法接受一个或多个 <code>ChatMessage</code> 作为输入。 <code>ChatMessage</code> 是表示聊天消息的基本接口。</p>
+<p>如果您希望自定义请求（例如，指定温度、工具或 JSON 模式等）， 您可以使用 <code>chat(ChatRequest)</code> 方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"></span><br><span class="line">ChatResponse <span class="title function_">chat</span><span class="params">(ChatRequest chatRequest)</span>;</span><br><span class="line">    </span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ChatRequest</span> <span class="variable">request</span> <span class="operator">=</span> ChatRequest.builder()</span><br><span class="line">    .messages(UserMessage.from())</span><br><span class="line">    .parameters(ChatRequestParameters.builder()</span><br><span class="line">        .temperature(<span class="number">0.5</span>)</span><br><span class="line">        .toolSpecifications(toolSpecifications)</span><br><span class="line">        .build())</span><br><span class="line">    .build();</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="ChatMessage-的类型"><a href="#ChatMessage-的类型" class="headerlink" title="ChatMessage 的类型"></a><code>ChatMessage</code> 的类型</h3><p>目前有四种类型的聊天消息，每种对应消息的一个”来源”：</p>
+<ul>
+<li><code>UserMessage</code>：这是来自用户的消息。根据 LLM 支持的模态，<code>UserMessage</code> 可以只包含文本（<code>String</code>）， 或<a target="_blank" rel="noopener" href="https://docs.langchain4j.info/tutorials/chat-and-language-models#multimodality">其他模态</a>。</li>
+<li><code>AiMessage</code>：这是由 AI 生成的消息，通常是对 <code>UserMessage</code> 的回应。<code>AiMessage</code> 可以包含文本响应（<code>String</code>）或执行工具的请求（<code>ToolExecutionRequest</code>）。</li>
+<li><code>ToolExecutionResultMessage</code>：这是 <code>ToolExecutionRequest</code> 的结果。</li>
+<li><code>SystemMessage</code>：这是来自系统的消息。通常，您会在这里写入关于 LLM 角色是什么、它应该如何行为、以什么风格回答等指令。 LLM 被训练为比其他类型的消息更加关注 <code>SystemMessage</code>， 所以要小心，最好不要让最终用户自由定义或在 <code>SystemMessage</code> 中注入一些输入。 通常，它位于对话的开始。</li>
+<li><code>CustomMessage</code>：这是一个可以包含任意属性的自定义消息。这种消息类型只能由 支持它的 <code>ChatLanguageModel</code> 实现使用（目前只有 Ollama）。</li>
+</ul>
+<p>现在我们了解了所有类型的 <code>ChatMessage</code>，让我们看看如何在对话中组合它们。</p>
+<p>在最简单的情况下，我们可以向 <code>chat</code> 方法提供单个 <code>UserMessage</code> 实例。返回 <code>ChatResponse</code>。 除了 <code>AiMessage</code> 外，<code>ChatResponse</code> 还包含 <code>ChatResponseMetadata</code>。 <code>ChatResponseMetadata</code> 包含 <code>TokenUsage</code>，其中包含有关输入包含多少令牌的统计信息， 输出（在 <code>AiMessage</code> 中）生成了多少令牌，以及总计（输入 + 输出）。  然后，<code>ChatResponseMetadata</code> 还包含 <code>FinishReason</code>， 这是一个枚举，包含生成停止的各种原因。 通常，如果 LLM 自己决定停止生成，它将是 <code>FinishReason.STOP</code>。</p>
+<h3 id="案例：统计-token-耗费"><a href="#案例：统计-token-耗费" class="headerlink" title="案例：统计 token 耗费"></a>案例：统计 token 耗费</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping(&quot;/chat2/&#123;question&#125;&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">chat2</span><span class="params">(<span class="meta">@PathVariable(value = &quot;question&quot;)</span> String question)</span> &#123;</span><br><span class="line">    <span class="type">UserMessage</span> <span class="variable">message</span> <span class="operator">=</span> UserMessage.from(question);</span><br><span class="line">    <span class="type">ChatResponse</span> <span class="variable">response</span> <span class="operator">=</span> chatLanguageModel.chat(message);</span><br><span class="line">    <span class="comment">//获取token消耗</span></span><br><span class="line">    <span class="type">ChatResponseMetadata</span> <span class="variable">metadata</span> <span class="operator">=</span> response.metadata();</span><br><span class="line">    <span class="type">TokenUsage</span> <span class="variable">tokenUsage</span> <span class="operator">=</span> metadata.tokenUsage();</span><br><span class="line">    <span class="comment">//或者直接</span></span><br><span class="line">    <span class="comment">//TokenUsage tokenUsage = response.tokenUsage();</span></span><br><span class="line">    <span class="type">Integer</span> <span class="variable">inputTokenCount</span> <span class="operator">=</span> tokenUsage.inputTokenCount();<span class="comment">//输入token</span></span><br><span class="line">    <span class="type">Integer</span> <span class="variable">outputTokenCount</span> <span class="operator">=</span> tokenUsage.outputTokenCount();<span class="comment">//输出token</span></span><br><span class="line">    <span class="type">Integer</span> <span class="variable">totalTokenCount</span> <span class="operator">=</span> tokenUsage.totalTokenCount();<span class="comment">//总token</span></span><br><span class="line">    log.info(<span class="string">&quot;调用模型完成，输入token=&#123;&#125;，输出token=&#123;&#125;，总token=&#123;&#125;&quot;</span>, inputTokenCount, outputTokenCount, totalTokenCount);</span><br><span class="line">    <span class="comment">//返回模型响应</span></span><br><span class="line">    <span class="type">AiMessage</span> <span class="variable">aiMessage</span> <span class="operator">=</span> response.aiMessage();</span><br><span class="line">    <span class="keyword">return</span> aiMessage.text();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2026-01-05T11:37:19.670+08:00  INFO 21180 --- [demo1] [nio-8080-exec-1] c.e.demo1.controller.ChatController      : 调用模型完成，输入token=10，输出token=670，总token=680</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="多模态"><a href="#多模态" class="headerlink" title="多模态"></a>多模态</h3><p><code>UserMessage</code> 不仅可以包含文本，还可以包含其他类型的内容。 <code>UserMessage</code> 包含 <code>List&lt;Content&gt; contents</code>。 <code>Content</code> 是一个接口，有以下实现：</p>
+<ul>
+<li><code>TextContent</code></li>
+<li><code>ImageContent</code></li>
+<li><code>AudioContent</code></li>
+<li><code>VideoContent</code></li>
+<li><code>PdfFileContent</code></li>
+</ul>
+<p>您可以在<a target="_blank" rel="noopener" href="https://docs.langchain4j.info/integrations/language-models">这里</a>的比较表中查看哪些 LLM 提供商支持哪些模态。</p>
+<h4 id="文本内容"><a href="#文本内容" class="headerlink" title="文本内容"></a>文本内容</h4><p><code>TextContent</code> 是最简单的 <code>Content</code> 形式，表示纯文本并包装单个 <code>String</code>。 <code>UserMessage.from(TextContent.from(&quot;Hello!&quot;))</code> 等同于 <code>UserMessage.from(&quot;Hello!&quot;)</code>。</p>
+<p>可以在 <code>UserMessage</code> 中提供一个或多个 <code>TextContent</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">UserMessage</span> <span class="variable">userMessage</span> <span class="operator">=</span> UserMessage.from(</span><br><span class="line">    TextContent.from(<span class="string">&quot;Hello!&quot;</span>),</span><br><span class="line">    TextContent.from(<span class="string">&quot;How are you?&quot;</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="图像内容"><a href="#图像内容" class="headerlink" title="图像内容"></a>图像内容</h4><p>根据 LLM 提供商的不同，<code>ImageContent</code> 可以从<strong>远程</strong>图像的 URL 创建， 或从 Base64 编码的二进制数据创建：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping(&quot;/chat3&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">chat3</span><span class="params">()</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">    <span class="type">File</span> <span class="variable">file</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(<span class="string">&quot;C:/Users/user/Pictures/Saved Pictures/image.jpg&quot;</span>);</span><br><span class="line">    <span class="type">FileInputStream</span> <span class="variable">fis</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileInputStream</span>(file);</span><br><span class="line">    <span class="type">byte</span>[] bytes = fis.readAllBytes();</span><br><span class="line">    fis.close();</span><br><span class="line">    <span class="type">String</span> <span class="variable">base64</span> <span class="operator">=</span> Base64.getEncoder().encodeToString(bytes);</span><br><span class="line">    <span class="type">UserMessage</span> <span class="variable">message</span> <span class="operator">=</span> UserMessage.from(</span><br><span class="line">            TextContent.from(<span class="string">&quot;以下两张图片内容是什么？&quot;</span>),</span><br><span class="line">            ImageContent.from(<span class="string">&quot;https://picsum.photos/200/300&quot;</span>),</span><br><span class="line">            ImageContent.from(base64, <span class="string">&quot;image/jpg&quot;</span>)</span><br><span class="line">    );</span><br><span class="line">    <span class="type">ChatResponse</span> <span class="variable">response</span> <span class="operator">=</span> chatLanguageModel.chat(message);</span><br><span class="line">    <span class="keyword">return</span> response.aiMessage().text();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">这两张图片的内容分别如下： --- **第一张图片：** 这是一张具有宁静、略带怀旧氛围的室内照片。画面主体是一个带有深色木质窗格的老式窗户，窗外是茂密的绿色树林。阳光透过树叶和窗格洒入室内，在窗框和窗台上投下斑驳的光影。整体色调偏暗，突出了窗外自然光的明亮与生机，营造出一种静谧、沉思或略带孤寂的感觉。 这张图常被用作背景、壁纸或表达“窗外风景”、“时光流逝”、“自然与建筑”等意境。 --- **第二张图片：** 这是一位动漫风格的女性角色特写。她有着深蓝色短发、明亮的蓝色眼睛，表情略显淡漠或平静。她身穿红色和服（或类似传统服饰），衣领处有白色装饰，耳侧佩戴着白色的花朵状发饰。她手中似乎拿着筷子，面前有一个红色碗，可能正在用餐。 该角色出自日本动画《**Re:从零开始的异世界生活**》（Re:Zero − Starting Life in Another World），是其中的重要角色——**雷姆（Rem）** 的Q版（chibi）形象。在原作中，雷姆是罗兹瓦尔宅邸的女仆，性格温柔忠诚，深受观众喜爱。这个Q版形象常用于轻松搞笑或可爱风格的周边、头像或表情包。 --- ✅ 总结： - 图一：窗外绿树成荫的复古窗景，充满诗意与静谧感。 - 图二：动漫角色雷姆的Q版形象，来自《Re:从零开始的异世界生活》，正准备用餐。 如需进一步了解某张图的出处、用途或相关作品，可继续提问！</span><br></pre></td></tr></table></figure>
+
+
+
+<p>还可以指定 <code>DetailLevel</code> 枚举（带有 <code>LOW</code>&#x2F;<code>HIGH</code>&#x2F;<code>AUTO</code> 选项）来控制模型如何处理图像。 更多详情请参见<a target="_blank" rel="noopener" href="https://platform.openai.com/docs/guides/vision#low-or-high-fidelity-image-understanding">这里</a>。</p>
+<h4 id="其他模态"><a href="#其他模态" class="headerlink" title="其他模态"></a>其他模态</h4><p><code>AudioContent</code> 类似于 <code>ImageContent</code>，但表示音频内容。</p>
+<p><code>VideoContent</code> 类似于 <code>ImageContent</code>，但表示视频内容。</p>
+<p><code>PdfFileContent</code> 类似于 <code>ImageContent</code>，但表示 PDF 文件的二进制内容。</p>
+
       
 
       
@@ -258,7 +342,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">LangChain4j</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">ChatLanguageModel</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">多模态</a>
         		</li>
       		
 		</ul>
@@ -1095,7 +1183,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">LangChain4j</a>
+                <a href="javascript:void(0)" class="js-tag color3">ChatLanguageModel</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">多模态</a>
               </li>
             
             <div class="clearfix"></div>
