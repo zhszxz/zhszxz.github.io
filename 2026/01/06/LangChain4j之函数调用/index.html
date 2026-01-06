@@ -6,15 +6,23 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Hexo</title>
+  <title>LangChain4j之函数调用 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/page/4/index.html">
+  <meta name="description" content="工具（函数调用）一些 LLM 除了生成文本外，还可以触发操作。 有一个被称为”工具”或”函数调用”的概念。 它允许 LLM 在必要时调用一个或多个可用的工具，通常由开发者定义。 工具可以是任何东西：网络搜索、调用外部 API 或执行特定代码片段等。 LLM 实际上不能自己调用工具；相反，它们在响应中表达调用特定工具的意图（而不是以纯文本形式响应）。 作为开发者，我们应该使用提供的参数执行这个工具，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LangChain4j之函数调用">
+<meta property="og:url" content="http://example.com/2026/01/06/LangChain4j%E4%B9%8B%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="工具（函数调用）一些 LLM 除了生成文本外，还可以触发操作。 有一个被称为”工具”或”函数调用”的概念。 它允许 LLM 在必要时调用一个或多个可用的工具，通常由开发者定义。 工具可以是任何东西：网络搜索、调用外部 API 或执行特定代码片段等。 LLM 实际上不能自己调用工具；相反，它们在响应中表达调用特定工具的意图（而不是以纯文本形式响应）。 作为开发者，我们应该使用提供的参数执行这个工具，">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2024/07/28/File/hain4j%E4%B9%8B%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/01.png">
+<meta property="og:image" content="http://example.com/2024/07/28/File/hain4j%E4%B9%8B%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/02.png">
+<meta property="og:image" content="http://example.com/2024/07/28/File/hain4j%E4%B9%8B%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/03.png">
+<meta property="article:published_time" content="2026-01-06T07:06:52.000Z">
+<meta property="article:modified_time" content="2026-01-06T12:43:30.803Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2024/07/28/File/hain4j%E4%B9%8B%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/01.png">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -150,723 +158,162 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-    <article id="post-Nginx-负载均衡" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+            <article id="post-LangChain4j之函数调用" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/08/20/Nginx-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">Nginx-负载均衡</a>
+    <h1 class="article-title" itemprop="name">
+      LangChain4j之函数调用
     </h1>
   
 
         
-        <a href="/2024/08/20/Nginx-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/" class="archive-article-date">
-  	<time datetime="2024-08-20T05:22:36.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-08-20</time>
+        <a href="/2026/01/06/LangChain4j%E4%B9%8B%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/" class="archive-article-date">
+  	<time datetime="2026-01-06T07:06:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2026-01-06</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="Nginx负载均衡"><a href="#Nginx负载均衡" class="headerlink" title="Nginx负载均衡"></a>Nginx负载均衡</h1><h2 id="负载均衡概述"><a href="#负载均衡概述" class="headerlink" title="负载均衡概述"></a>负载均衡概述</h2><p>早期的网站流量和业务功能都比较简单，单台服务器足以满足基本的需求，但是随着互联网的发展，业务流量越来越大并且业务逻辑也跟着越来越复杂，单台服务器的性能及单点故障问题就凸显出来了，因此需要多台服务器进行性能的水平扩展及避免单点故障出现。那么如何将不同用户的请求流量分发到不同的服务器上呢？</p>
-        
-          <a class="article-more-a" href="/2024/08/20/Nginx-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/#more">more >></a>
-        
-      
+        <h1 id="工具（函数调用）"><a href="#工具（函数调用）" class="headerlink" title="工具（函数调用）"></a>工具（函数调用）</h1><p>一些 LLM 除了生成文本外，还可以触发操作。</p>
+<p>有一个被称为”工具”或”函数调用”的概念。 它允许 LLM 在必要时调用一个或多个可用的工具，通常由开发者定义。 工具可以是任何东西：网络搜索、调用外部 API 或执行特定代码片段等。 LLM 实际上不能自己调用工具；相反，它们在响应中表达调用特定工具的意图（而不是以纯文本形式响应）。 作为开发者，我们应该使用提供的参数执行这个工具，并将工具执行的结果反馈回来。</p>
+<p>例如，我们知道 LLM 本身在数学计算方面并不擅长。 如果您的用例涉及偶尔的数学计算，您可能希望为 LLM 提供一个”数学工具”。 通过在请求中向 LLM 声明一个或多个工具， 如果它认为合适，它可以决定调用其中一个工具。 给定一个数学问题和一组数学工具，LLM 可能会决定为了正确回答问题， 它应该首先调用提供的数学工具之一。</p>
+<span id="more"></span>
 
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">负载均衡</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Nginx//" class="article-tag-list-link color1">Nginx</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/08/20/Nginx-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
+<p>让我们看看这在实践中是如何工作的（有工具和没有工具的情况）：</p>
+<p>没有工具的消息交换示例：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">请求：</span><br><span class="line">- 消息：</span><br><span class="line">    - UserMessage：</span><br><span class="line">        - 文本：475695037565 的平方根是多少？</span><br><span class="line"></span><br><span class="line">响应：</span><br><span class="line">- AiMessage：</span><br><span class="line">    - 文本：475695037565 的平方根约为 689710。</span><br></pre></td></tr></table></figure>
 
 
 
-
-  
-    <article id="post-Nginx-反向代理" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/08/20/Nginx-%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/">Nginx-反向代理</a>
-    </h1>
-  
-
-        
-        <a href="/2024/08/20/Nginx-%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/" class="archive-article-date">
-  	<time datetime="2024-08-20T05:15:47.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-08-20</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="Nginx反向代理"><a href="#Nginx反向代理" class="headerlink" title="Nginx反向代理"></a>Nginx反向代理</h2><h3 id="Nginx反向代理概述"><a href="#Nginx反向代理概述" class="headerlink" title="Nginx反向代理概述"></a>Nginx反向代理概述</h3><p>关于正向代理和反向代理，我们在前面的章节已经通过一张图给大家详细的介绍过了，简而言之就是正向代理代理的对象是客户端，反向代理代理的是服务端，这是两者之间最大的区别。</p>
-<p>Nginx即可以实现正向代理，也可以实现反向代理。</p>
-<p>我们先来通过一个小案例演示下Nginx正向代理的简单应用。</p>
-<p>先提需求：</p>
-        
-          <a class="article-more-a" href="/2024/08/20/Nginx-%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">反向代理</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Nginx//" class="article-tag-list-link color1">Nginx</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/08/20/Nginx-%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
+<p>接近但不正确。</p>
+<p>使用以下工具的消息交换示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Tool(&quot;对给定的 2 个数字求和&quot;)</span></span><br><span class="line"><span class="type">double</span> <span class="title function_">sum</span><span class="params">(<span class="type">double</span> a, <span class="type">double</span> b)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> a + b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Tool(&quot;返回给定数字的平方根&quot;)</span></span><br><span class="line"><span class="type">double</span> <span class="title function_">squareRoot</span><span class="params">(<span class="type">double</span> x)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> Math.sqrt(x);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
-
-  
-    <article id="post-认识Nginx" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/08/20/%E8%AE%A4%E8%AF%86Nginx/">认识Nginx</a>
-    </h1>
-  
-
-        
-        <a href="/2024/08/20/%E8%AE%A4%E8%AF%86Nginx/" class="archive-article-date">
-  	<time datetime="2024-08-20T04:43:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-08-20</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="Nginx简介"><a href="#Nginx简介" class="headerlink" title="Nginx简介"></a>Nginx简介</h2><h3 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h3><p>Nginx（“engine x”）一个具有高性能的【HTTP】和【反向代理】的【WEB服务器】，同时也是一个【POP3&#x2F;SMTP&#x2F;IMAP代理服务器】，是由伊戈尔·赛索耶夫(俄罗斯人)使用C语言编写的，Nginx的第一个版本是2004年10月4号发布的0.1.0版本。另外值得一提的是伊戈尔·赛索耶夫将Nginx的源码进行了开源，这也为Nginx的发展提供了良好的保障。</p>
-<p><img src="/2024/08/20/%E8%AE%A4%E8%AF%86Nginx/1573470187616.png" alt="1573470187616"></p>
-        
-          <a class="article-more-a" href="/2024/08/20/%E8%AE%A4%E8%AF%86Nginx/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">nginx.conf</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Nginx//" class="article-tag-list-link color1">Nginx</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/08/20/%E8%AE%A4%E8%AF%86Nginx/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">请求 1：</span><br><span class="line">- 消息：</span><br><span class="line">    - UserMessage：</span><br><span class="line">        - 文本：475695037565 的平方根是多少？</span><br><span class="line">- 工具：</span><br><span class="line">    - sum(double a, double b)：对给定的 2 个数字求和</span><br><span class="line">    - squareRoot(double x)：返回给定数字的平方根</span><br><span class="line"></span><br><span class="line">响应 1：</span><br><span class="line">- AiMessage：</span><br><span class="line">    - toolExecutionRequests：</span><br><span class="line">        - squareRoot(475695037565)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">... 这里我们使用&quot;475695037565&quot;参数执行 squareRoot 方法并获得&quot;689706.486532&quot;作为结果 ...</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">请求 2：</span><br><span class="line">- 消息：</span><br><span class="line">    - UserMessage：</span><br><span class="line">        - 文本：475695037565 的平方根是多少？</span><br><span class="line">    - AiMessage：</span><br><span class="line">        - toolExecutionRequests：</span><br><span class="line">            - squareRoot(475695037565)</span><br><span class="line">    - ToolExecutionResultMessage：</span><br><span class="line">        - 文本：689706.486532</span><br><span class="line"></span><br><span class="line">响应 2：</span><br><span class="line">- AiMessage：</span><br><span class="line">    - 文本：475695037565 的平方根是 689706.486532。</span><br></pre></td></tr></table></figure>
 
 
 
-
-  
-    <article id="post-Redis高级-最佳实践" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/08/18/Redis%E9%AB%98%E7%BA%A7-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/">Redis高级-最佳实践</a>
-    </h1>
-  
-
-        
-        <a href="/2024/08/18/Redis%E9%AB%98%E7%BA%A7-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/" class="archive-article-date">
-  	<time datetime="2024-08-18T14:31:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-08-18</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="Redis高级篇之最佳实践"><a href="#Redis高级篇之最佳实践" class="headerlink" title="Redis高级篇之最佳实践"></a>Redis高级篇之最佳实践</h2><p><strong>今日内容</strong></p>
-<blockquote>
+<p>如您所见，当 LLM 可以访问工具时，它可以在适当的时候决定调用其中一个工具。</p>
+<p>这是一个非常强大的功能。 在这个简单的例子中，我们给了 LLM 基本的数学工具， 但想象一下，如果我们给它提供了例如 <code>googleSearch</code> 和 <code>sendEmail</code> 工具， 以及一个查询，如”我的朋友想知道 AI 领域的最新消息。将简短摘要发送到 <a href="mailto:friend@email.com">friend@email.com</a>“， 那么它可以使用 <code>googleSearch</code> 工具查找最新消息， 然后总结并通过 <code>sendEmail</code> 工具发送摘要。</p>
+<p>备注</p>
+<p>为了增加 LLM 调用正确工具并使用正确参数的可能性， 我们应该提供清晰明确的：</p>
 <ul>
-<li>Redis键值设计</li>
-<li>批处理优化</li>
-<li>服务端优化</li>
-<li>集群最佳实践</li>
+<li>工具名称</li>
+<li>工具功能描述以及何时应该使用它</li>
+<li>每个工具参数的描述</li>
 </ul>
-</blockquote>
-<h2 id="1、Redis键值设计"><a href="#1、Redis键值设计" class="headerlink" title="1、Redis键值设计"></a>1、Redis键值设计</h2><h3 id="1-1、优雅的key结构"><a href="#1-1、优雅的key结构" class="headerlink" title="1.1、优雅的key结构"></a>1.1、优雅的key结构</h3><p>Redis的Key虽然可以自定义，但最好遵循下面的几个最佳实践约定：</p>
+<p>一个好的经验法则是：如果人类能够理解工具的目的和使用方法， 那么 LLM 很可能也能理解。</p>
+<p>LLM 经过专门的微调，以检测何时调用工具以及如何调用它们。 有些模型甚至可以同时调用多个工具，例如， <a target="_blank" rel="noopener" href="https://platform.openai.com/docs/guides/function-calling/parallel-function-calling">OpenAI</a>。</p>
+<p>请注意，并非所有模型都支持工具。 要查看哪些模型支持工具，请参考<a target="_blank" rel="noopener" href="https://docs.langchain4j.dev/integrations/language-models/">此页面</a>上的”工具”列。</p>
+<h1 id="两个抽象级别"><a href="#两个抽象级别" class="headerlink" title="两个抽象级别"></a>两个抽象级别</h1><p>LangChain4j 提供了两个抽象级别来使用工具：</p>
 <ul>
-<li><p>遵循基本格式：[业务名称]:[数据名]:[id]</p>
-</li>
-<li><p>长度不超过44字节</p>
-</li>
-<li><p>不包含特殊字符</p>
-        
-          <a class="article-more-a" href="/2024/08/18/Redis%E9%AB%98%E7%BA%A7-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">键值设计</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">BigKey</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">批处理</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">慢查询</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Redis//" class="article-tag-list-link color1">Redis</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/08/18/Redis%E9%AB%98%E7%BA%A7-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Redis高级-多级缓存同步" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E5%90%8C%E6%AD%A5/">Redis高级-多级缓存同步</a>
-    </h1>
-  
-
-        
-        <a href="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E5%90%8C%E6%AD%A5/" class="archive-article-date">
-  	<time datetime="2024-08-17T13:02:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-08-17</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="5-缓存同步"><a href="#5-缓存同步" class="headerlink" title="5.缓存同步"></a>5.缓存同步</h1><p>大多数情况下，浏览器查询到的都是缓存数据，如果缓存数据与数据库数据存在较大差异，可能会产生比较严重的后果。</p>
-<p>所以我们必须保证数据库数据、缓存数据的一致性，这就是缓存与数据库的同步。</p>
-<h2 id="5-1-数据同步策略"><a href="#5-1-数据同步策略" class="headerlink" title="5.1.数据同步策略"></a>5.1.数据同步策略</h2><p>缓存数据同步的常见方式有三种：</p>
-<p><strong>设置有效期</strong>：给缓存设置有效期，到期后自动删除。再次查询时更新</p>
-<ul>
-<li><p>优势：简单、方便</p>
-</li>
-<li><p>缺点：时效性差，缓存过期之前可能不一致</p>
-</li>
-<li><p>场景：更新频率较低，时效性要求低的业务</p>
-        
-          <a class="article-more-a" href="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E5%90%8C%E6%AD%A5/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Canal</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Redis//" class="article-tag-list-link color1">Redis</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E5%90%8C%E6%AD%A5/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Redis高级-多级缓存" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/">Redis高级-多级缓存</a>
-    </h1>
-  
-
-        
-        <a href="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/" class="archive-article-date">
-  	<time datetime="2024-08-17T12:24:32.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-08-17</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="3-Lua语法入门"><a href="#3-Lua语法入门" class="headerlink" title="3.Lua语法入门"></a>3.Lua语法入门</h1><p>Nginx编程需要用到Lua语言，因此我们必须先入门Lua的基本语法。</p>
-<h2 id="3-1-初识Lua"><a href="#3-1-初识Lua" class="headerlink" title="3.1.初识Lua"></a>3.1.初识Lua</h2><p>Lua 是一种轻量小巧的脚本语言，用标准C语言编写并以源代码形式开放， 其设计目的是为了嵌入应用程序中，从而为应用程序提供灵活的扩展和定制功能。官网：<a target="_blank" rel="noopener" href="https://www.lua.org/">https://www.lua.org/</a></p>
-        
-          <a class="article-more-a" href="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Lua</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">OpenResty</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Redis//" class="article-tag-list-link color1">Redis</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/08/17/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Redis高级-JVM进程缓存" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/08/11/Redis%E9%AB%98%E7%BA%A7-JVM%E8%BF%9B%E7%A8%8B%E7%BC%93%E5%AD%98/">Redis高级-JVM进程缓存</a>
-    </h1>
-  
-
-        
-        <a href="/2024/08/11/Redis%E9%AB%98%E7%BA%A7-JVM%E8%BF%9B%E7%A8%8B%E7%BC%93%E5%AD%98/" class="archive-article-date">
-  	<time datetime="2024-08-11T07:17:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-08-11</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="1-什么是多级缓存"><a href="#1-什么是多级缓存" class="headerlink" title="1.什么是多级缓存"></a>1.什么是多级缓存</h1><p>传统的缓存策略一般是请求到达Tomcat后，先查询Redis，如果未命中则查询数据库，如图：</p>
-<p><img src="/2024/08/11/Redis%E9%AB%98%E7%BA%A7-JVM%E8%BF%9B%E7%A8%8B%E7%BC%93%E5%AD%98/image-20210821075259137.png" alt="image-20210821075259137"></p>
-        
-          <a class="article-more-a" href="/2024/08/11/Redis%E9%AB%98%E7%BA%A7-JVM%E8%BF%9B%E7%A8%8B%E7%BC%93%E5%AD%98/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Caffeine</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Redis//" class="article-tag-list-link color1">Redis</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/08/11/Redis%E9%AB%98%E7%BA%A7-JVM%E8%BF%9B%E7%A8%8B%E7%BC%93%E5%AD%98/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Redis高级-分片集群" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/08/10/Redis%E9%AB%98%E7%BA%A7-%E5%88%86%E7%89%87%E9%9B%86%E7%BE%A4/">Redis高级-分片集群</a>
-    </h1>
-  
-
-        
-        <a href="/2024/08/10/Redis%E9%AB%98%E7%BA%A7-%E5%88%86%E7%89%87%E9%9B%86%E7%BE%A4/" class="archive-article-date">
-  	<time datetime="2024-08-10T11:20:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-08-10</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="4-Redis分片集群"><a href="#4-Redis分片集群" class="headerlink" title="4.Redis分片集群"></a>4.Redis分片集群</h1><h2 id="4-1-搭建分片集群"><a href="#4-1-搭建分片集群" class="headerlink" title="4.1.搭建分片集群"></a>4.1.搭建分片集群</h2><p>主从和哨兵可以解决高可用、高并发读的问题。但是依然有两个问题没有解决：</p>
-<ul>
-<li><p>海量数据存储问题</p>
-</li>
-<li><p>高并发写的问题</p>
-</li>
+<li>低级别，使用 <code>ChatLanguageModel</code> 和 <code>ToolSpecification</code> API</li>
+<li>高级别，使用 <a target="_blank" rel="noopener" href="https://docs.langchain4j.info/tutorials/ai-services">AI 服务</a>和带有 <code>@Tool</code> 注解的 Java 方法</li>
 </ul>
-<p>使用分片集群可以解决上述问题，如图:</p>
-        
-          <a class="article-more-a" href="/2024/08/10/Redis%E9%AB%98%E7%BA%A7-%E5%88%86%E7%89%87%E9%9B%86%E7%BE%A4/#more">more >></a>
-        
+<h2 id="低级工具-API"><a href="#低级工具-API" class="headerlink" title="低级工具 API"></a>低级工具 API</h2><p>低级API的函数调用，本质分三步：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1️⃣ 告诉模型：我有哪些函数（Tool / Function Schema）</span><br><span class="line">2️⃣ 模型决定：要不要调用函数（返回 tool_call）</span><br><span class="line">3️⃣ 你执行函数 → 把结果再发回模型 → 得到最终回答</span><br></pre></td></tr></table></figure>
+
+
+
+<p>在低级别，您可以使用 <code>ChatLanguageModel</code> 的 <code>chat(ChatRequest)</code> 方法。 <code>StreamingChatLanguageModel</code> 中也存在类似的方法。</p>
+<p>您可以在创建 <code>ChatRequest</code> 时指定一个或多个 <code>ToolSpecification</code>。</p>
+<p><code>ToolSpecification</code> 是一个包含工具所有信息的对象：</p>
+<ul>
+<li>工具的 <code>name</code>（名称）</li>
+<li>工具的 <code>description</code>（描述）</li>
+<li>工具的 <code>parameters</code>（参数）及其描述</li>
+</ul>
+<p>建议提供尽可能多的工具信息： 清晰的名称、全面的描述以及每个参数的描述等。</p>
+<p>创建 <code>ToolSpecification</code> 有两种方式：</p>
+<ol>
+<li>手动创建</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ToolSpecification</span> <span class="variable">toolSpecification</span> <span class="operator">=</span> ToolSpecification.builder()</span><br><span class="line">    .name(<span class="string">&quot;getWeather&quot;</span>)</span><br><span class="line">    .description(<span class="string">&quot;返回给定城市的天气预报&quot;</span>)</span><br><span class="line">    .parameters(JsonObjectSchema.builder()</span><br><span class="line">        .addStringProperty(<span class="string">&quot;city&quot;</span>, <span class="string">&quot;应返回天气预报的城市&quot;</span>)</span><br><span class="line">        .addEnumProperty(<span class="string">&quot;temperatureUnit&quot;</span>, List.of(<span class="string">&quot;CELSIUS&quot;</span>, <span class="string">&quot;FAHRENHEIT&quot;</span>))</span><br><span class="line">        .required(<span class="string">&quot;city&quot;</span>) <span class="comment">// 必须明确指定必需的属性</span></span><br><span class="line">        .build())</span><br><span class="line">    .build();</span><br></pre></td></tr></table></figure>
+
+
+
+<p>您可以在<a target="_blank" rel="noopener" href="https://docs.langchain4j.info/tutorials/structured-outputs#jsonobjectschema">这里</a>找到有关 <code>JsonObjectSchema</code> 的更多信息</p>
+<ol start="2">
+<li>使用辅助方法：</li>
+</ol>
+<ul>
+<li><code>ToolSpecifications.toolSpecificationsFrom(Class)</code></li>
+<li><code>ToolSpecifications.toolSpecificationsFrom(Object)</code></li>
+<li><code>ToolSpecifications.toolSpecificationFrom(Method)</code></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">WeatherTools</span> &#123; </span><br><span class="line">  </span><br><span class="line">    <span class="meta">@Tool(&quot;返回给定城市的天气预报&quot;)</span></span><br><span class="line">    String <span class="title function_">getWeather</span><span class="params">(</span></span><br><span class="line"><span class="params">            <span class="meta">@P(&quot;应返回天气预报的城市&quot;)</span> String city,</span></span><br><span class="line"><span class="params">            TemperatureUnit temperatureUnit</span></span><br><span class="line"><span class="params">    )</span> &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">List&lt;ToolSpecification&gt; toolSpecifications = ToolSpecifications.toolSpecificationsFrom(WeatherTools.class);</span><br></pre></td></tr></table></figure>
+
+
+
+<p>一旦您有了 <code>List&lt;ToolSpecification&gt;</code>，您可以调用模型：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ChatRequest</span> <span class="variable">request</span> <span class="operator">=</span> ChatRequest.builder()</span><br><span class="line">    .messages(UserMessage.from(<span class="string">&quot;明天伦敦的天气会怎样？&quot;</span>))</span><br><span class="line">    .toolSpecifications(toolSpecifications)</span><br><span class="line">    .build();</span><br><span class="line"><span class="type">ChatResponse</span> <span class="variable">response</span> <span class="operator">=</span> model.chat(request);</span><br><span class="line"><span class="type">AiMessage</span> <span class="variable">aiMessage</span> <span class="operator">=</span> response.aiMessage();</span><br></pre></td></tr></table></figure>
+
+
+
+<p>如果 LLM 决定调用工具，返回的 <code>AiMessage</code> 将在 <code>toolExecutionRequests</code> 字段中包含数据。 在这种情况下，<code>AiMessage.hasToolExecutionRequests()</code> 将返回 <code>true</code>。 根据 LLM 的不同，它可以包含一个或多个 <code>ToolExecutionRequest</code> 对象 （一些 LLM 支持并行调用多个工具）。</p>
+<p>每个 <code>ToolExecutionRequest</code> 应包含：</p>
+<ul>
+<li>工具调用的 <code>id</code>（某些 LLM 不提供）</li>
+<li>要调用的工具的 <code>name</code>，例如：<code>getWeather</code></li>
+<li><code>arguments</code>（参数），例如：<code>&#123; &quot;city&quot;: &quot;London&quot;, &quot;temperatureUnit&quot;: &quot;CELSIUS&quot; &#125;</code></li>
+</ul>
+<p>您需要使用 <code>ToolExecutionRequest</code> 中的信息手动执行工具。</p>
+<p>如果您想将工具执行的结果发送回 LLM， 您需要创建一个 <code>ToolExecutionResultMessage</code>（每个 <code>ToolExecutionRequest</code> 对应一个） 并将其与所有先前的消息一起发送：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">result</span> <span class="operator">=</span> <span class="string">&quot;预计明天伦敦会下雨。&quot;</span>;</span><br><span class="line"><span class="type">ToolExecutionResultMessage</span> <span class="variable">toolExecutionResultMessage</span> <span class="operator">=</span> ToolExecutionResultMessage.from(toolExecutionRequest, result);</span><br><span class="line"><span class="type">ChatRequest</span> <span class="variable">request2</span> <span class="operator">=</span> ChatRequest.builder()</span><br><span class="line">        .messages(List.of(userMessage, aiMessage, toolExecutionResultMessage))</span><br><span class="line">        .toolSpecifications(toolSpecifications)</span><br><span class="line">        .build();</span><br><span class="line"><span class="type">ChatResponse</span> <span class="variable">response2</span> <span class="operator">=</span> model.chat(request2);</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="案例：-低级API实现-Function-Call"><a href="#案例：-低级API实现-Function-Call" class="headerlink" title="案例： 低级API实现 Function Call"></a>案例： 低级API实现 Function Call</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//工具函数</span></span><br><span class="line"><span class="keyword">private</span> String <span class="title function_">resurrection</span><span class="params">(<span class="type">int</span> num)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (num == <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;孩子们，我回来了，想我了吗（一阵强劲的音乐~~~）&quot;</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;牢大永远离开了我们&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@GetMapping(&quot;/chat/func/&#123;question&#125;&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">chat</span><span class="params">(<span class="meta">@PathVariable(&quot;question&quot;)</span> String question)</span> &#123;</span><br><span class="line">    <span class="comment">//工具函数描述信息</span></span><br><span class="line">    <span class="type">ToolSpecification</span> <span class="variable">tool</span> <span class="operator">=</span> ToolSpecification.builder()</span><br><span class="line">            .name(<span class="string">&quot;resurrection&quot;</span>)<span class="comment">//函数名</span></span><br><span class="line">            .description(<span class="string">&quot;可以用于复活牢大&quot;</span>)<span class="comment">//函数用途描述</span></span><br><span class="line">            .parameters(JsonObjectSchema.builder()<span class="comment">//函数参数描述</span></span><br><span class="line">                    .addNumberProperty(<span class="string">&quot;num&quot;</span>, <span class="string">&quot;只有扣1才能复活牢大，否则牢大会永远离开我们&quot;</span>)</span><br><span class="line">                    .required(<span class="string">&quot;num&quot;</span>)<span class="comment">//必填参数</span></span><br><span class="line">                    .build())</span><br><span class="line">            .build();</span><br><span class="line"></span><br><span class="line">    <span class="comment">//构建聊天请求，携带工具描述</span></span><br><span class="line">    <span class="type">ChatRequest</span> <span class="variable">request</span> <span class="operator">=</span> ChatRequest.builder()</span><br><span class="line">            .messages(UserMessage.from(question))</span><br><span class="line">            .toolSpecifications(tool)</span><br><span class="line">            .build();</span><br><span class="line"></span><br><span class="line">    <span class="type">ChatResponse</span> <span class="variable">response</span> <span class="operator">=</span> chatLanguageModel.chat(request);</span><br><span class="line">    <span class="type">AiMessage</span> <span class="variable">aiMessage</span> <span class="operator">=</span> response.aiMessage();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//LLM 不调用函数，直接返回</span></span><br><span class="line">    <span class="keyword">if</span> (!aiMessage.hasToolExecutionRequests()) &#123;</span><br><span class="line">        <span class="keyword">return</span> aiMessage.text();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//否则，获取 LLM 要调用的工具函数信息</span></span><br><span class="line">    <span class="type">ToolExecutionRequest</span> <span class="variable">toolRequest</span> <span class="operator">=</span> aiMessage.toolExecutionRequests().get(<span class="number">0</span>);</span><br><span class="line">    <span class="type">String</span> <span class="variable">funcName</span> <span class="operator">=</span> toolRequest.name();<span class="comment">//函数名</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">args</span> <span class="operator">=</span> toolRequest.arguments();<span class="comment">//函数参数</span></span><br><span class="line">    <span class="type">Integer</span> <span class="variable">num</span> <span class="operator">=</span> (Integer) Json.fromJson(args, Map.class).get(<span class="string">&quot;num&quot;</span>);</span><br><span class="line">    <span class="type">String</span> <span class="variable">result</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//手动调用工具函数</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="string">&quot;resurrection&quot;</span>.equals(funcName)) &#123;</span><br><span class="line">        result = resurrection(num);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        result = <span class="string">&quot;未知的函数&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//封装工具函数执行结果</span></span><br><span class="line">    <span class="type">ToolExecutionResultMessage</span> <span class="variable">toolReaultMessage</span> <span class="operator">=</span> ToolExecutionResultMessage.from(</span><br><span class="line">            toolRequest,</span><br><span class="line">            result</span><br><span class="line">    );</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//将原始用户提示词、LLM信息、工具函数执行结果一起再次发给 LLM</span></span><br><span class="line">    response = chatLanguageModel.chat(</span><br><span class="line">            ChatRequest.builder()</span><br><span class="line">                    .messages(</span><br><span class="line">                            UserMessage.from(question),</span><br><span class="line">                            aiMessage,</span><br><span class="line">                            toolReaultMessage</span><br><span class="line">                    )</span><br><span class="line">                    .build()</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> response.aiMessage().text();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/2024/07/28/File/hain4j%E4%B9%8B%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/01.png"></p>
+<p>查看后台，可以发现 LLM 决定调用工具，并传入参数 <strong>num : 1</strong></p>
+<p><img src="/2024/07/28/File/hain4j%E4%B9%8B%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/02.png"></p>
+<p>换个提示词呢？</p>
+<p><img src="/2024/07/28/File/hain4j%E4%B9%8B%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/03.png"></p>
+<h2 id="高级工具-API"><a href="#高级工具-API" class="headerlink" title="高级工具 API"></a>高级工具 API</h2>
       
 
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
       
     </div>
     <div class="article-info article-info-index">
       
       
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">散列插槽</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">故障转移</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
       
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/Redis//" class="article-tag-list-link color1">Redis</a>
+        			<a href="/categories/Langchain4j//" class="article-tag-list-link color2">Langchain4j</a>
         		</li>
       		
 		</ul>
@@ -874,16 +321,75 @@
 
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/08/10/Redis%E9%AB%98%E7%BA%A7-%E5%88%86%E7%89%87%E9%9B%86%E7%BE%A4/">展开全文 >></a>
-        </p>
-      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2026/01/06/LangChain4j%E4%B9%8B%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2026/01/05/LangChain4j%E4%B9%8B%E9%AB%98%E9%98%B6api/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">LangChain4j之高阶api</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -903,205 +409,14 @@
 
 
 
-
-  
-    <article id="post-Redis高级-哨兵" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/08/09/Redis%E9%AB%98%E7%BA%A7-%E5%93%A8%E5%85%B5/">Redis高级-哨兵</a>
-    </h1>
-  
-
-        
-        <a href="/2024/08/09/Redis%E9%AB%98%E7%BA%A7-%E5%93%A8%E5%85%B5/" class="archive-article-date">
-  	<time datetime="2024-08-09T13:28:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-08-09</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="3-Redis哨兵"><a href="#3-Redis哨兵" class="headerlink" title="3.Redis哨兵"></a>3.Redis哨兵</h1><p>Redis提供了哨兵（Sentinel）机制来实现主从集群的自动故障恢复。</p>
-<h2 id="3-1-哨兵原理"><a href="#3-1-哨兵原理" class="headerlink" title="3.1.哨兵原理"></a>3.1.哨兵原理</h2><h3 id="3-1-1-集群结构和作用"><a href="#3-1-1-集群结构和作用" class="headerlink" title="3.1.1.集群结构和作用"></a>3.1.1.集群结构和作用</h3><p>哨兵的结构如图：</p>
-<p><img src="/2024/08/09/Redis%E9%AB%98%E7%BA%A7-%E5%93%A8%E5%85%B5/image-20210725154528072.png" alt="image-20210725154528072"></p>
-        
-          <a class="article-more-a" href="/2024/08/09/Redis%E9%AB%98%E7%BA%A7-%E5%93%A8%E5%85%B5/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">哨兵集群</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">读写分离</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Redis//" class="article-tag-list-link color1">Redis</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/08/09/Redis%E9%AB%98%E7%BA%A7-%E5%93%A8%E5%85%B5/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Redis高级-主从同步" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/08/09/Redis%E9%AB%98%E7%BA%A7-%E4%B8%BB%E4%BB%8E%E5%90%8C%E6%AD%A5/">Redis高级-主从同步</a>
-    </h1>
-  
-
-        
-        <a href="/2024/08/09/Redis%E9%AB%98%E7%BA%A7-%E4%B8%BB%E4%BB%8E%E5%90%8C%E6%AD%A5/" class="archive-article-date">
-  	<time datetime="2024-08-09T11:54:46.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-08-09</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="2-Redis主从"><a href="#2-Redis主从" class="headerlink" title="2.Redis主从"></a>2.Redis主从</h1><h2 id="2-1-搭建主从架构"><a href="#2-1-搭建主从架构" class="headerlink" title="2.1.搭建主从架构"></a>2.1.搭建主从架构</h2><p>单节点Redis的并发能力是有上限的，要进一步提高Redis的并发能力，就需要搭建主从集群，实现读写分离。</p>
-<p><img src="/2024/08/09/Redis%E9%AB%98%E7%BA%A7-%E4%B8%BB%E4%BB%8E%E5%90%8C%E6%AD%A5/image-20210725152037611.png" alt="image-20210725152037611"></p>
-        
-          <a class="article-more-a" href="/2024/08/09/Redis%E9%AB%98%E7%BA%A7-%E4%B8%BB%E4%BB%8E%E5%90%8C%E6%AD%A5/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">全量同步</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">增量同步</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">master</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">slave</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Redis//" class="article-tag-list-link color1">Redis</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/08/09/Redis%E9%AB%98%E7%BA%A7-%E4%B8%BB%E4%BB%8E%E5%90%8C%E6%AD%A5/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
   
   
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/3/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/5/">Next &raquo;</a>
-    </nav>
+  
+
+  
+
+  
+
   
 
 
@@ -1124,8 +439,8 @@
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,

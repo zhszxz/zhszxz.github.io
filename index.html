@@ -152,6 +152,84 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-LangChain4j之函数调用" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2026/01/06/LangChain4j%E4%B9%8B%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/">LangChain4j之函数调用</a>
+    </h1>
+  
+
+        
+        <a href="/2026/01/06/LangChain4j%E4%B9%8B%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/" class="archive-article-date">
+  	<time datetime="2026-01-06T07:06:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2026-01-06</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="工具（函数调用）"><a href="#工具（函数调用）" class="headerlink" title="工具（函数调用）"></a>工具（函数调用）</h1><p>一些 LLM 除了生成文本外，还可以触发操作。</p>
+<p>有一个被称为”工具”或”函数调用”的概念。 它允许 LLM 在必要时调用一个或多个可用的工具，通常由开发者定义。 工具可以是任何东西：网络搜索、调用外部 API 或执行特定代码片段等。 LLM 实际上不能自己调用工具；相反，它们在响应中表达调用特定工具的意图（而不是以纯文本形式响应）。 作为开发者，我们应该使用提供的参数执行这个工具，并将工具执行的结果反馈回来。</p>
+<p>例如，我们知道 LLM 本身在数学计算方面并不擅长。 如果您的用例涉及偶尔的数学计算，您可能希望为 LLM 提供一个”数学工具”。 通过在请求中向 LLM 声明一个或多个工具， 如果它认为合适，它可以决定调用其中一个工具。 给定一个数学问题和一组数学工具，LLM 可能会决定为了正确回答问题， 它应该首先调用提供的数学工具之一。</p>
+        
+          <a class="article-more-a" href="/2026/01/06/LangChain4j%E4%B9%8B%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Langchain4j//" class="article-tag-list-link color2">Langchain4j</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2026/01/06/LangChain4j%E4%B9%8B%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-LangChain4j之高阶api" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -963,95 +1041,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2025/02/19/MyBatisPlus%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-MyBatisPlus快速入门" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2025/02/19/MyBatisPlus%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">MyBatisPlus快速入门</a>
-    </h1>
-  
-
-        
-        <a href="/2025/02/19/MyBatisPlus%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/" class="archive-article-date">
-  	<time datetime="2025-02-19T07:09:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2025-02-19</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="1-快速入门"><a href="#1-快速入门" class="headerlink" title="1.快速入门"></a><strong>1.快速入门</strong></h1><p>大家在日常开发中应该能发现，单表的CRUD功能代码重复度很高，也没有什么难度。而这部分代码量往往比较大，开发起来比较费时。</p>
-<p>因此，目前企业中都会使用一些组件来简化或省略单表的CRUD开发工作。目前在国内使用较多的一个组件就是MybatisPlus。</p>
-<p>当然，MybatisPlus不仅仅可以简化单表操作，而且还对Mybatis的功能有很多的增强。可以让我们的开发更加的简单，高效。</p>
-        
-          <a class="article-more-a" href="/2025/02/19/MyBatisPlus%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">BaseMapper</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/MybatisPlus//" class="article-tag-list-link color2">MybatisPlus</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2025/02/19/MyBatisPlus%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">展开全文 >></a>
         </p>
       
 
