@@ -152,6 +152,106 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-LangChain4j之高阶api" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2026/01/05/LangChain4j%E4%B9%8B%E9%AB%98%E9%98%B6api/">LangChain4j之高阶api</a>
+    </h1>
+  
+
+        
+        <a href="/2026/01/05/LangChain4j%E4%B9%8B%E9%AB%98%E9%98%B6api/" class="archive-article-date">
+  	<time datetime="2026-01-05T12:08:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2026-01-05</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="AI-Services"><a href="#AI-Services" class="headerlink" title="AI Services"></a>AI Services</h1><p>到目前为止，我们一直在介绍底层组件，如 <code>ChatLanguageModel</code>、<code>ChatMessage</code>、<code>ChatMemory</code> 等。 在这个层面上工作非常灵活，给予您完全的自由，但也迫使您编写大量的样板代码。 由于 LLM 驱动的应用程序通常不仅需要单个组件，还需要多个组件协同工作 （例如，提示模板、聊天记忆、LLM、输出解析器、RAG 组件：嵌入模型和存储） 并且经常涉及多次交互，协调所有这些组件变得更加繁琐。</p>
+<p>我们希望您专注于业务逻辑，而不是低级实现细节。 因此，LangChain4j 中目前有两个高级概念可以帮助您：AI 服务和链。</p>
+        
+          <a class="article-more-a" href="/2026/01/05/LangChain4j%E4%B9%8B%E9%AB%98%E9%98%B6api/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">流式输出</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">AiService</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">高阶API</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">会话记忆</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/LangChain4J//" class="article-tag-list-link color2">LangChain4J</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2026/01/05/LangChain4j%E4%B9%8B%E9%AB%98%E9%98%B6api/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-LangChain4j之会话记忆" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -981,98 +1081,6 @@
 
 
   
-    <article id="post-Redis原理-内存回收" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/12/04/Redis%E5%8E%9F%E7%90%86-%E5%86%85%E5%AD%98%E5%9B%9E%E6%94%B6/">Redis原理-内存回收</a>
-    </h1>
-  
-
-        
-        <a href="/2024/12/04/Redis%E5%8E%9F%E7%90%86-%E5%86%85%E5%AD%98%E5%9B%9E%E6%94%B6/" class="archive-article-date">
-  	<time datetime="2024-12-04T09:13:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-12-04</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="3、原理篇-Redis内存回收"><a href="#3、原理篇-Redis内存回收" class="headerlink" title="3、原理篇-Redis内存回收"></a>3、原理篇-Redis内存回收</h2><h3 id="3-1、过期key处理"><a href="#3-1、过期key处理" class="headerlink" title="3.1、过期key处理"></a>3.1、过期key处理</h3><p>Redis之所以性能强，最主要的原因就是基于内存存储。然而单节点的Redis其内存大小不宜过大，会影响持久化或主从同步性能。<br>我们可以通过修改配置文件来设置Redis的最大内存：</p>
-<p><img src="/2024/07/28/File/%E5%8E%9F%E7%90%86-%E5%86%85%E5%AD%98%E5%9B%9E%E6%94%B6/1653983341150.png" alt="1653983341150"></p>
-        
-          <a class="article-more-a" href="/2024/12/04/Redis%E5%8E%9F%E7%90%86-%E5%86%85%E5%AD%98%E5%9B%9E%E6%94%B6/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">过期key处理</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">内存淘汰</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Redis//" class="article-tag-list-link color1">Redis</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2024/12/04/Redis%E5%8E%9F%E7%90%86-%E5%86%85%E5%AD%98%E5%9B%9E%E6%94%B6/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1807,6 +1815,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">流式输出</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">AiService</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">高阶API</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">会话记忆</a>
               </li>
             
             <div class="clearfix"></div>

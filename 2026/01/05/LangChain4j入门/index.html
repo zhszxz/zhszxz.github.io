@@ -18,7 +18,7 @@
 <meta property="og:image" content="http://example.com/2024/07/28/File/hain4j%E5%85%A5%E9%97%A8/01.png">
 <meta property="og:image" content="http://example.com/2024/07/28/File/hain4j%E5%85%A5%E9%97%A8/02.png">
 <meta property="article:published_time" content="2026-01-05T01:08:25.000Z">
-<meta property="article:modified_time" content="2026-01-05T08:36:07.552Z">
+<meta property="article:modified_time" content="2026-01-05T12:04:29.927Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="ChatLanguageModel">
 <meta property="article:tag" content="多模态">
@@ -317,6 +317,8 @@
 
 
 <h3 id="案例：StreamingChatLanguageModel-加-SseEmitter-实现流式输出"><a href="#案例：StreamingChatLanguageModel-加-SseEmitter-实现流式输出" class="headerlink" title="案例：StreamingChatLanguageModel 加 SseEmitter 实现流式输出"></a>案例：StreamingChatLanguageModel 加 SseEmitter 实现流式输出</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean(&quot;streamingChatLanguageModel&quot;)</span></span><br><span class="line"><span class="keyword">public</span> StreamingChatLanguageModel <span class="title function_">StreamingChatLanguageModel</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">OpenAiStreamingChatModel</span> <span class="variable">model</span> <span class="operator">=</span> OpenAiStreamingChatModel.builder()</span><br><span class="line">            .baseUrl(baseUrl)</span><br><span class="line">            .apiKey(apiKey)</span><br><span class="line">            .modelName(modelName)</span><br><span class="line">            .build();</span><br><span class="line">    <span class="keyword">return</span> model;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@GetMapping(&quot;/chat4/stream&quot;)</span></span><br><span class="line"><span class="keyword">public</span> SseEmitter <span class="title function_">chatStream</span><span class="params">(<span class="meta">@RequestParam</span> String question)</span> &#123;</span><br><span class="line">    <span class="type">SseEmitter</span> <span class="variable">sseEmitter</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SseEmitter</span>(<span class="number">0L</span>);<span class="comment">//不超时</span></span><br><span class="line">    streamingChatLanguageModel.chat(question, <span class="keyword">new</span> <span class="title class_">StreamingChatResponseHandler</span>() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onPartialResponse</span><span class="params">(String s)</span> &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                sseEmitter.send(s);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                sseEmitter.completeWithError(e);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onCompleteResponse</span><span class="params">(ChatResponse chatResponse)</span> &#123;</span><br><span class="line">            sseEmitter.complete();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onError</span><span class="params">(Throwable throwable)</span> &#123;</span><br><span class="line">            sseEmitter.completeWithError(throwable);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> sseEmitter;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
 
 
 
@@ -1218,6 +1220,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">流式输出</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">AiService</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">高阶API</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">会话记忆</a>
               </li>
             
             <div class="clearfix"></div>
