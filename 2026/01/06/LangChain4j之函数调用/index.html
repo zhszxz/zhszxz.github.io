@@ -18,9 +18,12 @@
 <meta property="og:image" content="http://example.com/2024/07/28/File/hain4j%E4%B9%8B%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/01.png">
 <meta property="og:image" content="http://example.com/2024/07/28/File/hain4j%E4%B9%8B%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/02.png">
 <meta property="og:image" content="http://example.com/2024/07/28/File/hain4j%E4%B9%8B%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/03.png">
+<meta property="og:image" content="http://example.com/2024/07/28/File/hain4j%E4%B9%8B%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/04.png">
+<meta property="og:image" content="http://example.com/2024/07/28/File/hain4j%E4%B9%8B%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/05.png">
 <meta property="article:published_time" content="2026-01-06T07:06:52.000Z">
-<meta property="article:modified_time" content="2026-01-06T12:43:30.803Z">
+<meta property="article:modified_time" content="2026-01-07T02:53:44.494Z">
 <meta property="article:author" content="John Doe">
+<meta property="article:tag" content="FunctionCall">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/2024/07/28/File/hain4j%E4%B9%8B%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/01.png">
   
@@ -273,12 +276,122 @@
 
 
 
+
+
 <p><img src="/2024/07/28/File/hain4j%E4%B9%8B%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/01.png"></p>
 <p>查看后台，可以发现 LLM 决定调用工具，并传入参数 <strong>num : 1</strong></p>
 <p><img src="/2024/07/28/File/hain4j%E4%B9%8B%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/02.png"></p>
 <p>换个提示词呢？</p>
 <p><img src="/2024/07/28/File/hain4j%E4%B9%8B%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/03.png"></p>
-<h2 id="高级工具-API"><a href="#高级工具-API" class="headerlink" title="高级工具 API"></a>高级工具 API</h2>
+<h2 id="高级工具-API"><a href="#高级工具-API" class="headerlink" title="高级工具 API"></a>高级工具 API</h2><p>在高级抽象层面，您可以使用 <code>@Tool</code> 注解任何 Java 方法， 并在创建 <a target="_blank" rel="noopener" href="https://docs.langchain4j.info/tutorials/ai-services#tools-function-calling">AI 服务</a>时指定它们。</p>
+<p>AI 服务会自动将这些方法转换为 <code>ToolSpecification</code>， 并在每次与 LLM 交互的请求中包含它们。 当 LLM 决定调用工具时，AI 服务将自动执行相应的方法， 并将方法的返回值（如果有）发送回 LLM。 您可以在 <code>DefaultToolExecutor</code> 中找到实现细节。</p>
+<p>几个工具示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Tool(&quot;使用给定的查询在 Google 中搜索相关 URL&quot;)</span></span><br><span class="line"><span class="keyword">public</span> List&lt;String&gt; <span class="title function_">searchGoogle</span><span class="params">(<span class="meta">@P(&quot;搜索查询&quot;)</span> String query)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> googleSearchService.search(query);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Tool(&quot;返回网页内容，给定 URL&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">getWebPageContent</span><span class="params">(<span class="meta">@P(&quot;页面的 URL&quot;)</span> String url)</span> &#123;</span><br><span class="line">    <span class="type">Document</span> <span class="variable">jsoupDocument</span> <span class="operator">=</span> Jsoup.connect(url).get();</span><br><span class="line">    <span class="keyword">return</span> jsoupDocument.body().text();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="工具方法限制"><a href="#工具方法限制" class="headerlink" title="工具方法限制"></a>工具方法限制</h3><p>带有 <code>@Tool</code> 注解的方法：</p>
+<ul>
+<li>可以是静态或非静态的</li>
+<li>可以有任何可见性（public、private 等）。</li>
+</ul>
+<h3 id="工具方法参数"><a href="#工具方法参数" class="headerlink" title="工具方法参数"></a>工具方法参数</h3><p>带有 <code>@Tool</code> 注解的方法可以接受各种类型的任意数量参数：</p>
+<ul>
+<li>基本类型：<code>int</code>、<code>double</code> 等</li>
+<li>对象类型：<code>String</code>、<code>Integer</code>、<code>Double</code> 等</li>
+<li>自定义 POJO（可以包含嵌套 POJO）</li>
+<li><code>enum</code>（枚举）</li>
+<li><code>List&lt;T&gt;</code>&#x2F;<code>Set&lt;T&gt;</code>，其中 <code>T</code> 是上述类型之一</li>
+<li><code>Map&lt;K,V&gt;</code>（您需要在参数描述中使用 <code>@P</code> 手动指定 <code>K</code> 和 <code>V</code> 的类型）</li>
+</ul>
+<p>也支持没有参数的方法。</p>
+<h4 id="必需和可选"><a href="#必需和可选" class="headerlink" title="必需和可选"></a>必需和可选</h4><p>默认情况下，所有工具方法参数都被视为***必需的***。 这意味着 LLM 必须为这样的参数生成一个值。 可以通过使用 <code>@P(required = false)</code> 注解使参数成为可选的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Tool</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">getTemperature</span><span class="params">(String location, <span class="meta">@P(required = false)</span> Unit unit)</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>复杂参数的字段和子字段默认也被视为***必需的***。 您可以通过使用 <code>@JsonProperty(required = false)</code> 注解使字段成为可选的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">record</span> <span class="title class_">User</span><span class="params">(String name, @JsonProperty(required = <span class="literal">false</span>)</span> String email) &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Tool</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">add</span><span class="params">(User user)</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="工具方法返回类型"><a href="#工具方法返回类型" class="headerlink" title="工具方法返回类型"></a>工具方法返回类型</h3><p>带有 <code>@Tool</code> 注解的方法可以返回任何类型，包括 <code>void</code>。 如果方法的返回类型是 <code>void</code>，则在方法成功返回时会向 LLM 发送”Success”字符串。</p>
+<p>如果方法的返回类型是 <code>String</code>，则返回值会原样发送给 LLM，不进行任何转换。</p>
+<p>对于其他返回类型，返回值会在发送给 LLM 之前转换为 JSON 字符串。</p>
+<h3 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h3><p>如果带有 <code>@Tool</code> 注解的方法抛出 <code>Exception</code>， 异常的消息（<code>e.getMessage()</code>）将作为工具执行的结果发送给 LLM。 这允许 LLM 纠正其错误并在认为必要时重试。</p>
+<h3 id="Tool"><a href="#Tool" class="headerlink" title="@Tool"></a><code>@Tool</code></h3><p>任何带有 <code>@Tool</code> 注解的 Java 方法， 并且在构建 AI 服务时_明确_指定，都可以由 LLM 执行：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">MathGenius</span> &#123;</span><br><span class="line">    </span><br><span class="line">    String <span class="title function_">ask</span><span class="params">(String question)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Calculator</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Tool</span></span><br><span class="line">    <span class="type">double</span> <span class="title function_">add</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> a + b;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Tool</span></span><br><span class="line">    <span class="type">double</span> <span class="title function_">squareRoot</span><span class="params">(<span class="type">double</span> x)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> Math.sqrt(x);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">MathGenius</span> <span class="variable">mathGenius</span> <span class="operator">=</span> AiServices.builder(MathGenius.class)</span><br><span class="line">    .chatLanguageModel(model)</span><br><span class="line">    .tools(<span class="keyword">new</span> <span class="title class_">Calculator</span>())</span><br><span class="line">    .build();</span><br><span class="line"></span><br><span class="line"><span class="type">String</span> <span class="variable">answer</span> <span class="operator">=</span> mathGenius.ask(<span class="string">&quot;475695037565 的平方根是多少？&quot;</span>);</span><br><span class="line"></span><br><span class="line">System.out.println(answer); <span class="comment">// 475695037565 的平方根是 689706.486532。</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>当调用 <code>ask</code> 方法时，会发生 2 次与 LLM 的交互，如前面部分所述。 在这些交互之间，<code>squareRoot</code> 方法会被自动调用。</p>
+<p><code>@Tool</code> 注解有 2 个可选字段：</p>
+<ul>
+<li><code>name</code>：工具名称。如果未提供，方法名将作为工具名称。</li>
+<li><code>value</code>：工具描述。</li>
+</ul>
+<p>根据工具的不同，LLM 可能即使没有任何描述也能很好地理解它 （例如，<code>add(a, b)</code> 是显而易见的）， 但通常最好提供清晰有意义的名称和描述。 这样，LLM 有更多信息来决定是否调用给定的工具，以及如何调用。</p>
+<h3 id="P"><a href="#P" class="headerlink" title="@P"></a><code>@P</code></h3><p>方法参数可以选择使用 <code>@P</code> 注解。</p>
+<p><code>@P</code> 注解有 2 个字段</p>
+<ul>
+<li><code>value</code>：参数描述。必填字段。</li>
+<li><code>required</code>：参数是否必需，默认为 <code>true</code>。可选字段。</li>
+</ul>
+<h3 id="Description"><a href="#Description" class="headerlink" title="@Description"></a><code>@Description</code></h3><p>类和字段的描述可以使用 <code>@Description</code> 注解指定：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Description(&quot;要执行的查询&quot;)</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Query</span> &#123;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Description(&quot;要选择的字段&quot;)</span></span><br><span class="line">  <span class="keyword">private</span> List&lt;String&gt; select;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Description(&quot;过滤条件&quot;)</span></span><br><span class="line">  <span class="keyword">private</span> List&lt;Condition&gt; where;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Tool</span></span><br><span class="line">Result <span class="title function_">executeQuery</span><span class="params">(Query query)</span> &#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>备注</p>
+<p>请注意，放在 <code>enum</code> 值上的 <code>@Description</code> <em><strong>没有效果</strong></em></p>
+<h3 id="ToolMemoryId"><a href="#ToolMemoryId" class="headerlink" title="@ToolMemoryId"></a><code>@ToolMemoryId</code></h3><p>如果您的 AI 服务方法有一个带有 <code>@MemoryId</code> 注解的参数， 您也可以使用 <code>@ToolMemoryId</code> 注解 <code>@Tool</code> 方法的参数。 提供给 AI 服务方法的值将自动传递给 <code>@Tool</code> 方法。 如果您有多个用户和&#x2F;或每个用户有多个聊天&#x2F;记忆， 并希望在 <code>@Tool</code> 方法内区分它们，这个功能很有用。</p>
+<h3 id="访问已执行的工具"><a href="#访问已执行的工具" class="headerlink" title="访问已执行的工具"></a>访问已执行的工具</h3><p>如果您希望访问在调用 AI 服务期间执行的工具， 您可以通过将返回类型包装在 <code>Result</code> 类中轻松实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">Assistant</span> &#123;</span><br><span class="line"></span><br><span class="line">    Result&lt;String&gt; <span class="title function_">chat</span><span class="params">(String userMessage)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Result&lt;String&gt; result = assistant.chat(<span class="string">&quot;取消我的预订 123-456&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="type">String</span> <span class="variable">answer</span> <span class="operator">=</span> result.content();</span><br><span class="line">List&lt;ToolExecution&gt; toolExecutions = result.toolExecutions();</span><br></pre></td></tr></table></figure>
+
+
+
+<p>在流式模式下，您可以通过指定 <code>onToolExecuted</code> 回调来实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">Assistant</span> &#123;</span><br><span class="line"></span><br><span class="line">    TokenStream <span class="title function_">chat</span><span class="params">(String message)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">TokenStream</span> <span class="variable">tokenStream</span> <span class="operator">=</span> assistant.chat(<span class="string">&quot;取消我的预订&quot;</span>);</span><br><span class="line"></span><br><span class="line">tokenStream</span><br><span class="line">    .onToolExecuted((ToolExecution toolExecution) -&gt; System.out.println(toolExecution))</span><br><span class="line">    .onPartialResponse(...)</span><br><span class="line">    .onCompleteResponse(...)</span><br><span class="line">    .onError(...)</span><br><span class="line">    .start();</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="以编程方式指定工具"><a href="#以编程方式指定工具" class="headerlink" title="以编程方式指定工具"></a>以编程方式指定工具</h3><p>使用 AI 服务时，也可以以编程方式指定工具。 这种方法提供了很大的灵活性，因为工具可以从外部源（如数据库和配置文件）加载。</p>
+<p>工具名称、描述、参数名称和描述 都可以使用 <code>ToolSpecification</code> 配置：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ToolSpecification</span> <span class="variable">toolSpecification</span> <span class="operator">=</span> ToolSpecification.builder()</span><br><span class="line">        .name(<span class="string">&quot;get_booking_details&quot;</span>)</span><br><span class="line">        .description(<span class="string">&quot;返回预订详情&quot;</span>)</span><br><span class="line">        .parameters(JsonObjectSchema.builder()</span><br><span class="line">                .properties(Map.of(</span><br><span class="line">                        <span class="string">&quot;bookingNumber&quot;</span>, JsonStringSchema.builder()</span><br><span class="line">                                .description(<span class="string">&quot;B-12345 格式的预订号&quot;</span>)</span><br><span class="line">                                .build()</span><br><span class="line">                ))</span><br><span class="line">                .build())</span><br><span class="line">        .build();</span><br></pre></td></tr></table></figure>
+
+
+
+<p>对于每个 <code>ToolSpecification</code>，需要提供一个 <code>ToolExecutor</code> 实现， 该实现将处理 LLM 生成的工具执行请求：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ToolExecutor</span> <span class="variable">toolExecutor</span> <span class="operator">=</span> (toolExecutionRequest, memoryId) -&gt; &#123;</span><br><span class="line">    Map&lt;String, Object&gt; arguments = fromJson(toolExecutionRequest.arguments());</span><br><span class="line">    <span class="type">String</span> <span class="variable">bookingNumber</span> <span class="operator">=</span> arguments.get(<span class="string">&quot;bookingNumber&quot;</span>).toString();</span><br><span class="line">    <span class="type">Booking</span> <span class="variable">booking</span> <span class="operator">=</span> getBooking(bookingNumber);</span><br><span class="line">    <span class="keyword">return</span> booking.toString();</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>一旦我们有了一个或多个（<code>ToolSpecification</code>，<code>ToolExecutor</code>）对， 我们可以在创建 AI 服务时指定它们：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Assistant</span> <span class="variable">assistant</span> <span class="operator">=</span> AiServices.builder(Assistant.class)</span><br><span class="line">    .chatLanguageModel(chatLanguageModel)</span><br><span class="line">    .tools(Map.of(toolSpecification, toolExecutor))</span><br><span class="line">    .build();</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="动态指定工具"><a href="#动态指定工具" class="headerlink" title="动态指定工具"></a>动态指定工具</h3><p>使用 AI 服务时，也可以为每次调用动态指定工具。 可以配置一个 <code>ToolProvider</code>，它将在每次调用 AI 服务时被调用， 并提供应包含在当前 LLM 请求中的工具。 <code>ToolProvider</code> 接受一个包含 <code>UserMessage</code> 和聊天记忆 ID 的 <code>ToolProviderRequest</code>， 并返回一个包含工具的 <code>ToolProviderResult</code>，形式为从 <code>ToolSpecification</code> 到 <code>ToolExecutor</code> 的 <code>Map</code>。</p>
+<p>以下是一个示例，说明如何仅在用户消息包含”booking”一词时添加 <code>get_booking_details</code> 工具：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ToolProvider</span> <span class="variable">toolProvider</span> <span class="operator">=</span> (toolProviderRequest) -&gt; &#123;</span><br><span class="line">    <span class="keyword">if</span> (toolProviderRequest.userMessage().singleText().contains(<span class="string">&quot;booking&quot;</span>)) &#123;</span><br><span class="line">        <span class="type">ToolSpecification</span> <span class="variable">toolSpecification</span> <span class="operator">=</span> ToolSpecification.builder()</span><br><span class="line">            .name(<span class="string">&quot;get_booking_details&quot;</span>)</span><br><span class="line">            .description(<span class="string">&quot;返回预订详情&quot;</span>)</span><br><span class="line">            .parameters(JsonObjectSchema.builder()</span><br><span class="line">                .addStringProperty(<span class="string">&quot;bookingNumber&quot;</span>)</span><br><span class="line">                .build())</span><br><span class="line">            .build();</span><br><span class="line">        <span class="keyword">return</span> ToolProviderResult.builder()</span><br><span class="line">            .add(toolSpecification, toolExecutor)</span><br><span class="line">            .build();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="type">Assistant</span> <span class="variable">assistant</span> <span class="operator">=</span> AiServices.builder(Assistant.class)</span><br><span class="line">    .chatLanguageModel(model)</span><br><span class="line">    .toolProvider(toolProvider)</span><br><span class="line">    .build();</span><br></pre></td></tr></table></figure>
+
+
+
+<p>AI 服务可以在同一次调用中同时使用以编程方式指定和动态指定的工具。</p>
+<h3 id="案例：高级API实现-Function-Call"><a href="#案例：高级API实现-Function-Call" class="headerlink" title="案例：高级API实现 Function Call"></a>案例：高级API实现 Function Call</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//提供给大模型的工具类</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LlmUtil</span> &#123;</span><br><span class="line">    <span class="meta">@Tool(value = &quot;计算两浮点数之和&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">double</span> <span class="title function_">add</span><span class="params">(<span class="meta">@P(&quot;加数1&quot;)</span> <span class="type">double</span> n1, <span class="meta">@P(&quot;加数2&quot;)</span> <span class="type">double</span> n2)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> n1 + n2;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Tool(value = &quot;计算浮点数的平方根&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">double</span> <span class="title function_">sqrt</span><span class="params">(<span class="type">double</span> n)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> Math.sqrt(n);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> Assistant <span class="title function_">assistant</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">OpenAiChatModel</span> <span class="variable">model</span> <span class="operator">=</span> OpenAiChatModel.builder()</span><br><span class="line">                .baseUrl(baseUrl)</span><br><span class="line">                .apiKey(apiKey)</span><br><span class="line">                .modelName(modelName)</span><br><span class="line">                .build();</span><br><span class="line"></span><br><span class="line">        <span class="type">Assistant</span> <span class="variable">assistant</span> <span class="operator">=</span> AiServices.builder(Assistant.class)</span><br><span class="line">                .chatLanguageModel(model)</span><br><span class="line">                .tools(<span class="keyword">new</span> <span class="title class_">LlmUtil</span>())<span class="comment">//创建时携带工具描述信息</span></span><br><span class="line">                .build();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> assistant;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@GetMapping(&quot;/chat/high/func/&#123;question&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">chat2</span><span class="params">(<span class="meta">@PathVariable(&quot;question&quot;)</span> String question)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> assistant.chat(question);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>效果对比：</p>
+<ol>
+<li>未使用 <em>Function call</em></li>
+</ol>
+<p><img src="/2024/07/28/File/hain4j%E4%B9%8B%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/04.png"></p>
+<ol start="2">
+<li>使用 <em>Function call</em></li>
+</ol>
+<p><img src="/2024/07/28/File/hain4j%E4%B9%8B%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/05.png"></p>
+
       
 
       
@@ -307,6 +420,17 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">FunctionCall</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
@@ -1159,6 +1283,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">会话记忆</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">ChatMemory</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">FunctionCall</a>
               </li>
             
             <div class="clearfix"></div>
