@@ -1,0 +1,270 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Nginx-负载均衡 | Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Nginx负载均衡负载均衡概述早期的网站流量和业务功能都比较简单，单台服务器足以满足基本的需求，但是随着互联网的发展，业务流量越来越大并且业务逻辑也跟着越来越复杂，单台服务器的性能及单点故障问题就凸显出来了，因此需要多台服务器进行性能的水平扩展及避免单点故障出现。那么如何将不同用户的请求流量分发到不同的服务器上呢？">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nginx-负载均衡">
+<meta property="og:url" content="http://example.com/2024/08/20/Java/Nginx/Nginx-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Nginx负载均衡负载均衡概述早期的网站流量和业务功能都比较简单，单台服务器足以满足基本的需求，但是随着互联网的发展，业务流量越来越大并且业务逻辑也跟着越来越复杂，单台服务器的性能及单点故障问题就凸显出来了，因此需要多台服务器进行性能的水平扩展及避免单点故障出现。那么如何将不同用户的请求流量分发到不同的服务器上呢？">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/butterfly-icon.png">
+<meta property="article:published_time" content="2024-08-20T05:22:36.000Z">
+<meta property="article:modified_time" content="2026-04-14T14:03:33.897Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="负载均衡">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Nginx-负载均衡",
+  "url": "http://example.com/2024/08/20/Java/Nginx/Nginx-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/",
+  "image": "http://example.com/img/butterfly-icon.png",
+  "datePublished": "2024-08-20T05:22:36.000Z",
+  "dateModified": "2026-04-14T14:03:33.897Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "John Doe",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2024/08/20/Java/Nginx/Nginx-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.5-b1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Nginx-负载均衡',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Hexo</span></a><a class="nav-page-title" href="/"><span class="site-name">Nginx-负载均衡</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">Nginx-负载均衡</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2024-08-20T05:22:36.000Z" title="Created 2024-08-20 13:22:36">2024-08-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-04-14T14:03:33.897Z" title="Updated 2026-04-14 22:03:33">2026-04-14</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="Nginx负载均衡"><a href="#Nginx负载均衡" class="headerlink" title="Nginx负载均衡"></a>Nginx负载均衡</h1><h2 id="负载均衡概述"><a href="#负载均衡概述" class="headerlink" title="负载均衡概述"></a>负载均衡概述</h2><p>早期的网站流量和业务功能都比较简单，单台服务器足以满足基本的需求，但是随着互联网的发展，业务流量越来越大并且业务逻辑也跟着越来越复杂，单台服务器的性能及单点故障问题就凸显出来了，因此需要多台服务器进行性能的水平扩展及避免单点故障出现。那么如何将不同用户的请求流量分发到不同的服务器上呢？</p>
+<span id="more"></span>
+
+<p><img src="/2024/08/20/Java/Nginx/Nginx-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/1591631182469.png" alt="1591631182469"></p>
+<h2 id="负载均衡的原理"><a href="#负载均衡的原理" class="headerlink" title="负载均衡的原理"></a>负载均衡的原理</h2><p>系统的扩展可以分为纵向扩展和横向扩展。</p>
+<p>纵向扩展是从单机的角度出发，通过增加系统的硬件处理能力来提升服务器的处理能力</p>
+<p>横向扩展是通过添加机器来满足大型网站服务的处理能力。</p>
+<p><img src="/2024/08/20/Java/Nginx/Nginx-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/1584602513812.png" alt="1584602513812"></p>
+<p>这里面涉及到两个重要的角色分别是”应用集群”和”负载均衡器”。</p>
+<p>应用集群：将同一应用部署到多台机器上，组成处理集群，接收负载均衡设备分发的请求，进行处理并返回响应的数据。</p>
+<p>负载均衡器:将用户访问的请求根据对应的负载均衡算法，分发到集群中的一台服务器进行处理。</p>
+<h3 id="负载均衡的作用"><a href="#负载均衡的作用" class="headerlink" title="负载均衡的作用"></a>负载均衡的作用</h3><p>1、解决服务器的高并发压力，提高应用程序的处理性能。</p>
+<p>2、提供故障转移，实现高可用。</p>
+<p>3、通过添加或减少服务器数量，增强网站的可扩展性。</p>
+<p>4、在负载均衡器上进行过滤，可以提高系统的安全性。</p>
+<h3 id="负载均衡策略"><a href="#负载均衡策略" class="headerlink" title="负载均衡策略"></a>负载均衡策略</h3><p>介绍完Nginx负载均衡的相关指令后，我们已经能实现将用户的请求分发到不同的服务器上，那么除了采用默认的分配方式以外，我们还能采用什么样的负载算法?</p>
+<p>Nginx的upstream支持如下六种方式的分配算法，分别是:</p>
+<table>
+<thead>
+<tr>
+<th>算法名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>轮询</td>
+<td>默认方式</td>
+</tr>
+<tr>
+<td>weight</td>
+<td>权重方式</td>
+</tr>
+<tr>
+<td>ip_hash</td>
+<td>依据ip分配方式</td>
+</tr>
+<tr>
+<td>least_conn</td>
+<td>依据最少连接方式</td>
+</tr>
+<tr>
+<td>url_hash</td>
+<td>依据URL分配方式</td>
+</tr>
+<tr>
+<td>fair</td>
+<td>依据响应时间方式</td>
+</tr>
+</tbody></table>
+<h5 id="轮询"><a href="#轮询" class="headerlink" title="轮询"></a>轮询</h5><p>是upstream模块负载均衡默认的策略。每个请求会按时间顺序逐个分配到不同的后端服务器。轮询不需要额外的配置。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">upstream backend&#123;</span><br><span class="line">	server 192.168.200.146:9001 weight=1;</span><br><span class="line">	server 192.168.200.146:9002;</span><br><span class="line">	server 192.168.200.146:9003;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">	listen 8083;</span><br><span class="line">	server_name localhost;</span><br><span class="line">	location /&#123;</span><br><span class="line">		proxy_pass http://backend;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="weight加权-加权轮询"><a href="#weight加权-加权轮询" class="headerlink" title="weight加权[加权轮询]"></a>weight加权[加权轮询]</h5><p>weight&#x3D;number:用来设置服务器的权重，默认为1，权重数据越大，被分配到请求的几率越大；该权重值，主要是针对实际工作环境中不同的后端服务器硬件配置进行调整的，所有此策略比较适合服务器的硬件配置差别比较大的情况。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">upstream backend&#123;</span><br><span class="line">	server 192.168.200.146:9001 weight=10;</span><br><span class="line">	server 192.168.200.146:9002 weight=5;</span><br><span class="line">	server 192.168.200.146:9003 weight=3;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">	listen 8083;</span><br><span class="line">	server_name localhost;</span><br><span class="line">	location /&#123;</span><br><span class="line">		proxy_pass http://backend;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="ip-hash"><a href="#ip-hash" class="headerlink" title="ip_hash"></a>ip_hash</h5><p>当对后端的多台动态应用服务器做负载均衡时，ip_hash指令能够将某个客户端IP的请求通过哈希算法定位到同一台后端服务器上。这样，当来自某一个IP的用户在后端Web服务器A上登录后，在访问该站点的其他URL，能保证其访问的还是后端web服务器A。</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>ip_hash;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认值</td>
+<td>—</td>
+</tr>
+<tr>
+<td>位置</td>
+<td>upstream</td>
+</tr>
+</tbody></table>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">upstream backend&#123;</span><br><span class="line">	ip_hash;</span><br><span class="line">	server 192.168.200.146:9001;</span><br><span class="line">	server 192.168.200.146:9002;</span><br><span class="line">	server 192.168.200.146:9003;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">	listen 8083;</span><br><span class="line">	server_name localhost;</span><br><span class="line">	location /&#123;</span><br><span class="line">		proxy_pass http://backend;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>需要额外多说一点的是使用ip_hash指令无法保证后端服务器的负载均衡，可能导致有些后端服务器接收到的请求多，有些后端服务器接收的请求少，而且设置后端服务器权重等方法将不起作用。</p>
+<p><img src="/2024/08/20/Java/Nginx/Nginx-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/1591706748677.png" alt="1591706748677"></p>
+<h5 id="least-conn"><a href="#least-conn" class="headerlink" title="least_conn"></a>least_conn</h5><p>最少连接，把请求转发给连接数较少的后端服务器。轮询算法是把请求平均的转发给各个后端，使它们的负载大致相同；但是，有些请求占用的时间很长，会导致其所在的后端负载较高。这种情况下，least_conn这种方式就可以达到更好的负载均衡效果。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">upstream backend&#123;</span><br><span class="line">	least_conn;</span><br><span class="line">	server 192.168.200.146:9001;</span><br><span class="line">	server 192.168.200.146:9002;</span><br><span class="line">	server 192.168.200.146:9003;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">	listen 8083;</span><br><span class="line">	server_name localhost;</span><br><span class="line">	location /&#123;</span><br><span class="line">		proxy_pass http://backend;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此负载均衡策略适合请求处理时间长短不一造成服务器过载的情况。</p>
+<p><img src="/2024/08/20/Java/Nginx/Nginx-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/1591809623736.png" alt="1591809623736"></p>
+<h5 id="url-hash"><a href="#url-hash" class="headerlink" title="url_hash"></a>url_hash</h5><p>按访问url的hash结果来分配请求，使每个url定向到同一个后端服务器，要配合缓存命中来使用。同一个资源多次请求，可能会到达不同的服务器上，导致不必要的多次下载，缓存命中率不高，以及一些资源时间的浪费。而使用url_hash，可以使得同一个url（也就是同一个资源请求）会到达同一台服务器，一旦缓存住了资源，再此收到请求，就可以从缓存中读取。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">upstream backend&#123;</span><br><span class="line">	hash &amp;request_uri;</span><br><span class="line">	server 192.168.200.146:9001;</span><br><span class="line">	server 192.168.200.146:9002;</span><br><span class="line">	server 192.168.200.146:9003;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">	listen 8083;</span><br><span class="line">	server_name localhost;</span><br><span class="line">	location /&#123;</span><br><span class="line">		proxy_pass http://backend;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>访问如下地址：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.200.133:8083/a</span><br><span class="line">http://192.168.200.133:8083/b</span><br><span class="line">http://192.168.200.133:8083/c</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/2024/08/20/Java/Nginx/Nginx-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/1591812222306.png" alt="1591812222306"></p>
+<h5 id="fair"><a href="#fair" class="headerlink" title="fair"></a>fair</h5><p>fair采用的不是内建负载均衡使用的轮换的均衡算法，而是可以根据页面大小、加载时间长短智能的进行负载均衡。那么如何使用第三方模块的fair负载均衡策略。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">upstream backend&#123;</span><br><span class="line">	fair;</span><br><span class="line">	server 192.168.200.146:9001;</span><br><span class="line">	server 192.168.200.146:9002;</span><br><span class="line">	server 192.168.200.146:9003;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">	listen 8083;</span><br><span class="line">	server_name localhost;</span><br><span class="line">	location /&#123;</span><br><span class="line">		proxy_pass http://backend;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是如何直接使用会报错，因为fair属于第三方模块实现的负载均衡。需要添加<code>nginx-upstream-fair</code></p>
+<h4 id="负载均衡案例"><a href="#负载均衡案例" class="headerlink" title="负载均衡案例"></a>负载均衡案例</h4><h5 id="案例一：对所有请求实现一般轮询规则的负载均衡"><a href="#案例一：对所有请求实现一般轮询规则的负载均衡" class="headerlink" title="案例一：对所有请求实现一般轮询规则的负载均衡"></a>案例一：对所有请求实现一般轮询规则的负载均衡</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">upstream backend&#123;</span><br><span class="line">	server 192.168.200.146:9001;</span><br><span class="line">	server 192.168.200.146:9002;</span><br><span class="line">	server 192.168.200.146:9003;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">	listen 8083;</span><br><span class="line">	server_name localhost;</span><br><span class="line">	location /&#123;</span><br><span class="line">		proxy_pass http://backend;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="案例二：对所有请求实现加权轮询规则的负载均衡"><a href="#案例二：对所有请求实现加权轮询规则的负载均衡" class="headerlink" title="案例二：对所有请求实现加权轮询规则的负载均衡"></a>案例二：对所有请求实现加权轮询规则的负载均衡</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">upstream backend&#123;</span><br><span class="line">	server 192.168.200.146:9001 weight=7;</span><br><span class="line">	server 192.168.200.146:9002 weight=5;</span><br><span class="line">	server 192.168.200.146:9003 weight=3;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">	listen 8083;</span><br><span class="line">	server_name localhost;</span><br><span class="line">	location /&#123;</span><br><span class="line">		proxy_pass http://backend;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="案例三：对特定资源实现负载均衡"><a href="#案例三：对特定资源实现负载均衡" class="headerlink" title="案例三：对特定资源实现负载均衡"></a>案例三：对特定资源实现负载均衡</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">upstream videobackend&#123;</span><br><span class="line">	server 192.168.200.146:9001;</span><br><span class="line">	server 192.168.200.146:9002;</span><br><span class="line">&#125;</span><br><span class="line">upstream filebackend&#123;</span><br><span class="line">	server 192.168.200.146:9003;</span><br><span class="line">	server 192.168.200.146:9004;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">	listen 8084;</span><br><span class="line">	server_name localhost;</span><br><span class="line">	location /video/ &#123;</span><br><span class="line">		proxy_pass http://videobackend;</span><br><span class="line">	&#125;</span><br><span class="line">	location /file/ &#123;</span><br><span class="line">		proxy_pass http://filebackend;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="案例四：对不同域名实现负载均衡"><a href="#案例四：对不同域名实现负载均衡" class="headerlink" title="案例四：对不同域名实现负载均衡"></a>案例四：对不同域名实现负载均衡</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">upstream itcastbackend&#123;</span><br><span class="line">	server 192.168.200.146:9001;</span><br><span class="line">	server 192.168.200.146:9002;</span><br><span class="line">&#125;</span><br><span class="line">upstream itheimabackend&#123;</span><br><span class="line">	server 192.168.200.146:9003;</span><br><span class="line">	server 192.168.200.146:9004;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">	listen	8085;</span><br><span class="line">	server_name www.itcast.cn;</span><br><span class="line">	location / &#123;</span><br><span class="line">		proxy_pass http://itcastbackend;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">	listen	8086;</span><br><span class="line">	server_name www.itheima.cn;</span><br><span class="line">	location / &#123;</span><br><span class="line">		proxy_pass http://itheimabackend;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="案例五：实现带有URL重写的负载均衡"><a href="#案例五：实现带有URL重写的负载均衡" class="headerlink" title="案例五：实现带有URL重写的负载均衡"></a>案例五：实现带有URL重写的负载均衡</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">upstream backend&#123;</span><br><span class="line">	server 192.168.200.146:9001;</span><br><span class="line">	server 192.168.200.146:9002;</span><br><span class="line">	server 192.168.200.146:9003;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">	listen	80;</span><br><span class="line">	server_name localhost;</span><br><span class="line">	location /file/ &#123;</span><br><span class="line">		rewrite ^(/file/.*) /server/$1 last;</span><br><span class="line">	&#125;</span><br><span class="line">	location / &#123;</span><br><span class="line">		proxy_pass http://backend;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://example.com">John Doe</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://example.com/2024/08/20/Java/Nginx/Nginx-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">http://example.com/2024/08/20/Java/Nginx/Nginx-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">负载均衡</a></div><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2024/08/20/Java/Nginx/Nginx-%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E4%B8%8E%E9%AB%98%E5%8F%AF%E7%94%A8/" title="Nginx-动静分离与高可用"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">Previous</div><div class="info-item-2">Nginx-动静分离与高可用</div></div><div class="info-2"><div class="info-item-1">Nginx实现服务器端集群搭建Nginx与Tomcat部署前面课程已经将Nginx的大部分内容进行了讲解，我们都知道了Nginx在高并发场景和处理静态资源是非常高性能的，但是在实际项目中除了静态资源还有就是后台业务代码模块，一般后台业务都会被部署在Tomcat，weblogic或者是websphere等web服务器上。那么如何使用Nginx接收用户的请求并把请求转发到后台web服务器？    步骤分析: 121.准备Tomcat环境，并在Tomcat上部署一个web项目2.准备Nginx环境，使用Nginx接收请求，并把请求分发到Tomat上    环境准备(Tomcat)浏览器访问: 1http://192.168.200.146:8080/demo/index.html   获取动态资源的链接地址: 1http://192.168.200.146:8080/demo/getAddress    本次课程将采用Tomcat作为后台web服务器 （1）在Centos上准备一个Tomcat （2）准备一个web项目，将其打包为war （3）启动tomcat进行访问测试。 12静态资...</div></div></div></a><a class="pagination-related" href="/2024/08/20/Java/Nginx/Nginx-%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/" title="Nginx-反向代理"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">Nginx-反向代理</div></div><div class="info-2"><div class="info-item-1">Nginx反向代理Nginx反向代理概述关于正向代理和反向代理，我们在前面的章节已经通过一张图给大家详细的介绍过了，简而言之就是正向代理代理的对象是客户端，反向代理代理的是服务端，这是两者之间最大的区别。 Nginx即可以实现正向代理，也可以实现反向代理。 我们先来通过一个小案例演示下Nginx正向代理的简单应用。 先提需求：    (1)服务端的设置： 123456789101112http &#123;  log_format main &#x27;client send request=&gt;clientIp=$remote_addr serverIp=&gt;$host&#x27;;	server&#123;		listen 80;		server_name	localhost;		access_log logs/access.log main;		location &#123;			root html;			index index.html index.htm;		&#125;	&#125;&#125;  (2)使用客户端访问服务端，打开日志查看结果  (3)代理服务...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">John Doe</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">74</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">170</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Nginx%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="toc-number">1.</span> <span class="toc-text">Nginx负载均衡</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E6%A6%82%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">负载均衡概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E7%9A%84%E5%8E%9F%E7%90%86"><span class="toc-number">1.2.</span> <span class="toc-text">负载均衡的原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="toc-number">1.2.1.</span> <span class="toc-text">负载均衡的作用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E7%AD%96%E7%95%A5"><span class="toc-number">1.2.2.</span> <span class="toc-text">负载均衡策略</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%BD%AE%E8%AF%A2"><span class="toc-number">1.2.2.0.1.</span> <span class="toc-text">轮询</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#weight%E5%8A%A0%E6%9D%83-%E5%8A%A0%E6%9D%83%E8%BD%AE%E8%AF%A2"><span class="toc-number">1.2.2.0.2.</span> <span class="toc-text">weight加权[加权轮询]</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#ip-hash"><span class="toc-number">1.2.2.0.3.</span> <span class="toc-text">ip_hash</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#least-conn"><span class="toc-number">1.2.2.0.4.</span> <span class="toc-text">least_conn</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#url-hash"><span class="toc-number">1.2.2.0.5.</span> <span class="toc-text">url_hash</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#fair"><span class="toc-number">1.2.2.0.6.</span> <span class="toc-text">fair</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E6%A1%88%E4%BE%8B"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">负载均衡案例</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E4%B8%80%EF%BC%9A%E5%AF%B9%E6%89%80%E6%9C%89%E8%AF%B7%E6%B1%82%E5%AE%9E%E7%8E%B0%E4%B8%80%E8%88%AC%E8%BD%AE%E8%AF%A2%E8%A7%84%E5%88%99%E7%9A%84%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="toc-number">1.2.2.1.1.</span> <span class="toc-text">案例一：对所有请求实现一般轮询规则的负载均衡</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E4%BA%8C%EF%BC%9A%E5%AF%B9%E6%89%80%E6%9C%89%E8%AF%B7%E6%B1%82%E5%AE%9E%E7%8E%B0%E5%8A%A0%E6%9D%83%E8%BD%AE%E8%AF%A2%E8%A7%84%E5%88%99%E7%9A%84%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="toc-number">1.2.2.1.2.</span> <span class="toc-text">案例二：对所有请求实现加权轮询规则的负载均衡</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E4%B8%89%EF%BC%9A%E5%AF%B9%E7%89%B9%E5%AE%9A%E8%B5%84%E6%BA%90%E5%AE%9E%E7%8E%B0%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="toc-number">1.2.2.1.3.</span> <span class="toc-text">案例三：对特定资源实现负载均衡</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E5%9B%9B%EF%BC%9A%E5%AF%B9%E4%B8%8D%E5%90%8C%E5%9F%9F%E5%90%8D%E5%AE%9E%E7%8E%B0%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="toc-number">1.2.2.1.4.</span> <span class="toc-text">案例四：对不同域名实现负载均衡</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E4%BA%94%EF%BC%9A%E5%AE%9E%E7%8E%B0%E5%B8%A6%E6%9C%89URL%E9%87%8D%E5%86%99%E7%9A%84%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="toc-number">1.2.2.1.5.</span> <span class="toc-text">案例五：实现带有URL重写的负载均衡</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/07/Java/LangChain4J/LangChain4j%E4%B9%8BRAG/" title="LangChain4j之RAG">LangChain4j之RAG</a><time datetime="2026-01-07T03:21:24.000Z" title="Created 2026-01-07 11:21:24">2026-01-07</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/06/Java/LangChain4J/LangChain4j%E4%B9%8B%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/" title="LangChain4j之函数调用">LangChain4j之函数调用</a><time datetime="2026-01-06T07:06:52.000Z" title="Created 2026-01-06 15:06:52">2026-01-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/05/Java/LangChain4J/LangChain4j%E4%B9%8B%E9%AB%98%E9%98%B6api/" title="LangChain4j之高阶api">LangChain4j之高阶api</a><time datetime="2026-01-05T12:08:53.000Z" title="Created 2026-01-05 20:08:53">2026-01-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/05/Java/LangChain4J/LangChain4j%E4%B9%8B%E4%BC%9A%E8%AF%9D%E8%AE%B0%E5%BF%86/" title="LangChain4j之会话记忆">LangChain4j之会话记忆</a><time datetime="2026-01-05T06:53:06.000Z" title="Created 2026-01-05 14:53:06">2026-01-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/05/Java/LangChain4J/LangChain4j%E5%85%A5%E9%97%A8/" title="LangChain4j入门">LangChain4j入门</a><time datetime="2026-01-05T01:08:25.000Z" title="Created 2026-01-05 09:08:25">2026-01-05</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By John Doe</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.5-b1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.5-b1"></script><script src="/js/main.js?v=5.5.5-b1"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

@@ -1,0 +1,398 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Redis原理-网络模型 | Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="2、原理篇-Redis网络模型2.1 用户空间和内核态空间服务器大多都采用Linux系统，这里我们以Linux为例来讲解: ubuntu和Centos 都是Linux的发行版，发行版可以看成对linux包了一层壳，任何Linux发行版，其系统内核都是Linux。我们的应用都需要通过Linux内核与硬件交互">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis原理-网络模型">
+<meta property="og:url" content="http://example.com/2024/12/03/Java/Redis/Redis%E5%8E%9F%E7%90%86-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="2、原理篇-Redis网络模型2.1 用户空间和内核态空间服务器大多都采用Linux系统，这里我们以Linux为例来讲解: ubuntu和Centos 都是Linux的发行版，发行版可以看成对linux包了一层壳，任何Linux发行版，其系统内核都是Linux。我们的应用都需要通过Linux内核与硬件交互">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/butterfly-icon.png">
+<meta property="article:published_time" content="2024-12-03T03:12:37.000Z">
+<meta property="article:modified_time" content="2026-04-14T14:05:56.074Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="BIO">
+<meta property="article:tag" content="NIO">
+<meta property="article:tag" content="IO多路复用">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Redis原理-网络模型",
+  "url": "http://example.com/2024/12/03/Java/Redis/Redis%E5%8E%9F%E7%90%86-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/",
+  "image": "http://example.com/img/butterfly-icon.png",
+  "datePublished": "2024-12-03T03:12:37.000Z",
+  "dateModified": "2026-04-14T14:05:56.074Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "John Doe",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2024/12/03/Java/Redis/Redis%E5%8E%9F%E7%90%86-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.5-b1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Redis原理-网络模型',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Hexo</span></a><a class="nav-page-title" href="/"><span class="site-name">Redis原理-网络模型</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">Redis原理-网络模型</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2024-12-03T03:12:37.000Z" title="Created 2024-12-03 11:12:37">2024-12-03</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-04-14T14:05:56.074Z" title="Updated 2026-04-14 22:05:56">2026-04-14</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="2、原理篇-Redis网络模型"><a href="#2、原理篇-Redis网络模型" class="headerlink" title="2、原理篇-Redis网络模型"></a>2、原理篇-Redis网络模型</h2><h3 id="2-1-用户空间和内核态空间"><a href="#2-1-用户空间和内核态空间" class="headerlink" title="2.1 用户空间和内核态空间"></a>2.1 用户空间和内核态空间</h3><p>服务器大多都采用Linux系统，这里我们以Linux为例来讲解:</p>
+<p>ubuntu和Centos 都是Linux的发行版，发行版可以看成对linux包了一层壳，任何Linux发行版，其系统内核都是Linux。我们的应用都需要通过Linux内核与硬件交互</p>
+<span id="more"></span>
+
+<p><img src="/2024/12/03/Java/Redis/Redis%E5%8E%9F%E7%90%86-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/1653844970346.png" alt="1653844970346"></p>
+<p>用户的应用，比如redis，mysql等其实是没有办法去执行访问我们操作系统的硬件的，所以我们可以通过发行版的这个壳子去访问内核，再通过内核去访问计算机硬件</p>
+<p><img src="/2024/12/03/Java/Redis/Redis%E5%8E%9F%E7%90%86-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/1653845147190.png" alt="1653845147190"></p>
+<p>计算机硬件包括，如cpu，内存，网卡等等，内核（通过寻址空间）可以操作硬件的，但是内核需要不同设备的驱动，有了这些驱动之后，内核就可以去对计算机硬件去进行 内存管理，文件系统的管理，进程的管理等等</p>
+<p><img src="/2024/12/03/Java/Redis/Redis%E5%8E%9F%E7%90%86-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/1653896065386.png" alt="1653896065386"></p>
+<p>我们想要用户的应用来访问，计算机就必须要通过对外暴露的一些接口，才能访问到，从而简介的实现对内核的操控，但是内核本身上来说也是一个应用，所以他本身也需要一些内存，cpu等设备资源，用户应用本身也在消耗这些资源，如果不加任何限制，用户去操作随意的去操作我们的资源，就有可能导致一些冲突，甚至有可能导致我们的系统出现无法运行的问题，因此我们需要把用户和<strong>内核隔离开</strong></p>
+<p>进程的寻址空间划分成两部分：<strong>内核空间、用户空间</strong></p>
+<p>什么是寻址空间呢？我们的应用程序也好，还是内核空间也好，都是没有办法直接去物理内存的，而是通过分配一些虚拟内存映射到物理内存中，我们的内核和应用程序去访问虚拟内存的时候，就需要一个虚拟地址，这个地址是一个无符号的整数，比如一个32位的操作系统，他的带宽就是32，他的虚拟地址就是2的32次方，也就是说他寻址的范围就是0~2的32次方， 这片寻址空间对应的就是2的32个字节，就是4GB，这个4GB，会有3个GB分给用户空间，会有1GB给内核系统</p>
+<p><img src="/2024/12/03/Java/Redis/Redis%E5%8E%9F%E7%90%86-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/1653896377259.png" alt="1653896377259"></p>
+<p>在linux中，他们权限分成两个等级，0和3，用户空间只能执行受限的命令（Ring3），而且不能直接调用系统资源，必须通过内核提供的接口来访问内核空间可以执行特权命令（Ring0），调用一切系统资源，所以一般情况下，用户的操作是运行在用户空间，而内核运行的数据是在内核空间的，而有的情况下，一个应用程序需要去调用一些特权资源，去调用一些内核空间的操作，所以此时他俩需要在用户态和内核态之间进行切换。</p>
+<p>比如：</p>
+<p>Linux系统为了提高IO效率，会在用户空间和内核空间都加入缓冲区：</p>
+<p>写数据时，要把用户缓冲数据拷贝到内核缓冲区，然后写入设备</p>
+<p>读数据时，要从设备读取数据到内核缓冲区，然后拷贝到用户缓冲区</p>
+<p>针对这个操作：我们的用户在写读数据时，会去向内核态申请，想要读取内核的数据，而内核数据要去等待驱动程序从硬件上读取数据，当从磁盘上加载到数据之后，内核会将数据写入到内核的缓冲区中，然后再将数据拷贝到用户态的buffer中，然后再返回给应用程序，整体而言，速度慢，就是这个原因，为了加速，我们希望read也好，还是wait for data也最好都不要等待，或者时间尽量的短。</p>
+<p><img src="/2024/12/03/Java/Redis/Redis%E5%8E%9F%E7%90%86-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/1653896687354.png" alt="1653896687354"></p>
+<h3 id="2-2-网络模型-阻塞IO"><a href="#2-2-网络模型-阻塞IO" class="headerlink" title="2.2.网络模型-阻塞IO"></a>2.2.网络模型-阻塞IO</h3><p>在《UNIX网络编程》一书中，总结归纳了5种IO模型：</p>
+<ul>
+<li>阻塞IO（Blocking IO）</li>
+<li>非阻塞IO（Nonblocking IO）</li>
+<li>IO多路复用（IO Multiplexing）</li>
+<li>信号驱动IO（Signal Driven IO）</li>
+<li>异步IO（Asynchronous IO）</li>
+</ul>
+<p>应用程序想要去读取数据，他是无法直接去读取磁盘数据的，他需要先到内核里边去等待内核操作硬件拿到数据，这个过程就是1，是需要等待的，等到内核从磁盘上把数据加载出来之后，再把这个数据写给用户的缓存区，这个过程是2，如果是阻塞IO，那么整个过程中，用户从发起读请求开始，一直到读取到数据，都是一个阻塞状态。</p>
+<p><img src="/2024/12/03/Java/Redis/Redis%E5%8E%9F%E7%90%86-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/1653897115346.png" alt="1653897115346"></p>
+<p>具体流程如下图：</p>
+<p>用户去读取数据时，会去先发起recvform一个命令，去尝试从内核上加载数据，如果内核没有数据，那么用户就会等待，此时内核会去从硬件上读取数据，内核读取数据之后，会把数据拷贝到用户态，并且返回ok，整个过程，都是阻塞等待的，这就是阻塞IO</p>
+<p>总结如下：</p>
+<p>顾名思义，阻塞IO就是两个阶段都必须阻塞等待：</p>
+<p><strong>阶段一：</strong></p>
+<ul>
+<li>用户进程尝试读取数据（比如网卡数据）</li>
+<li>此时数据尚未到达，内核需要等待数据</li>
+<li>此时用户进程也处于阻塞状态</li>
+</ul>
+<p>阶段二：</p>
+<ul>
+<li>数据到达并拷贝到内核缓冲区，代表已就绪</li>
+<li>将内核数据拷贝到用户缓冲区</li>
+<li>拷贝过程中，用户进程依然阻塞等待</li>
+<li>拷贝完成，用户进程解除阻塞，处理数据</li>
+</ul>
+<p>可以看到，阻塞IO模型中，用户进程在两个阶段都是阻塞状态。</p>
+<p><img src="/2024/12/03/Java/Redis/Redis%E5%8E%9F%E7%90%86-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/1653897270074.png" alt="1653897270074"></p>
+<h3 id="2-3-网络模型-非阻塞IO"><a href="#2-3-网络模型-非阻塞IO" class="headerlink" title="2.3 网络模型-非阻塞IO"></a>2.3 网络模型-非阻塞IO</h3><p>顾名思义，非阻塞IO的recvfrom操作会立即返回结果而不是阻塞用户进程。</p>
+<p>阶段一：</p>
+<ul>
+<li>用户进程尝试读取数据（比如网卡数据）</li>
+<li>此时数据尚未到达，内核需要等待数据</li>
+<li>返回异常给用户进程</li>
+<li>用户进程拿到error后，再次尝试读取</li>
+<li>循环往复，直到数据就绪</li>
+</ul>
+<p>阶段二：</p>
+<ul>
+<li>将内核数据拷贝到用户缓冲区</li>
+<li>拷贝过程中，用户进程依然阻塞等待</li>
+<li>拷贝完成，用户进程解除阻塞，处理数据</li>
+<li>可以看到，非阻塞IO模型中，用户进程在第一个阶段是非阻塞，第二个阶段是阻塞状态。虽然是非阻塞，但性能并没有得到提高。而且忙等机制会导致CPU空转，CPU使用率暴增。</li>
+</ul>
+<p><img src="/2024/12/03/Java/Redis/Redis%E5%8E%9F%E7%90%86-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/1653897490116.png" alt="1653897490116"></p>
+<h3 id="2-4-网络模型-IO多路复用"><a href="#2-4-网络模型-IO多路复用" class="headerlink" title="2.4 网络模型-IO多路复用"></a>2.4 网络模型-IO多路复用</h3><p>无论是阻塞IO还是非阻塞IO，用户应用在一阶段都需要调用recvfrom来获取数据，差别在于无数据时的处理方案：</p>
+<p>如果调用recvfrom时，恰好没有数据，阻塞IO会使CPU阻塞，非阻塞IO使CPU空转，都不能充分发挥CPU的作用。<br>如果调用recvfrom时，恰好有数据，则用户进程可以直接进入第二阶段，读取并处理数据</p>
+<p>所以怎么看起来以上两种方式性能都不好</p>
+<p>而在单线程情况下，只能依次处理IO事件，如果正在处理的IO事件恰好未就绪（数据不可读或不可写），线程就会被阻塞，所有IO事件都必须等待，性能自然会很差。</p>
+<p>就比如服务员给顾客点餐，<strong>分两步</strong>：</p>
+<ul>
+<li>顾客思考要吃什么（等待数据就绪）</li>
+<li>顾客想好了，开始点餐（读取数据）</li>
+</ul>
+<p>要提高效率有几种办法？</p>
+<p>方案一：增加更多服务员（多线程）<br>方案二：不排队，谁想好了吃什么（数据就绪了），服务员就给谁点餐（用户应用就去读取数据）</p>
+<p>那么问题来了：用户进程如何知道内核中数据是否就绪呢？</p>
+<p>所以接下来就需要详细的来解决多路复用模型是如何知道到底怎么知道内核数据是否就绪的问题了</p>
+<p>这个问题的解决依赖于提出的</p>
+<p>文件描述符（File Descriptor）：简称FD，是一个从0 开始的无符号整数，用来关联Linux中的一个文件。在Linux中，一切皆文件，例如常规文件、视频、硬件设备等，当然也包括网络套接字（Socket）。</p>
+<p>通过FD，我们的网络模型可以利用一个线程监听多个FD，并在某个FD可读、可写时得到通知，从而避免无效的等待，充分利用CPU资源。</p>
+<p>阶段一：</p>
+<ul>
+<li>用户进程调用select，指定要监听的FD集合</li>
+<li>核监听FD对应的多个socket</li>
+<li>任意一个或多个socket数据就绪则返回readable</li>
+<li>此过程中用户进程阻塞</li>
+</ul>
+<p>阶段二：</p>
+<ul>
+<li>用户进程找到就绪的socket</li>
+<li>依次调用recvfrom读取数据</li>
+<li>内核将数据拷贝到用户空间</li>
+<li>用户进程处理数据</li>
+</ul>
+<p>当用户去读取数据的时候，不再去直接调用recvfrom了，而是调用select的函数，select函数会将需要监听的数据交给内核，由内核去检查这些数据是否就绪了，如果说这个数据就绪了，就会通知应用程序数据就绪，然后来读取数据，再从内核中把数据拷贝给用户态，完成数据处理，如果N多个FD一个都没处理完，此时就进行等待。</p>
+<p>用IO复用模式，可以确保去读数据的时候，数据是一定存在的，他的效率比原来的阻塞IO和非阻塞IO性能都要高</p>
+<p><img src="/2024/12/03/Java/Redis/Redis%E5%8E%9F%E7%90%86-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/1653898691736.png" alt="1653898691736"></p>
+<p>IO多路复用是利用单个线程来同时监听多个FD，并在某个FD可读、可写时得到通知，从而避免无效的等待，充分利用CPU资源。不过监听FD的方式、通知的方式又有多种实现，常见的有：</p>
+<ul>
+<li>select</li>
+<li>poll</li>
+<li>epoll</li>
+</ul>
+<p>其中select和pool相当于是当被监听的数据准备好之后，他会把你监听的FD整个数据都发给你，你需要到整个FD中去找，哪些是处理好了的，需要通过遍历的方式，所以性能也并不是那么好</p>
+<p>而epoll，则相当于内核准备好了之后，他会把准备好的数据，直接发给你，咱们就省去了遍历的动作。</p>
+<h3 id="2-5-网络模型-IO多路复用-select方式"><a href="#2-5-网络模型-IO多路复用-select方式" class="headerlink" title="2.5 网络模型-IO多路复用-select方式"></a>2.5 网络模型-IO多路复用-select方式</h3><p>select是Linux最早是由的I&#x2F;O多路复用技术：</p>
+<p>简单说，就是我们把需要处理的数据封装成FD，然后在用户态时创建一个fd的集合（这个集合的大小是要监听的那个FD的最大值+1，但是大小整体是有限制的 ），这个集合的长度大小是有限制的，同时在这个集合中，标明出来我们要控制哪些数据，</p>
+<p>比如要监听的数据，是1,2,5三个数据，此时会执行select函数，然后将整个fd发给内核态，内核态会去遍历用户态传递过来的数据，如果发现这里边都数据都没有就绪，就休眠，直到有数据准备好时，就会被唤醒，唤醒之后，再次遍历一遍，看看谁准备好了，然后再将处理掉没有准备好的数据，最后再将这个FD集合写回到用户态中去，此时用户态就知道了，奥，有人准备好了，但是对于用户态而言，并不知道谁处理好了，所以用户态也需要去进行遍历，然后找到对应准备好数据的节点，再去发起读请求，我们会发现，这种模式下他虽然比阻塞IO和非阻塞IO好，但是依然有些麻烦的事情， 比如说频繁的传递fd集合，频繁的去遍历FD等问题</p>
+<p><img src="/2024/12/03/Java/Redis/Redis%E5%8E%9F%E7%90%86-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/1653900022580.png" alt="1653900022580"></p>
+<h3 id="2-6-网络模型-IO多路复用模型-poll模式"><a href="#2-6-网络模型-IO多路复用模型-poll模式" class="headerlink" title="2.6 网络模型-IO多路复用模型-poll模式"></a>2.6 网络模型-IO多路复用模型-poll模式</h3><p>poll模式对select模式做了简单改进，但性能提升不明显，部分关键代码如下：</p>
+<p>IO流程：</p>
+<ul>
+<li>创建pollfd数组，向其中添加关注的fd信息，数组大小自定义</li>
+<li>调用poll函数，将pollfd数组拷贝到内核空间，转链表存储，无上限</li>
+<li>内核遍历fd，判断是否就绪</li>
+<li>数据就绪或超时后，拷贝pollfd数组到用户空间，返回就绪fd数量n</li>
+<li>用户进程判断n是否大于0,大于0则遍历pollfd数组，找到就绪的fd</li>
+</ul>
+<p><strong>与select对比：</strong></p>
+<ul>
+<li>select模式中的fd_set大小固定为1024，而pollfd在内核中采用链表，理论上无上限</li>
+<li>监听FD越多，每次遍历消耗时间也越久，性能反而会下降</li>
+</ul>
+<p><img src="/2024/12/03/Java/Redis/Redis%E5%8E%9F%E7%90%86-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/1653900721427.png" alt="1653900721427"></p>
+<h3 id="2-7-网络模型-IO多路复用模型-epoll函数"><a href="#2-7-网络模型-IO多路复用模型-epoll函数" class="headerlink" title="2.7 网络模型-IO多路复用模型-epoll函数"></a>2.7 网络模型-IO多路复用模型-epoll函数</h3><p>epoll模式是对select和poll的改进，它提供了三个函数：</p>
+<p>第一个是：eventpoll的函数，他内部包含两个东西</p>
+<p>一个是：</p>
+<p>1、红黑树-&gt; 记录的事要监听的FD</p>
+<p>2、一个是链表-&gt;一个链表，记录的是就绪的FD</p>
+<p>紧接着调用epoll_ctl操作，将要监听的数据添加到红黑树上去，并且给每个fd设置一个监听函数，这个函数会在fd数据就绪时触发，就是准备好了，现在就把fd把数据添加到list_head中去</p>
+<p>3、调用epoll_wait函数</p>
+<p>就去等待，在用户态创建一个空的events数组，当就绪之后，我们的回调函数会把数据添加到list_head中去，当调用这个函数的时候，会去检查list_head，当然这个过程需要参考配置的等待时间，可以等一定时间，也可以一直等， 如果在此过程中，检查到了list_head中有数据会将数据添加到链表中，此时将数据放入到events数组中，并且返回对应的操作的数量，用户态的此时收到响应后，从events中拿到对应准备好的数据的节点，再去调用方法去拿数据。</p>
+<p>小总结：</p>
+<p>select模式存在的三个问题：</p>
+<ul>
+<li>能监听的FD最大不超过1024</li>
+<li>每次select都需要把所有要监听的FD都拷贝到内核空间</li>
+<li>每次都要遍历所有FD来判断就绪状态</li>
+</ul>
+<p>poll模式的问题：</p>
+<ul>
+<li>poll利用链表解决了select中监听FD上限的问题，但依然要遍历所有FD，如果监听较多，性能会下降</li>
+</ul>
+<p>epoll模式中如何解决这些问题的？</p>
+<ul>
+<li>基于epoll实例中的红黑树保存要监听的FD，理论上无上限，而且增删改查效率都非常高</li>
+<li>每个FD只需要执行一次epoll_ctl添加到红黑树，以后每次epol_wait无需传递任何参数，无需重复拷贝FD到内核空间</li>
+<li>利用ep_poll_callback机制来监听FD状态，无需遍历所有FD，因此性能不会随监听的FD数量增多而下降</li>
+</ul>
+<h3 id="2-8、网络模型-epoll中的ET和LT"><a href="#2-8、网络模型-epoll中的ET和LT" class="headerlink" title="2.8、网络模型-epoll中的ET和LT"></a>2.8、网络模型-epoll中的ET和LT</h3><p>当FD有数据可读时，我们调用epoll_wait（或者select、poll）可以得到通知。但是事件通知的模式有两种：</p>
+<ul>
+<li>LevelTriggered：简称LT，也叫做水平触发。只要某个FD中有数据可读，每次调用epoll_wait都会得到通知。</li>
+<li>EdgeTriggered：简称ET，也叫做边沿触发。只有在某个FD有状态变化时，调用epoll_wait才会被通知。</li>
+</ul>
+<p>举个栗子：</p>
+<ul>
+<li>假设一个客户端socket对应的FD已经注册到了epoll实例中</li>
+<li>客户端socket发送了2kb的数据</li>
+<li>服务端调用epoll_wait，得到通知说FD就绪</li>
+<li>服务端从FD读取了1kb数据回到步骤3（再次调用epoll_wait，形成循环）</li>
+</ul>
+<p>结论</p>
+<p>如果我们采用LT模式，因为FD中仍有1kb数据，则第⑤步依然会返回结果，并且得到通知<br>如果我们采用ET模式，因为第③步已经消费了FD可读事件，第⑤步FD状态没有变化，因此epoll_wait不会返回，数据无法读取，客户端响应超时。</p>
+<h3 id="2-9-网络模型-基于epoll的服务器端流程"><a href="#2-9-网络模型-基于epoll的服务器端流程" class="headerlink" title="2.9 网络模型-基于epoll的服务器端流程"></a>2.9 网络模型-基于epoll的服务器端流程</h3><p>我们来梳理一下这张图</p>
+<p>服务器启动以后，服务端会去调用epoll_create，创建一个epoll实例，epoll实例中包含两个数据</p>
+<p>1、红黑树（为空）：rb_root 用来去记录需要被监听的FD</p>
+<p>2、链表（为空）：list_head，用来存放已经就绪的FD</p>
+<p>创建好了之后，会去调用epoll_ctl函数，此函数会会将需要监听的数据添加到rb_root中去，并且对当前这些存在于红黑树的节点设置回调函数，当这些被监听的数据一旦准备完成，就会被调用，而调用的结果就是将红黑树的fd添加到list_head中去(但是此时并没有完成)</p>
+<p>3、当第二步完成后，就会调用epoll_wait函数，这个函数会去校验是否有数据准备完毕（因为数据一旦准备就绪，就会被回调函数添加到list_head中），在等待了一段时间后(可以进行配置)，如果等够了超时时间，则返回没有数据，如果有，则进一步判断当前是什么事件，如果是建立连接时间，则调用accept() 接受客户端socket，拿到建立连接的socket，然后建立起来连接，如果是其他事件，则把数据进行写出</p>
+<p><img src="/2024/12/03/Java/Redis/Redis%E5%8E%9F%E7%90%86-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/1653902845082.png" alt="1653902845082"></p>
+<h3 id="3-0-、网络模型-信号驱动"><a href="#3-0-、网络模型-信号驱动" class="headerlink" title="3.0 、网络模型-信号驱动"></a>3.0 、网络模型-信号驱动</h3><p>信号驱动IO是与内核建立SIGIO的信号关联并设置回调，当内核有FD就绪时，会发出SIGIO信号通知用户，期间用户应用可以执行其它业务，无需阻塞等待。</p>
+<p>阶段一：</p>
+<ul>
+<li>用户进程调用sigaction，注册信号处理函数</li>
+<li>内核返回成功，开始监听FD</li>
+<li>用户进程不阻塞等待，可以执行其它业务</li>
+<li>当内核数据就绪后，回调用户进程的SIGIO处理函数</li>
+</ul>
+<p>阶段二：</p>
+<ul>
+<li>收到SIGIO回调信号</li>
+<li>调用recvfrom，读取</li>
+<li>内核将数据拷贝到用户空间</li>
+<li>用户进程处理数据</li>
+</ul>
+<p><img src="/2024/12/03/Java/Redis/Redis%E5%8E%9F%E7%90%86-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/1653911776583.png" alt="1653911776583"></p>
+<p>当有大量IO操作时，信号较多，SIGIO处理函数不能及时处理可能导致信号队列溢出，而且内核空间与用户空间的频繁信号交互性能也较低。</p>
+<h4 id="3-0-1-异步IO"><a href="#3-0-1-异步IO" class="headerlink" title="3.0.1 异步IO"></a>3.0.1 异步IO</h4><p>这种方式，不仅仅是用户态在试图读取数据后，不阻塞，而且当内核的数据准备完成后，也不会阻塞</p>
+<p>他会由内核将所有数据处理完成后，由内核将数据写入到用户态中，然后才算完成，所以性能极高，不会有任何阻塞，全部都由内核完成，可以看到，异步IO模型中，用户进程在两个阶段都是非阻塞状态。</p>
+<p><img src="/2024/12/03/Java/Redis/Redis%E5%8E%9F%E7%90%86-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/1653911877542.png" alt="1653911877542"></p>
+<h4 id="3-0-2-对比"><a href="#3-0-2-对比" class="headerlink" title="3.0.2 对比"></a>3.0.2 对比</h4><p>最后用一幅图，来说明他们之间的区别</p>
+<p><img src="/2024/12/03/Java/Redis/Redis%E5%8E%9F%E7%90%86-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/1653912219712.png" alt="1653912219712"></p>
+<h3 id="3-1-、网络模型-Redis是单线程的吗？为什么使用单线程"><a href="#3-1-、网络模型-Redis是单线程的吗？为什么使用单线程" class="headerlink" title="3.1 、网络模型-Redis是单线程的吗？为什么使用单线程"></a>3.1 、网络模型-Redis是单线程的吗？为什么使用单线程</h3><p><strong>Redis到底是单线程还是多线程？</strong></p>
+<ul>
+<li>如果仅仅聊Redis的核心业务部分（命令处理），答案是单线程</li>
+<li>如果是聊整个Redis，那么答案就是多线程</li>
+</ul>
+<p>在Redis版本迭代过程中，在两个重要的时间节点上引入了多线程的支持：</p>
+<ul>
+<li>Redis v4.0：引入多线程异步处理一些耗时较旧的任务，例如异步删除命令unlink</li>
+<li>Redis v6.0：在核心网络模型中引入 多线程，进一步提高对于多核CPU的利用率</li>
+</ul>
+<p>因此，对于Redis的核心网络模型，在Redis 6.0之前确实都是单线程。是利用epoll（Linux系统）这样的IO多路复用技术在事件循环中不断处理客户端情况。</p>
+<p><strong>为什么Redis要选择单线程？</strong></p>
+<ul>
+<li>抛开持久化不谈，Redis是纯  内存操作，执行速度非常快，它的性能瓶颈是网络延迟而不是执行速度，因此多线程并不会带来巨大的性能提升。</li>
+<li>多线程会导致过多的上下文切换，带来不必要的开销</li>
+<li>引入多线程会面临线程安全问题，必然要引入线程锁这样的安全手段，实现复杂度增高，而且性能也会大打折扣</li>
+</ul>
+<h3 id="3-2-、Redis的单线程模型-Redis单线程和多线程网络模型变更"><a href="#3-2-、Redis的单线程模型-Redis单线程和多线程网络模型变更" class="headerlink" title="3.2 、Redis的单线程模型-Redis单线程和多线程网络模型变更"></a>3.2 、Redis的单线程模型-Redis单线程和多线程网络模型变更</h3><p><img src="/2024/12/03/Java/Redis/Redis%E5%8E%9F%E7%90%86-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/1653982278727.png" alt="1653982278727"></p>
+<p>当我们的客户端想要去连接我们服务器，会去先到IO多路复用模型去进行排队，会有一个连接应答处理器，他会去接受读请求，然后又把读请求注册到具体模型中去，此时这些建立起来的连接，如果是客户端请求处理器去进行执行命令时，他会去把数据读取出来，然后把数据放入到client中， clinet去解析当前的命令转化为redis认识的命令，接下来就开始处理这些命令，从redis中的command中找到这些命令，然后就真正的去操作对应的数据了，当数据操作完成后，会去找到命令回复处理器，再由他将数据写出。</p>
+<h2 id="3、Redis通信协议-RESP协议"><a href="#3、Redis通信协议-RESP协议" class="headerlink" title="3、Redis通信协议-RESP协议"></a>3、Redis通信协议-RESP协议</h2><p>Redis是一个CS架构的软件，通信一般分两步（不包括pipeline和PubSub）：</p>
+<p>客户端（client）向服务端（server）发送一条命令</p>
+<p>服务端解析并执行命令，返回响应结果给客户端</p>
+<p>因此客户端发送命令的格式、服务端响应结果的格式必须有一个规范，这个规范就是通信协议。</p>
+<p>而在Redis中采用的是RESP（Redis Serialization Protocol）协议：</p>
+<p>Redis 1.2版本引入了RESP协议</p>
+<p>Redis 2.0版本中成为与Redis服务端通信的标准，称为RESP2</p>
+<p>Redis 6.0版本中，从RESP2升级到了RESP3协议，增加了更多数据类型并且支持6.0的新特性–客户端缓存</p>
+<p>但目前，默认使用的依然是RESP2协议，也是我们要学习的协议版本（以下简称RESP）。</p>
+<p>在RESP中，通过首字节的字符来区分不同数据类型，常用的数据类型包括5种：</p>
+<p>单行字符串：首字节是 ‘+’ ，后面跟上单行字符串，以CRLF（ “\r\n” ）结尾。例如返回”OK”： “+OK\r\n”</p>
+<p>错误（Errors）：首字节是 ‘-’ ，与单行字符串格式一样，只是字符串是异常信息，例如：”-Error message\r\n”</p>
+<p>数值：首字节是 ‘:’ ，后面跟上数字格式的字符串，以CRLF结尾。例如：”:10\r\n”</p>
+<p>多行字符串：首字节是 ‘$’ ，表示二进制安全的字符串，最大支持512MB：</p>
+<p>如果大小为0，则代表空字符串：”$0\r\n\r\n”</p>
+<p>如果大小为-1，则代表不存在：”$-1\r\n”</p>
+<p>数组：首字节是 ‘*’，后面跟上数组元素个数，再跟上元素，元素数据类型不限:</p>
+<p><img src="/2024/12/03/Java/Redis/Redis%E5%8E%9F%E7%90%86-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/1653982993020.png" alt="1653982993020"></p>
+<h3 id="3-1、Redis通信协议-基于Socket自定义Redis的客户端"><a href="#3-1、Redis通信协议-基于Socket自定义Redis的客户端" class="headerlink" title="3.1、Redis通信协议-基于Socket自定义Redis的客户端"></a>3.1、Redis通信协议-基于Socket自定义Redis的客户端</h3><p>Redis支持TCP通信，因此我们可以使用Socket来模拟客户端，与Redis服务端建立连接：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Main</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> Socket s;</span><br><span class="line">    <span class="keyword">static</span> PrintWriter writer;</span><br><span class="line">    <span class="keyword">static</span> BufferedReader reader;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 1.建立连接</span></span><br><span class="line">            <span class="type">String</span> <span class="variable">host</span> <span class="operator">=</span> <span class="string">&quot;192.168.150.101&quot;</span>;</span><br><span class="line">            <span class="type">int</span> <span class="variable">port</span> <span class="operator">=</span> <span class="number">6379</span>;</span><br><span class="line">            s = <span class="keyword">new</span> <span class="title class_">Socket</span>(host, port);</span><br><span class="line">            <span class="comment">// 2.获取输出流、输入流</span></span><br><span class="line">            writer = <span class="keyword">new</span> <span class="title class_">PrintWriter</span>(<span class="keyword">new</span> <span class="title class_">OutputStreamWriter</span>(s.getOutputStream(), StandardCharsets.UTF_8));</span><br><span class="line">            reader = <span class="keyword">new</span> <span class="title class_">BufferedReader</span>(<span class="keyword">new</span> <span class="title class_">InputStreamReader</span>(s.getInputStream(), StandardCharsets.UTF_8));</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 3.发出请求</span></span><br><span class="line">            <span class="comment">// 3.1.获取授权 auth 123321</span></span><br><span class="line">            sendRequest(<span class="string">&quot;auth&quot;</span>, <span class="string">&quot;123321&quot;</span>);</span><br><span class="line">            <span class="type">Object</span> <span class="variable">obj</span> <span class="operator">=</span> handleResponse();</span><br><span class="line">            System.out.println(<span class="string">&quot;obj = &quot;</span> + obj);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 3.2.set name 虎哥</span></span><br><span class="line">            sendRequest(<span class="string">&quot;set&quot;</span>, <span class="string">&quot;name&quot;</span>, <span class="string">&quot;虎哥&quot;</span>);</span><br><span class="line">            <span class="comment">// 4.解析响应</span></span><br><span class="line">            obj = handleResponse();</span><br><span class="line">            System.out.println(<span class="string">&quot;obj = &quot;</span> + obj);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 3.2.set name 虎哥</span></span><br><span class="line">            sendRequest(<span class="string">&quot;get&quot;</span>, <span class="string">&quot;name&quot;</span>);</span><br><span class="line">            <span class="comment">// 4.解析响应</span></span><br><span class="line">            obj = handleResponse();</span><br><span class="line">            System.out.println(<span class="string">&quot;obj = &quot;</span> + obj);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 3.2.set name 虎哥</span></span><br><span class="line">            sendRequest(<span class="string">&quot;mget&quot;</span>, <span class="string">&quot;name&quot;</span>, <span class="string">&quot;num&quot;</span>, <span class="string">&quot;msg&quot;</span>);</span><br><span class="line">            <span class="comment">// 4.解析响应</span></span><br><span class="line">            obj = handleResponse();</span><br><span class="line">            System.out.println(<span class="string">&quot;obj = &quot;</span> + obj);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="comment">// 5.释放连接</span></span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (reader != <span class="literal">null</span>) reader.close();</span><br><span class="line">                <span class="keyword">if</span> (writer != <span class="literal">null</span>) writer.close();</span><br><span class="line">                <span class="keyword">if</span> (s != <span class="literal">null</span>) s.close();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Object <span class="title function_">handleResponse</span><span class="params">()</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        <span class="comment">// 读取首字节</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">prefix</span> <span class="operator">=</span> reader.read();</span><br><span class="line">        <span class="comment">// 判断数据类型标示</span></span><br><span class="line">        <span class="keyword">switch</span> (prefix) &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&#x27;+&#x27;</span>: <span class="comment">// 单行字符串，直接读一行</span></span><br><span class="line">                <span class="keyword">return</span> reader.readLine();</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&#x27;-&#x27;</span>: <span class="comment">// 异常，也读一行</span></span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(reader.readLine());</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&#x27;:&#x27;</span>: <span class="comment">// 数字</span></span><br><span class="line">                <span class="keyword">return</span> Long.parseLong(reader.readLine());</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&#x27;$&#x27;</span>: <span class="comment">// 多行字符串</span></span><br><span class="line">                <span class="comment">// 先读长度</span></span><br><span class="line">                <span class="type">int</span> <span class="variable">len</span> <span class="operator">=</span> Integer.parseInt(reader.readLine());</span><br><span class="line">                <span class="keyword">if</span> (len == -<span class="number">1</span>) &#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> (len == <span class="number">0</span>) &#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">// 再读数据,读len个字节。我们假设没有特殊字符，所以读一行（简化）</span></span><br><span class="line">                <span class="keyword">return</span> reader.readLine();</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&#x27;*&#x27;</span>:</span><br><span class="line">                <span class="keyword">return</span> readBulkString();</span><br><span class="line">            <span class="keyword">default</span>:</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(<span class="string">&quot;错误的数据格式！&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Object <span class="title function_">readBulkString</span><span class="params">()</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        <span class="comment">// 获取数组大小</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">len</span> <span class="operator">=</span> Integer.parseInt(reader.readLine());</span><br><span class="line">        <span class="keyword">if</span> (len &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 定义集合，接收多个元素</span></span><br><span class="line">        List&lt;Object&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(len);</span><br><span class="line">        <span class="comment">// 遍历，依次读取每个元素</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; len; i++) &#123;</span><br><span class="line">            list.add(handleResponse());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> list;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// set name 虎哥</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sendRequest</span><span class="params">(String ... args)</span> &#123;</span><br><span class="line">        writer.println(<span class="string">&quot;*&quot;</span> + args.length);</span><br><span class="line">        <span class="keyword">for</span> (String arg : args) &#123;</span><br><span class="line">            writer.println(<span class="string">&quot;$&quot;</span> + arg.getBytes(StandardCharsets.UTF_8).length);</span><br><span class="line">            writer.println(arg);</span><br><span class="line">        &#125;</span><br><span class="line">        writer.flush();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id=""><a href="#" class="headerlink" title=""></a></h3></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://example.com">John Doe</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://example.com/2024/12/03/Java/Redis/Redis%E5%8E%9F%E7%90%86-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/">http://example.com/2024/12/03/Java/Redis/Redis%E5%8E%9F%E7%90%86-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/BIO/">BIO</a><a class="post-meta__tags" href="/tags/NIO/">NIO</a><a class="post-meta__tags" href="/tags/IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/">IO多路复用</a></div><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2024/12/04/Java/Redis/Redis%E5%8E%9F%E7%90%86-%E5%86%85%E5%AD%98%E5%9B%9E%E6%94%B6/" title="Redis原理-内存回收"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">Previous</div><div class="info-item-2">Redis原理-内存回收</div></div><div class="info-2"><div class="info-item-1">3、原理篇-Redis内存回收3.1、过期key处理Redis之所以性能强，最主要的原因就是基于内存存储。然而单节点的Redis其内存大小不宜过大，会影响持久化或主从同步性能。我们可以通过修改配置文件来设置Redis的最大内存：    当内存使用达到上限时，就无法存储更多数据了。为了解决这个问题，Redis提供了一些策略实现内存回收： 内存过期策略 在学习Redis缓存的时候我们说过，可以通过expire命令给Redis的key设置TTL（存活时间）：  可以发现，当key的TTL到期以后，再次访问name返回的是nil，说明这个key已经不存在了，对应的内存也得到释放。从而起到内存回收的目的。 Redis本身是一个典型的key-value内存存储数据库，因此所有的key、value都保存在之前学习过的Dict结构中。不过在其database结构体中，有两个Dict：一个用来记录key-value；另一个用来记录key-TTL。   这里有两个问题需要我们思考：Redis是如何知道一个key是否过期呢？ 利用两个Dict分别记录key-value对及key-ttl对 是不是TTL...</div></div></div></a><a class="pagination-related" href="/2024/11/19/Java/Redis/Redis%E5%8E%9F%E7%90%86-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" title="Redis原理-数据结构"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">Redis原理-数据结构</div></div><div class="info-2"><div class="info-item-1">1、原理篇-Redis数据结构1.1 Redis数据结构-动态字符串我们都知道Redis中保存的Key是字符串，value往往是字符串或者字符串的集合。可见字符串是Redis中最常用的一种数据结构。 不过Redis没有直接使用C语言中的字符串，因为C语言字符串存在很多问题：获取字符串长度的需要通过运算非二进制安全不可修改Redis构建了一种新的字符串结构，称为简单动态字符串（Simple Dynamic String），简称SDS。   例如，我们执行命令：  那么Redis将在底层创建两个SDS，其中一个是包含“name”的SDS，另一个是包含“虎哥”的SDS。 Redis是C语言实现的，其中SDS是一个结构体，源码如下：  例如，一个包含字符串“name”的sds结构如下：  SDS之所以叫做动态字符串，是因为它具备动态扩容的能力，例如一个内容为“hi”的SDS：  假如我们要给SDS追加一段字符串“,Amy”，这里首先会申请新内存空间： 如果新字符串小于1M，则新空间为扩展后字符串长度的两倍+1； 如果新字符串大于1M，则新空间为扩展后字符串长度+1M+1。称为内存预分配。...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">John Doe</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">74</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">170</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81%E5%8E%9F%E7%90%86%E7%AF%87-Redis%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.</span> <span class="toc-text">2、原理篇-Redis网络模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81%E7%A9%BA%E9%97%B4"><span class="toc-number">1.1.</span> <span class="toc-text">2.1 用户空间和内核态空间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B-%E9%98%BB%E5%A1%9EIO"><span class="toc-number">1.2.</span> <span class="toc-text">2.2.网络模型-阻塞IO</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B-%E9%9D%9E%E9%98%BB%E5%A1%9EIO"><span class="toc-number">1.3.</span> <span class="toc-text">2.3 网络模型-非阻塞IO</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B-IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8"><span class="toc-number">1.4.</span> <span class="toc-text">2.4 网络模型-IO多路复用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-5-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B-IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8-select%E6%96%B9%E5%BC%8F"><span class="toc-number">1.5.</span> <span class="toc-text">2.5 网络模型-IO多路复用-select方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-6-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B-IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%E6%A8%A1%E5%9E%8B-poll%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.6.</span> <span class="toc-text">2.6 网络模型-IO多路复用模型-poll模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-7-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B-IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%E6%A8%A1%E5%9E%8B-epoll%E5%87%BD%E6%95%B0"><span class="toc-number">1.7.</span> <span class="toc-text">2.7 网络模型-IO多路复用模型-epoll函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-8%E3%80%81%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B-epoll%E4%B8%AD%E7%9A%84ET%E5%92%8CLT"><span class="toc-number">1.8.</span> <span class="toc-text">2.8、网络模型-epoll中的ET和LT</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-9-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B-%E5%9F%BA%E4%BA%8Eepoll%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AB%AF%E6%B5%81%E7%A8%8B"><span class="toc-number">1.9.</span> <span class="toc-text">2.9 网络模型-基于epoll的服务器端流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-0-%E3%80%81%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B-%E4%BF%A1%E5%8F%B7%E9%A9%B1%E5%8A%A8"><span class="toc-number">1.10.</span> <span class="toc-text">3.0 、网络模型-信号驱动</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-0-1-%E5%BC%82%E6%AD%A5IO"><span class="toc-number">1.10.1.</span> <span class="toc-text">3.0.1 异步IO</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-0-2-%E5%AF%B9%E6%AF%94"><span class="toc-number">1.10.2.</span> <span class="toc-text">3.0.2 对比</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E3%80%81%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B-Redis%E6%98%AF%E5%8D%95%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%90%97%EF%BC%9F%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8%E5%8D%95%E7%BA%BF%E7%A8%8B"><span class="toc-number">1.11.</span> <span class="toc-text">3.1 、网络模型-Redis是单线程的吗？为什么使用单线程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E3%80%81Redis%E7%9A%84%E5%8D%95%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B-Redis%E5%8D%95%E7%BA%BF%E7%A8%8B%E5%92%8C%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E5%8F%98%E6%9B%B4"><span class="toc-number">1.12.</span> <span class="toc-text">3.2 、Redis的单线程模型-Redis单线程和多线程网络模型变更</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%E3%80%81Redis%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE-RESP%E5%8D%8F%E8%AE%AE"><span class="toc-number">2.</span> <span class="toc-text">3、Redis通信协议-RESP协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1%E3%80%81Redis%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE-%E5%9F%BA%E4%BA%8ESocket%E8%87%AA%E5%AE%9A%E4%B9%89Redis%E7%9A%84%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="toc-number">2.1.</span> <span class="toc-text">3.1、Redis通信协议-基于Socket自定义Redis的客户端</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">2.2.</span> <span class="toc-text"></span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/07/Java/LangChain4J/LangChain4j%E4%B9%8BRAG/" title="LangChain4j之RAG">LangChain4j之RAG</a><time datetime="2026-01-07T03:21:24.000Z" title="Created 2026-01-07 11:21:24">2026-01-07</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/06/Java/LangChain4J/LangChain4j%E4%B9%8B%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/" title="LangChain4j之函数调用">LangChain4j之函数调用</a><time datetime="2026-01-06T07:06:52.000Z" title="Created 2026-01-06 15:06:52">2026-01-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/05/Java/LangChain4J/LangChain4j%E4%B9%8B%E9%AB%98%E9%98%B6api/" title="LangChain4j之高阶api">LangChain4j之高阶api</a><time datetime="2026-01-05T12:08:53.000Z" title="Created 2026-01-05 20:08:53">2026-01-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/05/Java/LangChain4J/LangChain4j%E4%B9%8B%E4%BC%9A%E8%AF%9D%E8%AE%B0%E5%BF%86/" title="LangChain4j之会话记忆">LangChain4j之会话记忆</a><time datetime="2026-01-05T06:53:06.000Z" title="Created 2026-01-05 14:53:06">2026-01-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/05/Java/LangChain4J/LangChain4j%E5%85%A5%E9%97%A8/" title="LangChain4j入门">LangChain4j入门</a><time datetime="2026-01-05T01:08:25.000Z" title="Created 2026-01-05 09:08:25">2026-01-05</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By John Doe</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.5-b1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.5-b1"></script><script src="/js/main.js?v=5.5.5-b1"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

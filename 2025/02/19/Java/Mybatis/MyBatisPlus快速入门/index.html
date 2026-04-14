@@ -1,0 +1,498 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>MyBatisPlus快速入门 | Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="1.快速入门大家在日常开发中应该能发现，单表的CRUD功能代码重复度很高，也没有什么难度。而这部分代码量往往比较大，开发起来比较费时。 因此，目前企业中都会使用一些组件来简化或省略单表的CRUD开发工作。目前在国内使用较多的一个组件就是MybatisPlus。 当然，MybatisPlus不仅仅可以简化单表操作，而且还对Mybatis的功能有很多的增强。可以让我们的开发更加的简单，高效。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MyBatisPlus快速入门">
+<meta property="og:url" content="http://example.com/2025/02/19/Java/Mybatis/MyBatisPlus%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="1.快速入门大家在日常开发中应该能发现，单表的CRUD功能代码重复度很高，也没有什么难度。而这部分代码量往往比较大，开发起来比较费时。 因此，目前企业中都会使用一些组件来简化或省略单表的CRUD开发工作。目前在国内使用较多的一个组件就是MybatisPlus。 当然，MybatisPlus不仅仅可以简化单表操作，而且还对Mybatis的功能有很多的增强。可以让我们的开发更加的简单，高效。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/butterfly-icon.png">
+<meta property="article:published_time" content="2025-02-19T07:09:44.000Z">
+<meta property="article:modified_time" content="2026-04-14T14:37:03.283Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="BaseMapper">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "MyBatisPlus快速入门",
+  "url": "http://example.com/2025/02/19/Java/Mybatis/MyBatisPlus%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/",
+  "image": "http://example.com/img/butterfly-icon.png",
+  "datePublished": "2025-02-19T07:09:44.000Z",
+  "dateModified": "2026-04-14T14:37:03.283Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "John Doe",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2025/02/19/Java/Mybatis/MyBatisPlus%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.5-b1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'MyBatisPlus快速入门',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Hexo</span></a><a class="nav-page-title" href="/"><span class="site-name">MyBatisPlus快速入门</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">MyBatisPlus快速入门</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-02-19T07:09:44.000Z" title="Created 2025-02-19 15:09:44">2025-02-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-04-14T14:37:03.283Z" title="Updated 2026-04-14 22:37:03">2026-04-14</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="1-快速入门"><a href="#1-快速入门" class="headerlink" title="1.快速入门"></a><strong>1.快速入门</strong></h1><p>大家在日常开发中应该能发现，单表的CRUD功能代码重复度很高，也没有什么难度。而这部分代码量往往比较大，开发起来比较费时。</p>
+<p>因此，目前企业中都会使用一些组件来简化或省略单表的CRUD开发工作。目前在国内使用较多的一个组件就是MybatisPlus。</p>
+<p>当然，MybatisPlus不仅仅可以简化单表操作，而且还对Mybatis的功能有很多的增强。可以让我们的开发更加的简单，高效。</p>
+<span id="more"></span>
+
+<p>通过学习MybatisPlus，我们要达成下面的目标：</p>
+<ul>
+<li>能利用MybatisPlus实现基本的CRUD</li>
+</ul>
+<ul>
+<li>会使用条件构建造器构建查询和更新语句</li>
+<li>会使用MybatisPlus中的常用注解</li>
+<li>会使用MybatisPlus处理枚举、JSON类型字段</li>
+<li>会使用MybatisPlus实现分页</li>
+</ul>
+<p>为了方便测试，我们先创建一个新的项目，并准备一些基础数据。</p>
+<h2 id="1-1-环境准备"><a href="#1-1-环境准备" class="headerlink" title="1.1.环境准备"></a><strong>1.1.环境准备</strong></h2><p>复制课前资料提供好的一个项目到你的工作空间（不要包含空格和特殊字符）</p>
+<p>接下来，要导入两张表，在课前资料中已经提供了SQL文件</p>
+<p>最后，在<code>application.yaml</code>中修改jdbc参数为你自己的数据库参数：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">datasource:</span></span><br><span class="line">    <span class="attr">url:</span> <span class="string">jdbc:mysql://127.0.0.1:3306/mp?useUnicode=true&amp;characterEncoding=UTF-8&amp;autoReconnect=true&amp;serverTimezone=Asia/Shanghai</span></span><br><span class="line">    <span class="attr">driver-class-name:</span> <span class="string">com.mysql.cj.jdbc.Driver</span></span><br><span class="line">    <span class="attr">username:</span> <span class="string">root</span></span><br><span class="line">    <span class="attr">password:</span> <span class="string">MySQL123</span></span><br><span class="line"><span class="attr">logging:</span></span><br><span class="line">  <span class="attr">level:</span></span><br><span class="line">    <span class="attr">com.itheima:</span> <span class="string">debug</span></span><br><span class="line">  <span class="attr">pattern:</span></span><br><span class="line">    <span class="attr">dateformat:</span> <span class="string">HH:mm:ss</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="1-2-快速开始"><a href="#1-2-快速开始" class="headerlink" title="1.2.快速开始"></a><strong>1.2.快速开始</strong></h2><p>比如我们要实现User表的CRUD，只需要下面几步：</p>
+<ul>
+<li>引入MybatisPlus依赖</li>
+<li>定义Mapper</li>
+</ul>
+<h3 id="1-2-1引入依赖"><a href="#1-2-1引入依赖" class="headerlink" title="1.2.1引入依赖"></a><strong>1.2.1引入依赖</strong></h3><p>MybatisPlus提供了starter，实现了自动Mybatis以及MybatisPlus的自动装配功能，坐标如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.baomidou<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mybatis-plus-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.5.3.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>由于这个starter包含对mybatis的自动装配，因此完全可以替换掉Mybatis的starter。 最终，项目的依赖如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.baomidou<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mybatis-plus-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.5.3.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.mysql<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mysql-connector-j<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">scope</span>&gt;</span>runtime<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.projectlombok<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>lombok<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">optional</span>&gt;</span>true<span class="tag">&lt;/<span class="name">optional</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-test<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2-2-定义Mapper"><a href="#1-2-2-定义Mapper" class="headerlink" title="1.2.2.定义Mapper"></a><strong>1.2.2.定义Mapper</strong></h3><p>为了简化单表CRUD，MybatisPlus提供了一个基础的<code>BaseMapper</code>接口，其中已经实现了单表的CRUD：</p>
+<p><img src="/2025/02/19/Java/Mybatis/MyBatisPlus%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/1.png" alt="img"></p>
+<p>因此我们自定义的Mapper只要实现了这个<code>BaseMapper</code>，就无需自己实现单表CRUD了。 修改mp-demo中的<code>com.itheima.mp.mapper</code>包下的<code>UserMapper</code>接口，让其继承<code>BaseMapper</code>：</p>
+<p><img src="/2025/02/19/Java/Mybatis/MyBatisPlus%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/2.png" alt="img"></p>
+<p>代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.itheima.mp.mapper;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.baomidou.mybatisplus.core.mapper.BaseMapper;</span><br><span class="line"><span class="keyword">import</span> com.itheima.mp.domain.po.User;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">UserMapper</span> <span class="keyword">extends</span> <span class="title class_">BaseMapper</span>&lt;User&gt; &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2-3-测试"><a href="#1-2-3-测试" class="headerlink" title="1.2.3.测试"></a><strong>1.2.3.测试</strong></h3><p>新建一个测试类，编写几个单元测试，测试基本的CRUD功能：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.itheima.mp.mapper;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.itheima.mp.domain.po.User;</span><br><span class="line"><span class="keyword">import</span> org.junit.jupiter.api.Test;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.test.context.SpringBootTest;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.time.LocalDateTime;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="meta">@SpringBootTest</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">UserMapperTest</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> UserMapper userMapper;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testInsert</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>();</span><br><span class="line">        user.setId(<span class="number">5L</span>);</span><br><span class="line">        user.setUsername(<span class="string">&quot;Lucy&quot;</span>);</span><br><span class="line">        user.setPassword(<span class="string">&quot;123&quot;</span>);</span><br><span class="line">        user.setPhone(<span class="string">&quot;18688990011&quot;</span>);</span><br><span class="line">        user.setBalance(<span class="number">200</span>);</span><br><span class="line">        user.setInfo(<span class="string">&quot;&#123;\&quot;age\&quot;: 24, \&quot;intro\&quot;: \&quot;英文老师\&quot;, \&quot;gender\&quot;: \&quot;female\&quot;&#125;&quot;</span>);</span><br><span class="line">        user.setCreateTime(LocalDateTime.now());</span><br><span class="line">        user.setUpdateTime(LocalDateTime.now());</span><br><span class="line">        userMapper.insert(user);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testSelectById</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> userMapper.selectById(<span class="number">5L</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;user = &quot;</span> + user);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testSelectByIds</span><span class="params">()</span> &#123;</span><br><span class="line">        List&lt;User&gt; users = userMapper.selectBatchIds(List.of(<span class="number">1L</span>, <span class="number">2L</span>, <span class="number">3L</span>, <span class="number">4L</span>, <span class="number">5L</span>));</span><br><span class="line">        users.forEach(System.out::println);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testUpdateById</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>();</span><br><span class="line">        user.setId(<span class="number">5L</span>);</span><br><span class="line">        user.setBalance(<span class="number">20000</span>);</span><br><span class="line">        userMapper.updateById(user);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testDelete</span><span class="params">()</span> &#123;</span><br><span class="line">        userMapper.deleteById(<span class="number">5L</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，在运行过程中打印出的SQL日志，非常标准：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">11</span>:<span class="number">05</span>:<span class="number">01</span>  INFO <span class="number">15524</span> <span class="comment">--- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...</span></span><br><span class="line"><span class="number">11</span>:<span class="number">05</span>:<span class="number">02</span>  INFO <span class="number">15524</span> <span class="comment">--- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.</span></span><br><span class="line"><span class="number">11</span>:<span class="number">05</span>:<span class="number">02</span> DEBUG <span class="number">15524</span> <span class="comment">--- [           main] c.i.mp.mapper.UserMapper.selectById      : ==&gt;  Preparing: SELECT id,username,password,phone,info,status,balance,create_time,update_time FROM user WHERE id=?</span></span><br><span class="line"><span class="number">11</span>:<span class="number">05</span>:<span class="number">02</span> DEBUG <span class="number">15524</span> <span class="comment">--- [           main] c.i.mp.mapper.UserMapper.selectById      : ==&gt; Parameters: 5(Long)</span></span><br><span class="line"><span class="number">11</span>:<span class="number">05</span>:<span class="number">02</span> DEBUG <span class="number">15524</span> <span class="comment">--- [           main] c.i.mp.mapper.UserMapper.selectById      : &lt;==      Total: 1</span></span><br><span class="line"><span class="keyword">user</span> <span class="operator">=</span> <span class="keyword">User</span>(id<span class="operator">=</span><span class="number">5</span>, username<span class="operator">=</span>Lucy, password<span class="operator">=</span><span class="number">123</span>, phone<span class="operator">=</span><span class="number">18688990011</span>, info<span class="operator">=</span>&#123;&quot;age&quot;: <span class="number">21</span>&#125;, status<span class="operator">=</span><span class="number">1</span>, balance<span class="operator">=</span><span class="number">20000</span>, createTime<span class="operator">=</span>Fri Jun <span class="number">30</span> <span class="number">11</span>:<span class="number">02</span>:<span class="number">30</span> CST <span class="number">2023</span>, updateTime<span class="operator">=</span>Fri Jun <span class="number">30</span> <span class="number">11</span>:<span class="number">02</span>:<span class="number">30</span> CST <span class="number">2023</span>)</span><br></pre></td></tr></table></figure>
+
+<p>只需要继承BaseMapper就能省去所有的单表CRUD，是不是非常简单！</p>
+<h2 id="1-3-常见注解"><a href="#1-3-常见注解" class="headerlink" title="1.3.常见注解"></a><strong>1.3.常见注解</strong></h2><p>在刚刚的入门案例中，我们仅仅引入了依赖，继承了BaseMapper就能使用MybatisPlus，非常简单。但是问题来了： MybatisPlus如何知道我们要查询的是哪张表？表中有哪些字段呢？</p>
+<p>大家回忆一下，UserMapper在继承BaseMapper的时候指定了一个泛型：</p>
+<p><img src="/2025/02/19/Java/Mybatis/MyBatisPlus%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/3.png" alt="img"></p>
+<p>泛型中的User就是与数据库对应的PO.</p>
+<p>MybatisPlus就是根据PO实体的信息来推断出表的信息，从而生成SQL的。默认情况下：</p>
+<ul>
+<li>MybatisPlus会把PO实体的类名驼峰转下划线作为表名</li>
+<li>MybatisPlus会把PO实体的所有变量名驼峰转下划线作为表的字段名，并根据变量类型推断字段类型</li>
+<li>MybatisPlus会把名为id的字段作为主键</li>
+</ul>
+<p>但很多情况下，默认的实现与实际场景不符，因此MybatisPlus提供了一些注解便于我们声明表信息。</p>
+<h3 id="1-3-1-TableName"><a href="#1-3-1-TableName" class="headerlink" title="1.3.1.@TableName"></a><strong>1.3.1.@TableName</strong></h3><p>说明：</p>
+<ul>
+<li>描述：表名注解，标识实体类对应的表</li>
+<li>使用位置：实体类</li>
+</ul>
+<p>示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TableName(&quot;user&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Long id;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>TableName注解除了指定表名以外，还可以指定很多其它属性：</p>
+<table>
+<thead>
+<tr>
+<th><strong>属性</strong></th>
+<th><strong>类型</strong></th>
+<th><strong>必须指定</strong></th>
+<th><strong>默认值</strong></th>
+<th><strong>描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>value</td>
+<td>String</td>
+<td>否</td>
+<td>“”</td>
+<td>表名</td>
+</tr>
+<tr>
+<td>schema</td>
+<td>String</td>
+<td>否</td>
+<td>“”</td>
+<td>schema</td>
+</tr>
+<tr>
+<td>keepGlobalPrefix</td>
+<td>boolean</td>
+<td>否</td>
+<td>false</td>
+<td>是否保持使用全局的 tablePrefix 的值（当全局 tablePrefix 生效时）</td>
+</tr>
+<tr>
+<td>resultMap</td>
+<td>String</td>
+<td>否</td>
+<td>“”</td>
+<td>xml 中 resultMap 的 id（用于满足特定类型的实体类对象绑定）</td>
+</tr>
+<tr>
+<td>autoResultMap</td>
+<td>boolean</td>
+<td>否</td>
+<td>false</td>
+<td>是否自动构建 resultMap 并使用（如果设置 resultMap 则不会进行 resultMap 的自动构建与注入）</td>
+</tr>
+<tr>
+<td>excludeProperty</td>
+<td>String[]</td>
+<td>否</td>
+<td>{}</td>
+<td>需要排除的属性名 @since 3.3.1</td>
+</tr>
+</tbody></table>
+<h3 id="1-3-2-TableId"><a href="#1-3-2-TableId" class="headerlink" title="1.3.2.@TableId"></a><strong>1.3.2.@TableId</strong></h3><p>说明：</p>
+<ul>
+<li>描述：主键注解，标识实体类中的主键字段</li>
+<li>使用位置：实体类的主键字段</li>
+</ul>
+<p>示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TableName(&quot;user&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line">    <span class="meta">@TableId</span></span><br><span class="line">    <span class="keyword">private</span> Long id;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>TableId</code>注解支持两个属性：</p>
+<table>
+<thead>
+<tr>
+<th align="left"><strong>属性</strong></th>
+<th align="left"><strong>类型</strong></th>
+<th align="left"><strong>必须指定</strong></th>
+<th align="left"><strong>默认值</strong></th>
+<th align="left"><strong>描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">value</td>
+<td align="left">String</td>
+<td align="left">否</td>
+<td align="left">“”</td>
+<td align="left">表名</td>
+</tr>
+<tr>
+<td align="left">type</td>
+<td align="left">Enum</td>
+<td align="left">否</td>
+<td align="left">IdType.NONE</td>
+<td align="left">指定主键类型</td>
+</tr>
+</tbody></table>
+<p><code>IdType</code>支持的类型有：</p>
+<table>
+<thead>
+<tr>
+<th align="left"><strong>值</strong></th>
+<th align="left"><strong>描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">AUTO</td>
+<td align="left">数据库 ID 自增</td>
+</tr>
+<tr>
+<td align="left">NONE</td>
+<td align="left">无状态，该类型为未设置主键类型（注解里等于跟随全局，全局里约等于 INPUT）</td>
+</tr>
+<tr>
+<td align="left">INPUT</td>
+<td align="left">insert 前自行 set 主键值</td>
+</tr>
+<tr>
+<td align="left">ASSIGN_ID</td>
+<td align="left">分配 ID(主键类型为 Number(Long 和 Integer)或 String)(since 3.3.0),使用接口IdentifierGenerator的方法nextId(默认实现类为DefaultIdentifierGenerator雪花算法)</td>
+</tr>
+<tr>
+<td align="left">ASSIGN_UUID</td>
+<td align="left">分配 UUID,主键类型为 String(since 3.3.0),使用接口IdentifierGenerator的方法nextUUID(默认 default 方法)</td>
+</tr>
+<tr>
+<td align="left">ID_WORKER</td>
+<td align="left">分布式全局唯一 ID 长整型类型(please use ASSIGN_ID)</td>
+</tr>
+<tr>
+<td align="left">UUID</td>
+<td align="left">32 位 UUID 字符串(please use ASSIGN_UUID)</td>
+</tr>
+<tr>
+<td align="left">ID_WORKER_STR</td>
+<td align="left">分布式全局唯一 ID 字符串类型(please use ASSIGN_ID)</td>
+</tr>
+</tbody></table>
+<p>这里比较常见的有三种：</p>
+<ul>
+<li><code>AUTO</code>：利用数据库的id自增长</li>
+<li><code>INPUT</code>：手动生成id</li>
+<li><code>ASSIGN_ID</code>：雪花算法生成<code>Long</code>类型的全局唯一id，这是默认的ID策略</li>
+</ul>
+<h3 id="1-3-3-TableField"><a href="#1-3-3-TableField" class="headerlink" title="1.3.3.@TableField"></a><strong>1.3.3.@TableField</strong></h3><p>说明：</p>
+<blockquote>
+<p>描述：普通字段注解</p>
+</blockquote>
+<p>示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TableName(&quot;user&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line">    <span class="meta">@TableId</span></span><br><span class="line">    <span class="keyword">private</span> Long id;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> Integer age;</span><br><span class="line">    <span class="meta">@TableField(&quot;isMarried&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Boolean isMarried;</span><br><span class="line">    <span class="meta">@TableField(&quot;concat&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String concat;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>一般情况下我们并不需要给字段添加<code>@TableField</code>注解，一些特殊情况除外：</p>
+<ul>
+<li>成员变量名与数据库字段名不一致</li>
+<li>成员变量是以<code>isXXX</code>命名，按照<code>JavaBean</code>的规范，<code>MybatisPlus</code>识别字段时会把<code>is</code>去除，这就导致与数据库不符。</li>
+<li>成员变量名与数据库一致，但是与数据库的关键字冲突。使用<code>@TableField</code>注解给字段名添加转义字符：</li>
+</ul>
+<p>支持的其它属性如下：</p>
+<table>
+<thead>
+<tr>
+<th><strong>属性</strong></th>
+<th><strong>类型</strong></th>
+<th><strong>必填</strong></th>
+<th><strong>默认值</strong></th>
+<th><strong>描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>value</td>
+<td>String</td>
+<td>否</td>
+<td>“”</td>
+<td>数据库字段名</td>
+</tr>
+<tr>
+<td>exist</td>
+<td>boolean</td>
+<td>否</td>
+<td>true</td>
+<td>是否为数据库表字段</td>
+</tr>
+<tr>
+<td>condition</td>
+<td>String</td>
+<td>否</td>
+<td>“”</td>
+<td>字段 where 实体查询比较条件</td>
+</tr>
+<tr>
+<td>update</td>
+<td>String</td>
+<td>否</td>
+<td>“”</td>
+<td>字段 update set 部分注入，例如：当在version字段上注解update&#x3D;”%s+1” 表示更新时会 set version&#x3D;version+1 （该属性优先级高于 el 属性）</td>
+</tr>
+<tr>
+<td>insertStrategy</td>
+<td>Enum</td>
+<td>否</td>
+<td>FieldStrategy.DEFAULT</td>
+<td>举例：NOT_NULL insert into table_a(<if test="columnProperty != null">column</if>) values (<if test="columnProperty != null">#{columnProperty}</if>)</td>
+</tr>
+<tr>
+<td>updateStrategy</td>
+<td>Enum</td>
+<td>否</td>
+<td>FieldStrategy.DEFAULT</td>
+<td>举例：IGNORED update table_a set column&#x3D;#{columnProperty}</td>
+</tr>
+<tr>
+<td>whereStrategy</td>
+<td>Enum</td>
+<td>否</td>
+<td>FieldStrategy.DEFAULT</td>
+<td>举例：NOT_EMPTY where <if test="columnProperty != null and columnProperty!=''">column&#x3D;#{columnProperty}</if></td>
+</tr>
+<tr>
+<td>fill</td>
+<td>Enum</td>
+<td>否</td>
+<td>FieldFill.DEFAULT</td>
+<td>字段自动填充策略</td>
+</tr>
+<tr>
+<td>select</td>
+<td>boolean</td>
+<td>否</td>
+<td>true</td>
+<td>是否进行 select 查询</td>
+</tr>
+<tr>
+<td>keepGlobalFormat</td>
+<td>boolean</td>
+<td>否</td>
+<td>false</td>
+<td>是否保持使用全局的 format 进行处理</td>
+</tr>
+<tr>
+<td>jdbcType</td>
+<td>JdbcType</td>
+<td>否</td>
+<td>JdbcType.UNDEFINED</td>
+<td>JDBC 类型 (该默认值不代表会按照该值生效)</td>
+</tr>
+<tr>
+<td>typeHandler</td>
+<td>TypeHander</td>
+<td>否</td>
+<td></td>
+<td>类型处理器 (该默认值不代表会按照该值生效)</td>
+</tr>
+<tr>
+<td>numericScale</td>
+<td>String</td>
+<td>否</td>
+<td>“”</td>
+<td>指定小数点后保留的位数</td>
+</tr>
+</tbody></table>
+<h2 id="1-4-常见配置"><a href="#1-4-常见配置" class="headerlink" title="1.4.常见配置"></a><strong>1.4.常见配置</strong></h2><p>MybatisPlus也支持基于yaml文件的自定义配置，详见官方文档：</p>
+<p><a target="_blank" rel="noopener" href="https://www.baomidou.com/pages/56bac0/#%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE">https://www.baomidou.com/pages/56bac0/#%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE</a></p>
+<p>大多数的配置都有默认值，因此我们都无需配置。但还有一些是没有默认值的，例如:</p>
+<ul>
+<li>实体类的别名扫描包</li>
+<li>全局id类型</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">mybatis-plus:</span></span><br><span class="line">  <span class="attr">type-aliases-package:</span> <span class="string">com.itheima.mp.domain.po</span></span><br><span class="line">  <span class="attr">global-config:</span></span><br><span class="line">    <span class="attr">db-config:</span></span><br><span class="line">      <span class="attr">id-type:</span> <span class="string">auto</span> <span class="comment"># 全局id类型为自增长</span></span><br></pre></td></tr></table></figure>
+
+<p>需要注意的是，MyBatisPlus也支持手写SQL的，而mapper文件的读取地址可以自己配置：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">mybatis-plus:</span></span><br><span class="line">  <span class="attr">mapper-locations:</span> <span class="string">&quot;classpath*:/mapper/**/*.xml&quot;</span> <span class="comment"># Mapper.xml文件地址，当前这个是默认值。</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到默认值是<code>classpath*:/mapper/**/*.xml</code>，也就是说我们只要把mapper.xml文件放置这个目录下就一定会被加载。</p>
+<p>例如，我们新建一个<code>UserMapper.xml</code>文件：</p>
+<p><img src="/2025/02/19/Java/Mybatis/MyBatisPlus%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/4.png" alt="img"></p>
+<p>然后在其中定义一个方法：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">mapper</span> <span class="keyword">PUBLIC</span> <span class="string">&quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span> <span class="string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">&quot;com.itheima.mp.mapper.UserMapper&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;queryById&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;User&quot;</span>&gt;</span></span><br><span class="line">        SELECT * FROM user WHERE id = #&#123;id&#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后在测试类<code>UserMapperTest</code>中测试该方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">testQuery</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> userMapper.queryById(<span class="number">1L</span>);</span><br><span class="line">    System.out.println(<span class="string">&quot;user = &quot;</span> + user);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://example.com">John Doe</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://example.com/2025/02/19/Java/Mybatis/MyBatisPlus%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">http://example.com/2025/02/19/Java/Mybatis/MyBatisPlus%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/BaseMapper/">BaseMapper</a></div><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/02/19/Java/Mybatis/MyBatisPlus%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD/" title="MyBatisPlus核心功能"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">Previous</div><div class="info-item-2">MyBatisPlus核心功能</div></div><div class="info-2"><div class="info-item-1">2.核心功能刚才的案例中都是以id为条件的简单CRUD，一些复杂条件的SQL语句就要用到一些更高级的功能了。 **2.1.**条件构造器除了新增以外，修改、删除、查询的SQL语句都需要指定where条件。因此BaseMapper中提供的相关方法除了以id作为where条件以外，还支持更加复杂的where条件。    参数中的Wrapper就是条件构造的抽象类，其下有很多默认实现，继承关系如图：  Wrapper的子类AbstractWrapper提供了where中包含的所有条件构造方法：  而QueryWrapper在AbstractWrapper的基础上拓展了一个select方法，允许指定查询字段：  而UpdateWrapper在AbstractWrapper的基础上拓展了一个set方法，允许指定SQL中的SET部分：  接下来，我们就来看看如何利用Wrapper实现复杂查询。 2.1.1.QueryWrapper无论是修改、删除、查询，都可以使用QueryWrapper来构建查询条件。接下来看一些例子： 查询：查询出名字中带o的，存款大于等于1000元的人。代码如下： 12...</div></div></div></a><a class="pagination-related" href="/2024/12/04/Java/Redis/Redis%E5%8E%9F%E7%90%86-%E5%86%85%E5%AD%98%E5%9B%9E%E6%94%B6/" title="Redis原理-内存回收"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">Redis原理-内存回收</div></div><div class="info-2"><div class="info-item-1">3、原理篇-Redis内存回收3.1、过期key处理Redis之所以性能强，最主要的原因就是基于内存存储。然而单节点的Redis其内存大小不宜过大，会影响持久化或主从同步性能。我们可以通过修改配置文件来设置Redis的最大内存：    当内存使用达到上限时，就无法存储更多数据了。为了解决这个问题，Redis提供了一些策略实现内存回收： 内存过期策略 在学习Redis缓存的时候我们说过，可以通过expire命令给Redis的key设置TTL（存活时间）：  可以发现，当key的TTL到期以后，再次访问name返回的是nil，说明这个key已经不存在了，对应的内存也得到释放。从而起到内存回收的目的。 Redis本身是一个典型的key-value内存存储数据库，因此所有的key、value都保存在之前学习过的Dict结构中。不过在其database结构体中，有两个Dict：一个用来记录key-value；另一个用来记录key-TTL。   这里有两个问题需要我们思考：Redis是如何知道一个key是否过期呢？ 利用两个Dict分别记录key-value对及key-ttl对 是不是TTL...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">John Doe</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">74</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">170</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8"><span class="toc-number">1.</span> <span class="toc-text">1.快速入门</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="toc-number">1.1.</span> <span class="toc-text">1.1.环境准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B"><span class="toc-number">1.2.</span> <span class="toc-text">1.2.快速开始</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-1%E5%BC%95%E5%85%A5%E4%BE%9D%E8%B5%96"><span class="toc-number">1.2.1.</span> <span class="toc-text">1.2.1引入依赖</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-2-%E5%AE%9A%E4%B9%89Mapper"><span class="toc-number">1.2.2.</span> <span class="toc-text">1.2.2.定义Mapper</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-3-%E6%B5%8B%E8%AF%95"><span class="toc-number">1.2.3.</span> <span class="toc-text">1.2.3.测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3-%E5%B8%B8%E8%A7%81%E6%B3%A8%E8%A7%A3"><span class="toc-number">1.3.</span> <span class="toc-text">1.3.常见注解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-1-TableName"><span class="toc-number">1.3.1.</span> <span class="toc-text">1.3.1.@TableName</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-2-TableId"><span class="toc-number">1.3.2.</span> <span class="toc-text">1.3.2.@TableId</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-3-TableField"><span class="toc-number">1.3.3.</span> <span class="toc-text">1.3.3.@TableField</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-4-%E5%B8%B8%E8%A7%81%E9%85%8D%E7%BD%AE"><span class="toc-number">1.4.</span> <span class="toc-text">1.4.常见配置</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/07/Java/LangChain4J/LangChain4j%E4%B9%8BRAG/" title="LangChain4j之RAG">LangChain4j之RAG</a><time datetime="2026-01-07T03:21:24.000Z" title="Created 2026-01-07 11:21:24">2026-01-07</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/06/Java/LangChain4J/LangChain4j%E4%B9%8B%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/" title="LangChain4j之函数调用">LangChain4j之函数调用</a><time datetime="2026-01-06T07:06:52.000Z" title="Created 2026-01-06 15:06:52">2026-01-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/05/Java/LangChain4J/LangChain4j%E4%B9%8B%E9%AB%98%E9%98%B6api/" title="LangChain4j之高阶api">LangChain4j之高阶api</a><time datetime="2026-01-05T12:08:53.000Z" title="Created 2026-01-05 20:08:53">2026-01-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/05/Java/LangChain4J/LangChain4j%E4%B9%8B%E4%BC%9A%E8%AF%9D%E8%AE%B0%E5%BF%86/" title="LangChain4j之会话记忆">LangChain4j之会话记忆</a><time datetime="2026-01-05T06:53:06.000Z" title="Created 2026-01-05 14:53:06">2026-01-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/05/Java/LangChain4J/LangChain4j%E5%85%A5%E9%97%A8/" title="LangChain4j入门">LangChain4j入门</a><time datetime="2026-01-05T01:08:25.000Z" title="Created 2026-01-05 09:08:25">2026-01-05</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By John Doe</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.5-b1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.5-b1"></script><script src="/js/main.js?v=5.5.5-b1"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

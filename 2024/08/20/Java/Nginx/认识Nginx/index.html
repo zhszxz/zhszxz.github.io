@@ -1,0 +1,611 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>认识Nginx | Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Nginx简介背景介绍Nginx（“engine x”）一个具有高性能的【HTTP】和【反向代理】的【WEB服务器】，同时也是一个【POP3&#x2F;SMTP&#x2F;IMAP代理服务器】，是由伊戈尔·赛索耶夫(俄罗斯人)使用C语言编写的，Nginx的第一个版本是2004年10月4号发布的0.1.0版本。另外值得一提的是伊戈尔·赛索耶夫将Nginx的源码进行了开源，这也为Nginx的发展提供了">
+<meta property="og:type" content="article">
+<meta property="og:title" content="认识Nginx">
+<meta property="og:url" content="http://example.com/2024/08/20/Java/Nginx/%E8%AE%A4%E8%AF%86Nginx/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Nginx简介背景介绍Nginx（“engine x”）一个具有高性能的【HTTP】和【反向代理】的【WEB服务器】，同时也是一个【POP3&#x2F;SMTP&#x2F;IMAP代理服务器】，是由伊戈尔·赛索耶夫(俄罗斯人)使用C语言编写的，Nginx的第一个版本是2004年10月4号发布的0.1.0版本。另外值得一提的是伊戈尔·赛索耶夫将Nginx的源码进行了开源，这也为Nginx的发展提供了">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/butterfly-icon.png">
+<meta property="article:published_time" content="2024-08-20T04:43:02.000Z">
+<meta property="article:modified_time" content="2026-04-14T14:03:45.073Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="nginx">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "认识Nginx",
+  "url": "http://example.com/2024/08/20/Java/Nginx/%E8%AE%A4%E8%AF%86Nginx/",
+  "image": "http://example.com/img/butterfly-icon.png",
+  "datePublished": "2024-08-20T04:43:02.000Z",
+  "dateModified": "2026-04-14T14:03:45.073Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "John Doe",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2024/08/20/Java/Nginx/%E8%AE%A4%E8%AF%86Nginx/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.5-b1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '认识Nginx',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Hexo</span></a><a class="nav-page-title" href="/"><span class="site-name">认识Nginx</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">认识Nginx</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2024-08-20T04:43:02.000Z" title="Created 2024-08-20 12:43:02">2024-08-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-04-14T14:03:45.073Z" title="Updated 2026-04-14 22:03:45">2026-04-14</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="Nginx简介"><a href="#Nginx简介" class="headerlink" title="Nginx简介"></a>Nginx简介</h2><h3 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h3><p>Nginx（“engine x”）一个具有高性能的【HTTP】和【反向代理】的【WEB服务器】，同时也是一个【POP3&#x2F;SMTP&#x2F;IMAP代理服务器】，是由伊戈尔·赛索耶夫(俄罗斯人)使用C语言编写的，Nginx的第一个版本是2004年10月4号发布的0.1.0版本。另外值得一提的是伊戈尔·赛索耶夫将Nginx的源码进行了开源，这也为Nginx的发展提供了良好的保障。</p>
+<p><img src="/2024/08/20/Java/Nginx/%E8%AE%A4%E8%AF%86Nginx/1573470187616.png" alt="1573470187616"></p>
+<span id="more"></span>
+
+<h4 id="名词解释"><a href="#名词解释" class="headerlink" title="名词解释"></a>名词解释</h4><ol>
+<li>WEB服务器：</li>
+</ol>
+<p>WEB服务器也叫网页服务器，英文名叫Web Server，主要功能是为用户提供网上信息浏览服务。</p>
+<ol start="2">
+<li>HTTP:</li>
+</ol>
+<p>HTTP是超文本传输协议的缩写，是用于从WEB服务器传输超文本到本地浏览器的传输协议，也是互联网上应用最为广泛的一种网络协议。HTTP是一个客户端和服务器端请求和应答的标准，客户端是终端用户，服务端是网站，通过使用Web浏览器、网络爬虫或者其他工具，客户端发起一个到服务器上指定端口的HTTP请求。</p>
+<ol start="3">
+<li>POP3&#x2F;SMTP&#x2F;IMAP：</li>
+</ol>
+<p>POP3(Post Offic Protocol 3)邮局协议的第三个版本，</p>
+<p>SMTP(Simple Mail Transfer Protocol)简单邮件传输协议，</p>
+<p>IMAP(Internet Mail Access Protocol)交互式邮件存取协议，</p>
+<p>通过上述名词的解释，我们可以了解到Nginx也可以作为电子邮件代理服务器。</p>
+<ol start="4">
+<li>反向代理</li>
+</ol>
+<p>正向代理</p>
+<p><img src="/2024/08/20/Java/Nginx/%E8%AE%A4%E8%AF%86Nginx/1573489359728.png" alt="1573489359728"></p>
+<p>反向代理</p>
+<p><img src="/2024/08/20/Java/Nginx/%E8%AE%A4%E8%AF%86Nginx/1573489653799.png" alt="1573489653799"></p>
+<h3 id="常见服务器对比"><a href="#常见服务器对比" class="headerlink" title="常见服务器对比"></a>常见服务器对比</h3><p>在介绍这一节内容之前，我们先来认识一家公司叫Netcraft。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Netcraft公司于1994年底在英国成立，多年来一直致力于互联网市场以及在线安全方面的咨询服务，其中在国际上最具影响力的当属其针对网站服务器、SSL市场所做的客观严谨的分析研究，公司官网每月公布的调研数据（Web Server Survey）已成为当今人们了解全球网站数量以及服务器市场分额情况的主要参考依据，时常被诸如华尔街杂志，英国BBC，Slashdot等媒体报道或引用。</span><br></pre></td></tr></table></figure>
+
+<p>我们先来看一组数据，我们先打开Nginx的官方网站  <a target="_blank" rel="noopener" href="http://nginx.org/">http://nginx.org/</a>,找到Netcraft公司公布的数据，对当前主流服务器产品进行介绍。</p>
+<p><img src="/2024/08/20/Java/Nginx/%E8%AE%A4%E8%AF%86Nginx/1581394945120.png" alt="1581394945120"></p>
+<p>上面这张图展示了2019年全球主流Web服务器的市场情况，其中有Apache、Microsoft-IIS、google Servers、Nginx、Tomcat等，而我们在了解新事物的时候，往往习惯通过类比来帮助自己理解事物的概貌。所以下面我们把几种常见的服务器来给大家简单介绍下：</p>
+<h4 id="IIS"><a href="#IIS" class="headerlink" title="IIS"></a>IIS</h4><p>​	全称(Internet Information Services)即互联网信息服务，是由微软公司提供的基于windows系统的互联网基本服务。windows作为服务器在稳定性与其他一些性能上都不如类UNIX操作系统，因此在需要高性能Web服务器的场合下，IIS可能就会被”冷落”.</p>
+<h4 id="Tomcat"><a href="#Tomcat" class="headerlink" title="Tomcat"></a>Tomcat</h4><p>​	Tomcat是一个运行Servlet和JSP的Web应用软件，Tomcat技术先进、性能稳定而且开放源代码，因此深受Java爱好者的喜爱并得到了部分软件开发商的认可，成为目前比较流行的Web应用服务器。但是Tomcat天生是一个重量级的Web服务器，对静态文件和高并发的处理比较弱。</p>
+<h4 id="Apache"><a href="#Apache" class="headerlink" title="Apache"></a>Apache</h4><p>​	Apache的发展时期很长，同时也有过一段辉煌的业绩。从上图可以看出大概在2014年以前都是市场份额第一的服务器。Apache有很多优点，如稳定、开源、跨平台等。但是它出现的时间太久了，在它兴起的年代，互联网的产业规模远远不如今天，所以它被设计成一个重量级的、不支持高并发的Web服务器。在Apache服务器上，如果有数以万计的并发HTTP请求同时访问，就会导致服务器上消耗大量能存，操作系统内核对成百上千的Apache进程做进程间切换也会消耗大量的CUP资源，并导致HTTP请求的平均响应速度降低，这些都决定了Apache不可能成为高性能的Web服务器。这也促使了Lighttpd和Nginx的出现。</p>
+<h4 id="Lighttpd"><a href="#Lighttpd" class="headerlink" title="Lighttpd"></a>Lighttpd</h4><p>​	Lighttpd是德国的一个开源的Web服务器软件，它和Nginx一样，都是轻量级、高性能的Web服务器，欧美的业界开发者比较钟爱Lighttpd,而国内的公司更多的青睐Nginx，同时网上Nginx的资源要更丰富些。</p>
+<h4 id="其他的服务器"><a href="#其他的服务器" class="headerlink" title="其他的服务器"></a>其他的服务器</h4><p>Google Servers，Weblogic, Webshpere(IBM)…</p>
+<p>经过各个服务器的对比，种种迹象都表明，Nginx将以性能为王。这也是我们为什么选择Nginx的理由。</p>
+<h4 id="Nginx的优点"><a href="#Nginx的优点" class="headerlink" title="Nginx的优点"></a>Nginx的优点</h4><h5 id="1-速度更快、并发更高"><a href="#1-速度更快、并发更高" class="headerlink" title="(1)速度更快、并发更高"></a>(1)速度更快、并发更高</h5><p>单次请求或者高并发请求的环境下，Nginx都会比其他Web服务器响应的速度更快。一方面在正常情况下，单次请求会得到更快的响应，另一方面，在高峰期(如有数以万计的并发请求)，Nginx比其他Web服务器更快的响应请求。Nginx之所以有这么高的并发处理能力和这么好的性能原因在于Nginx采用了多进程和I&#x2F;O多路复用(epoll)的底层实现。</p>
+<h5 id="2-配置简单，扩展性强"><a href="#2-配置简单，扩展性强" class="headerlink" title="(2)配置简单，扩展性强"></a>(2)配置简单，扩展性强</h5><p>Nginx的设计极具扩展性，它本身就是由很多模块组成，这些模块的使用可以通过配置文件的配置来添加。这些模块有官方提供的也有第三方提供的模块，如果需要完全可以开发服务自己业务特性的定制模块。</p>
+<h5 id="3-高可靠性"><a href="#3-高可靠性" class="headerlink" title="(3)高可靠性"></a>(3)高可靠性</h5><p>Nginx采用的是多进程模式运行，其中有一个master主进程和N多个worker进程，worker进程的数量我们可以手动设置，每个worker进程之间都是相互独立提供服务，并且master主进程可以在某一个worker进程出错时，快速去”拉起”新的worker进程提供服务。</p>
+<h5 id="4-热部署"><a href="#4-热部署" class="headerlink" title="(4)热部署"></a>(4)热部署</h5><p>现在互联网项目都要求以7*24小时进行服务的提供，针对于这一要求，Nginx也提供了热部署功能，即可以在Nginx不停止的情况下，对Nginx进行文件升级、更新配置和更换日志文件等功能。</p>
+<h5 id="5-成本低、BSD许可证"><a href="#5-成本低、BSD许可证" class="headerlink" title="(5)成本低、BSD许可证"></a>(5)成本低、BSD许可证</h5><p>BSD是一个开源的许可证，世界上的开源许可证有很多，现在比较流行的有六种分别是GPL、BSD、MIT、Mozilla、Apache、LGPL。这六种的区别是什么，我们可以通过下面一张图来解释下：</p>
+<p><img src="/2024/08/20/Java/Nginx/%E8%AE%A4%E8%AF%86Nginx/1585139995444.png" alt="1585139995444"></p>
+<p>Nginx本身是开源的，我们不仅可以免费的将Nginx应用在商业领域，而且还可以在项目中直接修改Nginx的源码来定制自己的特殊要求。这些点也都是Nginx为什么能吸引无数开发者继续为Nginx来贡献自己的智慧和青春。OpenRestry [Nginx+Lua]   Tengine[淘宝]</p>
+<p>Nginx的核心组成</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx二进制可执行文件</span><br><span class="line">nginx.conf配置文件</span><br><span class="line">error.log错误的日志记录</span><br><span class="line">access.log访问日志记录</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Nginx服务器启停命令"><a href="#Nginx服务器启停命令" class="headerlink" title="Nginx服务器启停命令"></a>Nginx服务器启停命令</h3><p>Nginx安装完成后，接下来我们要学习的是如何启动、重启和停止Nginx的服务。</p>
+<p>通过Nginx安装目录下的sbin下的可执行文件nginx来进行Nginx状态的控制，我们可以通过<code>nginx -h</code>来查看都有哪些参数可以用：</p>
+<p><img src="/2024/08/20/Java/Nginx/%E8%AE%A4%E8%AF%86Nginx/1581486604517.png" alt="1581486604517"></p>
+<p>-?和-h:显示帮助信息</p>
+<p>-v:打印版本号信息并退出</p>
+<p>-V:打印版本号信息和配置信息并退出</p>
+<p>-t:测试nginx的配置文件语法是否正确并退出</p>
+<p>-T:测试nginx的配置文件语法是否正确并列出用到的配置文件信息然后退出</p>
+<p>-q:在配置测试期间禁止显示非错误消息</p>
+<p>-s:signal信号，后面可以跟 ：</p>
+<p>​	 stop[快速关闭，类似于TERM&#x2F;INT信号的作用]</p>
+<p>​	quit[优雅的关闭，类似于QUIT信号的作用] </p>
+<p>​	reopen[重新打开日志文件类似于USR1信号的作用] </p>
+<p>​	reload[类似于HUP信号的作用]</p>
+<p>-p:prefix，指定Nginx的prefix路径，(默认为: &#x2F;usr&#x2F;local&#x2F;nginx&#x2F;)</p>
+<p>-c:filename,指定Nginx的配置文件路径,(默认为: conf&#x2F;nginx.conf)</p>
+<p>-g:用来补充Nginx配置文件，向Nginx服务指定启动时应用全局的配置</p>
+<h2 id="Nginx核心配置文件结构"><a href="#Nginx核心配置文件结构" class="headerlink" title="Nginx核心配置文件结构"></a>Nginx核心配置文件结构</h2><p>从前面的内容学习中，我们知道Nginx的核心配置文件默认是放在<code>/usr/local/nginx/conf/nginx.conf</code>，这一节，我们就来学习下nginx.conf的内容和基本配置方法。</p>
+<p>读取Nginx自带的Nginx配置文件，我们将其中的注释部分【学习一个技术点就是在Nginx的配置文件中可以使用<code>#</code>来注释】删除掉后，就剩下下面内容:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">worker_processes  1;</span><br><span class="line"></span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections  1024;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line">    sendfile        on;</span><br><span class="line">    keepalive_timeout  65;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  localhost;</span><br><span class="line">        location / &#123;</span><br><span class="line">            root   html;</span><br><span class="line">            index  index.html index.htm;</span><br><span class="line">        &#125;</span><br><span class="line">        error_page   500 502 503 504  /50x.html;</span><br><span class="line">        location = /50x.html &#123;</span><br><span class="line">            root   html;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">指令名	指令值;  #全局块，主要设置Nginx服务器整体运行的配置指令</span><br><span class="line"></span><br><span class="line"> #events块,主要设置,Nginx服务器与用户的网络连接,这一部分对Nginx服务器的性能影响较大</span><br><span class="line">events &#123;	 </span><br><span class="line">    指令名	指令值;</span><br><span class="line">&#125;</span><br><span class="line">#http块，是Nginx服务器配置中的重要部分，代理、缓存、日志记录、第三方模块配置...             </span><br><span class="line">http &#123;		</span><br><span class="line">    指令名	指令值;</span><br><span class="line">    server &#123; #server块，是Nginx配置和虚拟主机相关的内容</span><br><span class="line">        指令名	指令值;</span><br><span class="line">        location / &#123; </span><br><span class="line">        #location块，基于Nginx服务器接收请求字符串与location后面的值进行匹配，对特定请求进行处理</span><br><span class="line">            指令名	指令值;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>简单小结下:</p>
+<p>nginx.conf配置文件中默认有三大块：全局块、events块、http块</p>
+<p>http块中可以配置多个server块，每个server块又可以配置多个location块。</p>
+<h3 id="全局块"><a href="#全局块" class="headerlink" title="全局块"></a>全局块</h3><h4 id="user指令"><a href="#user指令" class="headerlink" title="user指令"></a>user指令</h4><p>（1）user:用于配置运行Nginx服务器的worker进程的用户和用户组。</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>user user [group]</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认值</td>
+<td>nobody</td>
+</tr>
+<tr>
+<td>位置</td>
+<td>全局块</td>
+</tr>
+</tbody></table>
+<p>该属性也可以在编译的时候指定，语法如下<code>./configure --user=user --group=group</code>,如果两个地方都进行了设置，最终生效的是配置文件中的配置。</p>
+<p>该指令的使用步骤:</p>
+<p>(1)设置一个用户信息”www”</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">user www;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2024/08/20/Java/Nginx/%E8%AE%A4%E8%AF%86Nginx/1586597350943.png" alt="1586597350943"></p>
+<p>(2) 创建一个用户</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">useradd www</span><br></pre></td></tr></table></figure>
+
+<p>(3)修改user属性</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">user www</span><br></pre></td></tr></table></figure>
+
+<p>(4)创建<code>/root/html/index.html</code>页面，添加如下内容</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>Welcome to nginx!<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="language-css"></span></span><br><span class="line"><span class="language-css">    <span class="selector-tag">body</span> &#123;</span></span><br><span class="line"><span class="language-css">        <span class="attribute">width</span>: <span class="number">35em</span>;</span></span><br><span class="line"><span class="language-css">        <span class="attribute">margin</span>: <span class="number">0</span> auto;</span></span><br><span class="line"><span class="language-css">        <span class="attribute">font-family</span>: Tahoma, Verdana, Arial, sans-serif;</span></span><br><span class="line"><span class="language-css">    &#125;</span></span><br><span class="line"><span class="language-css"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>Welcome to nginx!<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>If you see this page, the nginx web server is successfully installed and</span><br><span class="line">working. Further configuration is required.<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>For online documentation and support please refer to</span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;http://nginx.org/&quot;</span>&gt;</span>nginx.org<span class="tag">&lt;/<span class="name">a</span>&gt;</span>.<span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br><span class="line">Commercial support is available at</span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;http://nginx.com/&quot;</span>&gt;</span>nginx.com<span class="tag">&lt;/<span class="name">a</span>&gt;</span>.<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;<span class="name">em</span>&gt;</span>Thank you for using nginx.<span class="tag">&lt;/<span class="name">em</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;<span class="name">em</span>&gt;</span>I am WWW<span class="tag">&lt;/<span class="name">em</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>(5)修改nginx.conf</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">location / &#123;</span><br><span class="line">	root   /root/html;</span><br><span class="line">	index  index.html index.htm;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>(5)测试启动访问</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">页面会报403拒绝访问的错误</span><br></pre></td></tr></table></figure>
+
+<p>(6)分析原因</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">因为当前用户没有访问/root/html目录的权限</span><br></pre></td></tr></table></figure>
+
+<p>(7)将文件创建到 <code>/home/www/html/index.html</code>,修改配置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">location / &#123;</span><br><span class="line">	root   /home/www/html;</span><br><span class="line">	index  index.html index.htm;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>(8)再次测试启动访问</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">能正常访问。</span><br></pre></td></tr></table></figure>
+
+<p>综上所述，使用user指令可以指定启动运行工作进程的用户及用户组，这样对于系统的权限访问控制的更加精细，也更加安全。</p>
+<h4 id="work-process指令"><a href="#work-process指令" class="headerlink" title="work process指令"></a>work process指令</h4><p>master_process:用来指定是否开启工作进程。</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>master_process on|off;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认值</td>
+<td>master_process on;</td>
+</tr>
+<tr>
+<td>位置</td>
+<td>全局块</td>
+</tr>
+</tbody></table>
+<p>worker_processes:用于配置Nginx生成工作进程的数量，这个是Nginx服务器实现并发处理服务的关键所在。理论上来说workder process的值越大，可以支持的并发处理量也越多，但事实上这个值的设定是需要受到来自服务器自身的限制，建议将该值和服务器CPU的内核数保存一致。</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>worker_processes     num&#x2F;auto;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认值</td>
+<td>1</td>
+</tr>
+<tr>
+<td>位置</td>
+<td>全局块</td>
+</tr>
+</tbody></table>
+<p>如果将worker_processes设置成2，则会看到如下内容:</p>
+<p><img src="/2024/08/20/Java/Nginx/%E8%AE%A4%E8%AF%86Nginx/1581563242526.png" alt="1581563242526"></p>
+<h4 id="其他指令"><a href="#其他指令" class="headerlink" title="其他指令"></a>其他指令</h4><p>daemon：设定Nginx是否以守护进程的方式启动。</p>
+<p>守护式进程是linux后台执行的一种服务进程，特点是独立于控制终端，不会随着终端关闭而停止。</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>daemon on|off;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认值</td>
+<td>daemon on;</td>
+</tr>
+<tr>
+<td>位置</td>
+<td>全局块</td>
+</tr>
+</tbody></table>
+<p>pid:用来配置Nginx当前master进程的进程号ID存储的文件路径。</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>pid file;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认值</td>
+<td>默认为:&#x2F;usr&#x2F;local&#x2F;nginx&#x2F;logs&#x2F;nginx.pid</td>
+</tr>
+<tr>
+<td>位置</td>
+<td>全局块</td>
+</tr>
+</tbody></table>
+<p>该属性可以通过<code>./configure --pid-path=PATH</code>来指定</p>
+<p>error_log:用来配置Nginx的错误日志存放路径</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>error_log  file [日志级别];</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认值</td>
+<td>error_log logs&#x2F;error.log error;</td>
+</tr>
+<tr>
+<td>位置</td>
+<td>全局块、http、server、location</td>
+</tr>
+</tbody></table>
+<p>该属性可以通过<code>./configure --error-log-path=PATH</code>来指定</p>
+<p>其中日志级别的值有：debug|info|notice|warn|error|crit|alert|emerg，翻译过来为试|信息|通知|警告|错误|临界|警报|紧急，这块建议大家设置的时候不要设置成info以下的等级，因为会带来大量的磁盘I&#x2F;O消耗，影响Nginx的性能。</p>
+<p>（5）include:用来引入其他配置文件，使Nginx的配置更加灵活</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>include file;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认值</td>
+<td>无</td>
+</tr>
+<tr>
+<td>位置</td>
+<td>any</td>
+</tr>
+</tbody></table>
+<h3 id="events块"><a href="#events块" class="headerlink" title="events块"></a>events块</h3><p>（1）accept_mutex:用来设置Nginx网络连接序列化</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>accept_mutex on|off;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认值</td>
+<td>accept_mutex on;</td>
+</tr>
+<tr>
+<td>位置</td>
+<td>events</td>
+</tr>
+</tbody></table>
+<p>这个配置主要可以用来解决常说的”惊群”问题。大致意思是在某一个时刻，客户端发来一个请求连接，Nginx后台是以多进程的工作模式，也就是说有多个worker进程会被同时唤醒，但是最终只会有一个进程可以获取到连接，如果每次唤醒的进程数目太多，就会影响Nginx的整体性能。如果将上述值设置为on(开启状态)，将会对多个Nginx进程接收连接进行序列号，一个个来唤醒接收，就防止了多个进程对连接的争抢。</p>
+<p><img src="/2024/08/20/Java/Nginx/%E8%AE%A4%E8%AF%86Nginx/1581566971955.png" alt="1581566971955"></p>
+<p>（2）multi_accept:用来设置是否允许同时接收多个网络连接</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>multi_accept on|off;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认值</td>
+<td>multi_accept off;</td>
+</tr>
+<tr>
+<td>位置</td>
+<td>events</td>
+</tr>
+</tbody></table>
+<p>如果multi_accept被禁止了，nginx一个工作进程只能同时接受一个新的连接。否则，一个工作进程可以同时接受所有的新连接</p>
+<p>（3）worker_connections：用来配置单个worker进程最大的连接数</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>worker_connections number;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认值</td>
+<td>worker_commections 512;</td>
+</tr>
+<tr>
+<td>位置</td>
+<td>events</td>
+</tr>
+</tbody></table>
+<p>这里的连接数不仅仅包括和前端用户建立的连接数，而是包括所有可能的连接数。另外，number值不能大于操作系统支持打开的最大文件句柄数量。</p>
+<p>（4）use:用来设置Nginx服务器选择哪种事件驱动来处理网络消息。</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>use  method;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认值</td>
+<td>根据操作系统定</td>
+</tr>
+<tr>
+<td>位置</td>
+<td>events</td>
+</tr>
+</tbody></table>
+<p>注意：此处所选择事件处理模型是Nginx优化部分的一个重要内容，method的可选值有select&#x2F;poll&#x2F;epoll&#x2F;kqueue等，之前在准备centos环境的时候，我们强调过要使用linux内核在2.6以上，就是为了能使用epoll函数来优化Nginx。</p>
+<p>另外这些值的选择，我们也可以在编译的时候使用</p>
+<p><code>--with-select_module</code>、<code>--without-select_module</code>、</p>
+<p><code> --with-poll_module</code>、<code> --without-poll_module</code>来设置是否需要将对应的事件驱动模块编译到Nginx的内核。</p>
+<h4 id="events指令配置实例"><a href="#events指令配置实例" class="headerlink" title="events指令配置实例"></a>events指令配置实例</h4><p>打开Nginx的配置文件 nginx.conf,添加如下配置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">events&#123;</span><br><span class="line">	accept_mutex on;</span><br><span class="line">	multi_accept on;</span><br><span class="line">	worker_commections 1024;</span><br><span class="line">	use epoll;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>启动测试</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">./nginx -t</span><br><span class="line">./nginx -s reload</span><br></pre></td></tr></table></figure>
+
+<h3 id="http块"><a href="#http块" class="headerlink" title="http块"></a>http块</h3><h4 id="定义MIME-Type"><a href="#定义MIME-Type" class="headerlink" title="定义MIME-Type"></a>定义MIME-Type</h4><p>我们都知道浏览器中可以显示的内容有HTML、XML、GIF等种类繁多的文件、媒体等资源，浏览器为了区分这些资源，就需要使用MIME Type。所以说MIME Type是网络资源的媒体类型。Nginx作为web服务器，也需要能够识别前端请求的资源类型。</p>
+<p>在Nginx的配置文件中，默认有两行配置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">include mime.types;</span><br><span class="line">default_type application/octet-stream;</span><br></pre></td></tr></table></figure>
+
+<p>（1）default_type:用来配置Nginx响应前端请求默认的MIME类型。</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>default_type mime-type;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认值</td>
+<td>default_type text&#x2F;plain；</td>
+</tr>
+<tr>
+<td>位置</td>
+<td>http、server、location</td>
+</tr>
+</tbody></table>
+<p>在default_type之前还有一句<code>include mime.types</code>,include之前我们已经介绍过，相当于把mime.types文件中MIMT类型与相关类型文件的文件后缀名的对应关系加入到当前的配置文件中。</p>
+<p>举例来说明：</p>
+<p>有些时候请求某些接口的时候需要返回指定的文本字符串或者json字符串，如果逻辑非常简单或者干脆是固定的字符串，那么可以使用nginx快速实现，这样就不用编写程序响应请求了，可以减少服务器资源占用并且响应性能非常快。</p>
+<p>如何实现:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">location /get_text &#123;</span><br><span class="line">	#这里也可以设置成text/plain</span><br><span class="line">    default_type text/html;</span><br><span class="line">    return 200 &quot;This is nginx&#x27;s text&quot;;</span><br><span class="line">&#125;</span><br><span class="line">location /get_json&#123;</span><br><span class="line">    default_type application/json;</span><br><span class="line">    return 200 &#x27;&#123;&quot;name&quot;:&quot;TOM&quot;,&quot;age&quot;:18&#125;&#x27;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="自定义服务日志"><a href="#自定义服务日志" class="headerlink" title="自定义服务日志"></a>自定义服务日志</h4><p>Nginx中日志的类型分access.log、error.log。</p>
+<p>access.log:用来记录用户所有的访问请求。</p>
+<p>error.log:记录nginx本身运行时的错误信息，不会记录用户的访问请求。</p>
+<p>Nginx服务器支持对服务日志的格式、大小、输出等进行设置，需要使用到两个指令，分别是access_log和log_format指令。</p>
+<p>（1）access_log:用来设置用户访问日志的相关属性。</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>access_log path[format[buffer&#x3D;size]]</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认值</td>
+<td>access_log logs&#x2F;access.log combined;</td>
+</tr>
+<tr>
+<td>位置</td>
+<td><code>http</code>, <code>server</code>, <code>location</code></td>
+</tr>
+</tbody></table>
+<p>（2）log_format:用来指定日志的输出格式。</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>log_format name [escape&#x3D;default|json|none] string….;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认值</td>
+<td>log_format combined “…”;</td>
+</tr>
+<tr>
+<td>位置</td>
+<td>http</td>
+</tr>
+</tbody></table>
+<h4 id="其他配置指令"><a href="#其他配置指令" class="headerlink" title="其他配置指令"></a>其他配置指令</h4><p>（1）sendfile:用来设置Nginx服务器是否使用sendfile()传输文件，该属性可以大大提高Nginx处理静态资源的性能</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>sendfile on|off；</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认值</td>
+<td>sendfile off;</td>
+</tr>
+<tr>
+<td>位置</td>
+<td>http、server、location</td>
+</tr>
+</tbody></table>
+<p>（2）keepalive_timeout:用来设置长连接的超时时间。</p>
+<p>》为什么要使用keepalive？</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">我们都知道HTTP是一种无状态协议，客户端向服务端发送一个TCP请求，服务端响应完毕后断开连接。</span><br><span class="line">如何客户端向服务端发送多个请求，每个请求都需要重新创建一次连接，效率相对来说比较多，使用keepalive模式，可以告诉服务器端在处理完一个请求后保持这个TCP连接的打开状态，若接收到来自这个客户端的其他请求，服务端就会利用这个未被关闭的连接，而不需要重新创建一个新连接，提升效率，但是这个连接也不能一直保持，这样的话，连接如果过多，也会是服务端的性能下降，这个时候就需要我们进行设置其的超时时间。</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>keepalive_timeout time;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认值</td>
+<td>keepalive_timeout 75s;</td>
+</tr>
+<tr>
+<td>位置</td>
+<td>http、server、location</td>
+</tr>
+</tbody></table>
+<p>（3）keepalive_requests:用来设置一个keep-alive连接使用的次数。</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>keepalive_requests number;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认值</td>
+<td>keepalive_requests 100;</td>
+</tr>
+<tr>
+<td>位置</td>
+<td>http、server、location</td>
+</tr>
+</tbody></table>
+<h3 id="server块和location块"><a href="#server块和location块" class="headerlink" title="server块和location块"></a>server块和location块</h3><p>server块和location块都是我们要重点讲解和学习的内容，因为我们后面会对Nginx的功能进行详细讲解，所以这块内容就放到静态资源部署的地方给大家详细说明。</p>
+<p>本节我们主要来认识下Nginx默认给的nginx.conf中的相关内容，以及server块与location块在使用的时候需要注意的一些内容。</p>
+<pre><code>server &#123;
+    listen       80;
+    server_name  localhost;
+    location / &#123;
+        root   html;
+        index  index.html index.htm;
+    &#125;
+   
+    error_page   500 502 503 504 404  /50x.html;
+    location = /50x.html &#123;
+        root   html;
+    &#125;
+&#125;
+</code></pre>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://example.com">John Doe</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://example.com/2024/08/20/Java/Nginx/%E8%AE%A4%E8%AF%86Nginx/">http://example.com/2024/08/20/Java/Nginx/%E8%AE%A4%E8%AF%86Nginx/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/nginx/">nginx</a></div><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2024/08/20/Java/Nginx/Nginx-%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/" title="Nginx-反向代理"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">Previous</div><div class="info-item-2">Nginx-反向代理</div></div><div class="info-2"><div class="info-item-1">Nginx反向代理Nginx反向代理概述关于正向代理和反向代理，我们在前面的章节已经通过一张图给大家详细的介绍过了，简而言之就是正向代理代理的对象是客户端，反向代理代理的是服务端，这是两者之间最大的区别。 Nginx即可以实现正向代理，也可以实现反向代理。 我们先来通过一个小案例演示下Nginx正向代理的简单应用。 先提需求：    (1)服务端的设置： 123456789101112http &#123;  log_format main &#x27;client send request=&gt;clientIp=$remote_addr serverIp=&gt;$host&#x27;;	server&#123;		listen 80;		server_name	localhost;		access_log logs/access.log main;		location &#123;			root html;			index index.html index.htm;		&#125;	&#125;&#125;  (2)使用客户端访问服务端，打开日志查看结果  (3)代理服务...</div></div></div></a><a class="pagination-related" href="/2024/08/18/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/" title="Redis高级-最佳实践"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">Redis高级-最佳实践</div></div><div class="info-2"><div class="info-item-1">Redis高级篇之最佳实践今日内容   Redis键值设计 批处理优化 服务端优化 集群最佳实践   1、Redis键值设计1.1、优雅的key结构Redis的Key虽然可以自定义，但最好遵循下面的几个最佳实践约定：  遵循基本格式：[业务名称]:[数据名]:[id]  长度不超过44字节  不包含特殊字符   例如：我们的登录业务，保存用户信息，其key可以设计成如下格式：  这样设计的好处：  可读性强 避免key冲突 方便管理 更节省内存： key是string类型，底层编码包含int、embstr和raw三种。embstr在小于44字节使用，采用连续内存空间，内存占用更小。当字节数大于44字节时，会转为raw模式存储，在raw模式下，内存空间不是连续的，而是采用一个指针指向了另外一段内存空间，在这段空间里存储SDS内容，这样空间不连续，访问的时候性能也就会收到影响，还有可能产生内存碎片   1.2、拒绝BigKeyBigKey通常以Key的大小和Key中成员的数量来综合判定，例如：  Key本身的数据量过大：一个String类型的Key，它的值为5 MB Key中的成员数...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">John Doe</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">74</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">170</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Nginx%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">Nginx简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%83%8C%E6%99%AF%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.1.</span> <span class="toc-text">背景介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%8D%E8%AF%8D%E8%A7%A3%E9%87%8A"><span class="toc-number">1.1.1.</span> <span class="toc-text">名词解释</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AF%B9%E6%AF%94"><span class="toc-number">1.2.</span> <span class="toc-text">常见服务器对比</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#IIS"><span class="toc-number">1.2.1.</span> <span class="toc-text">IIS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Tomcat"><span class="toc-number">1.2.2.</span> <span class="toc-text">Tomcat</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Apache"><span class="toc-number">1.2.3.</span> <span class="toc-text">Apache</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Lighttpd"><span class="toc-number">1.2.4.</span> <span class="toc-text">Lighttpd</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-number">1.2.5.</span> <span class="toc-text">其他的服务器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Nginx%E7%9A%84%E4%BC%98%E7%82%B9"><span class="toc-number">1.2.6.</span> <span class="toc-text">Nginx的优点</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-%E9%80%9F%E5%BA%A6%E6%9B%B4%E5%BF%AB%E3%80%81%E5%B9%B6%E5%8F%91%E6%9B%B4%E9%AB%98"><span class="toc-number">1.2.6.1.</span> <span class="toc-text">(1)速度更快、并发更高</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-%E9%85%8D%E7%BD%AE%E7%AE%80%E5%8D%95%EF%BC%8C%E6%89%A9%E5%B1%95%E6%80%A7%E5%BC%BA"><span class="toc-number">1.2.6.2.</span> <span class="toc-text">(2)配置简单，扩展性强</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-%E9%AB%98%E5%8F%AF%E9%9D%A0%E6%80%A7"><span class="toc-number">1.2.6.3.</span> <span class="toc-text">(3)高可靠性</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-%E7%83%AD%E9%83%A8%E7%BD%B2"><span class="toc-number">1.2.6.4.</span> <span class="toc-text">(4)热部署</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#5-%E6%88%90%E6%9C%AC%E4%BD%8E%E3%80%81BSD%E8%AE%B8%E5%8F%AF%E8%AF%81"><span class="toc-number">1.2.6.5.</span> <span class="toc-text">(5)成本低、BSD许可证</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Nginx%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%90%AF%E5%81%9C%E5%91%BD%E4%BB%A4"><span class="toc-number">1.3.</span> <span class="toc-text">Nginx服务器启停命令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nginx%E6%A0%B8%E5%BF%83%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84"><span class="toc-number">2.</span> <span class="toc-text">Nginx核心配置文件结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%A8%E5%B1%80%E5%9D%97"><span class="toc-number">2.1.</span> <span class="toc-text">全局块</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#user%E6%8C%87%E4%BB%A4"><span class="toc-number">2.1.1.</span> <span class="toc-text">user指令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#work-process%E6%8C%87%E4%BB%A4"><span class="toc-number">2.1.2.</span> <span class="toc-text">work process指令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E6%8C%87%E4%BB%A4"><span class="toc-number">2.1.3.</span> <span class="toc-text">其他指令</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#events%E5%9D%97"><span class="toc-number">2.2.</span> <span class="toc-text">events块</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#events%E6%8C%87%E4%BB%A4%E9%85%8D%E7%BD%AE%E5%AE%9E%E4%BE%8B"><span class="toc-number">2.2.1.</span> <span class="toc-text">events指令配置实例</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#http%E5%9D%97"><span class="toc-number">2.3.</span> <span class="toc-text">http块</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89MIME-Type"><span class="toc-number">2.3.1.</span> <span class="toc-text">定义MIME-Type</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%9C%8D%E5%8A%A1%E6%97%A5%E5%BF%97"><span class="toc-number">2.3.2.</span> <span class="toc-text">自定义服务日志</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E9%85%8D%E7%BD%AE%E6%8C%87%E4%BB%A4"><span class="toc-number">2.3.3.</span> <span class="toc-text">其他配置指令</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#server%E5%9D%97%E5%92%8Clocation%E5%9D%97"><span class="toc-number">2.4.</span> <span class="toc-text">server块和location块</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/07/Java/LangChain4J/LangChain4j%E4%B9%8BRAG/" title="LangChain4j之RAG">LangChain4j之RAG</a><time datetime="2026-01-07T03:21:24.000Z" title="Created 2026-01-07 11:21:24">2026-01-07</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/06/Java/LangChain4J/LangChain4j%E4%B9%8B%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/" title="LangChain4j之函数调用">LangChain4j之函数调用</a><time datetime="2026-01-06T07:06:52.000Z" title="Created 2026-01-06 15:06:52">2026-01-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/05/Java/LangChain4J/LangChain4j%E4%B9%8B%E9%AB%98%E9%98%B6api/" title="LangChain4j之高阶api">LangChain4j之高阶api</a><time datetime="2026-01-05T12:08:53.000Z" title="Created 2026-01-05 20:08:53">2026-01-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/05/Java/LangChain4J/LangChain4j%E4%B9%8B%E4%BC%9A%E8%AF%9D%E8%AE%B0%E5%BF%86/" title="LangChain4j之会话记忆">LangChain4j之会话记忆</a><time datetime="2026-01-05T06:53:06.000Z" title="Created 2026-01-05 14:53:06">2026-01-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/05/Java/LangChain4J/LangChain4j%E5%85%A5%E9%97%A8/" title="LangChain4j入门">LangChain4j入门</a><time datetime="2026-01-05T01:08:25.000Z" title="Created 2026-01-05 09:08:25">2026-01-05</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By John Doe</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.5-b1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.5-b1"></script><script src="/js/main.js?v=5.5.5-b1"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

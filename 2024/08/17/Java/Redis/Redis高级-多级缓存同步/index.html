@@ -1,0 +1,246 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Redis高级-多级缓存同步 | Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="5.缓存同步大多数情况下，浏览器查询到的都是缓存数据，如果缓存数据与数据库数据存在较大差异，可能会产生比较严重的后果。 所以我们必须保证数据库数据、缓存数据的一致性，这就是缓存与数据库的同步。 5.1.数据同步策略缓存数据同步的常见方式有三种： 设置有效期：给缓存设置有效期，到期后自动删除。再次查询时更新  优势：简单、方便  缺点：时效性差，缓存过期之前可能不一致  场景：更新频率较低，时效性要">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis高级-多级缓存同步">
+<meta property="og:url" content="http://example.com/2024/08/17/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E5%90%8C%E6%AD%A5/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="5.缓存同步大多数情况下，浏览器查询到的都是缓存数据，如果缓存数据与数据库数据存在较大差异，可能会产生比较严重的后果。 所以我们必须保证数据库数据、缓存数据的一致性，这就是缓存与数据库的同步。 5.1.数据同步策略缓存数据同步的常见方式有三种： 设置有效期：给缓存设置有效期，到期后自动删除。再次查询时更新  优势：简单、方便  缺点：时效性差，缓存过期之前可能不一致  场景：更新频率较低，时效性要">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/butterfly-icon.png">
+<meta property="article:published_time" content="2024-08-17T13:02:26.000Z">
+<meta property="article:modified_time" content="2026-04-14T14:04:18.375Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Canal">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Redis高级-多级缓存同步",
+  "url": "http://example.com/2024/08/17/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E5%90%8C%E6%AD%A5/",
+  "image": "http://example.com/img/butterfly-icon.png",
+  "datePublished": "2024-08-17T13:02:26.000Z",
+  "dateModified": "2026-04-14T14:04:18.375Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "John Doe",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2024/08/17/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E5%90%8C%E6%AD%A5/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.5-b1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Redis高级-多级缓存同步',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Hexo</span></a><a class="nav-page-title" href="/"><span class="site-name">Redis高级-多级缓存同步</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">Redis高级-多级缓存同步</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2024-08-17T13:02:26.000Z" title="Created 2024-08-17 21:02:26">2024-08-17</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-04-14T14:04:18.375Z" title="Updated 2026-04-14 22:04:18">2026-04-14</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="5-缓存同步"><a href="#5-缓存同步" class="headerlink" title="5.缓存同步"></a>5.缓存同步</h1><p>大多数情况下，浏览器查询到的都是缓存数据，如果缓存数据与数据库数据存在较大差异，可能会产生比较严重的后果。</p>
+<p>所以我们必须保证数据库数据、缓存数据的一致性，这就是缓存与数据库的同步。</p>
+<h2 id="5-1-数据同步策略"><a href="#5-1-数据同步策略" class="headerlink" title="5.1.数据同步策略"></a>5.1.数据同步策略</h2><p>缓存数据同步的常见方式有三种：</p>
+<p><strong>设置有效期</strong>：给缓存设置有效期，到期后自动删除。再次查询时更新</p>
+<ul>
+<li><p>优势：简单、方便</p>
+</li>
+<li><p>缺点：时效性差，缓存过期之前可能不一致</p>
+</li>
+<li><p>场景：更新频率较低，时效性要求低的业务</p>
+<span id="more"></span></li>
+</ul>
+<p><strong>同步双写</strong>：在修改数据库的同时，直接修改缓存</p>
+<ul>
+<li>优势：时效性强，缓存与数据库强一致</li>
+<li>缺点：有代码侵入，耦合度高；</li>
+<li>场景：对一致性、时效性要求较高的缓存数据</li>
+</ul>
+<p><strong>异步通知：</strong>修改数据库时发送事件通知，相关服务监听到通知后修改缓存数据</p>
+<ul>
+<li>优势：低耦合，可以同时通知多个缓存服务</li>
+<li>缺点：时效性一般，可能存在中间不一致状态</li>
+<li>场景：时效性要求一般，有多个服务需要同步</li>
+</ul>
+<p>而异步实现又可以基于MQ或者Canal来实现：</p>
+<p>1）基于MQ的异步通知：</p>
+<p><img src="/2024/08/17/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E5%90%8C%E6%AD%A5/image-20210821115552327.png" alt="image-20210821115552327"></p>
+<p>解读：</p>
+<ul>
+<li>商品服务完成对数据的修改后，只需要发送一条消息到MQ中。</li>
+<li>缓存服务监听MQ消息，然后完成对缓存的更新</li>
+</ul>
+<p>依然有少量的代码侵入。</p>
+<p>2）基于Canal的通知</p>
+<p><img src="/2024/08/17/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E5%90%8C%E6%AD%A5/image-20210821115719363.png" alt="image-20210821115719363"></p>
+<p>解读：</p>
+<ul>
+<li>商品服务完成商品修改后，业务直接结束，没有任何代码侵入</li>
+<li>Canal监听MySQL变化，当发现变化后，立即通知缓存服务</li>
+<li>缓存服务接收到canal通知，更新缓存</li>
+</ul>
+<p>代码零侵入</p>
+<h2 id="5-2-安装Canal"><a href="#5-2-安装Canal" class="headerlink" title="5.2.安装Canal"></a>5.2.安装Canal</h2><h3 id="5-2-1-认识Canal"><a href="#5-2-1-认识Canal" class="headerlink" title="5.2.1.认识Canal"></a>5.2.1.认识Canal</h3><p>**Canal [kə’næl]**，译意为水道&#x2F;管道&#x2F;沟渠，canal是阿里巴巴旗下的一款开源项目，基于Java开发。基于数据库增量日志解析，提供增量数据订阅&amp;消费。GitHub的地址：<a target="_blank" rel="noopener" href="https://github.com/alibaba/canal">https://github.com/alibaba/canal</a></p>
+<p>Canal是基于mysql的主从同步来实现的，MySQL主从同步的原理如下：</p>
+<p><img src="/2024/08/17/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E5%90%8C%E6%AD%A5/image-20210821115914748.png" alt="image-20210821115914748"></p>
+<ul>
+<li>1）MySQL master 将数据变更写入二进制日志( binary log），其中记录的数据叫做binary log events</li>
+<li>2）MySQL slave 将 master 的 binary log events拷贝到它的中继日志(relay log)</li>
+<li>3）MySQL slave 重放 relay log 中事件，将数据变更反映它自己的数据</li>
+</ul>
+<p>而Canal就是把自己伪装成MySQL的一个slave节点，从而监听master的binary log变化。再把得到的变化信息通知给Canal的客户端，进而完成对其它数据库的同步。</p>
+<p><img src="/2024/08/17/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E5%90%8C%E6%AD%A5/image-20210821115948395.png" alt="image-20210821115948395"></p>
+<h3 id="5-2-2-安装Canal"><a href="#5-2-2-安装Canal" class="headerlink" title="5.2.2.安装Canal"></a>5.2.2.安装Canal</h3><p>安装和配置Canal参考课前资料文档：</p>
+<p><img src="/2024/08/17/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E5%90%8C%E6%AD%A5/image-20210821120017324.png" alt="image-20210821120017324"> </p>
+<h2 id="5-3-监听Canal"><a href="#5-3-监听Canal" class="headerlink" title="5.3.监听Canal"></a>5.3.监听Canal</h2><p>Canal提供了各种语言的客户端，当Canal监听到binlog变化时，会通知Canal的客户端。</p>
+<p><img src="/2024/08/17/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E5%90%8C%E6%AD%A5/image-20210821120049024.png" alt="image-20210821120049024"></p>
+<p>我们可以利用Canal提供的Java客户端，监听Canal通知消息。当收到变化的消息时，完成对缓存的更新。</p>
+<p>不过这里我们会使用GitHub上的第三方开源的canal-starter客户端。地址：<a target="_blank" rel="noopener" href="https://github.com/NormanGyllenhaal/canal-client">https://github.com/NormanGyllenhaal/canal-client</a></p>
+<p>与SpringBoot完美整合，自动装配，比官方客户端要简单好用很多。</p>
+<h3 id="5-3-1-引入依赖："><a href="#5-3-1-引入依赖：" class="headerlink" title="5.3.1.引入依赖："></a>5.3.1.引入依赖：</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>top.javatool<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>canal-spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2.1-RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="5-3-2-编写配置："><a href="#5-3-2-编写配置：" class="headerlink" title="5.3.2.编写配置："></a>5.3.2.编写配置：</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">canal:</span></span><br><span class="line">  <span class="attr">destination:</span> <span class="string">heima</span> <span class="comment"># canal的集群名字，要与安装canal时设置的名称一致</span></span><br><span class="line">  <span class="attr">server:</span> <span class="number">192.168</span><span class="number">.150</span><span class="number">.101</span><span class="string">:11111</span> <span class="comment"># canal服务地址</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="5-3-3-修改Item实体类"><a href="#5-3-3-修改Item实体类" class="headerlink" title="5.3.3.修改Item实体类"></a>5.3.3.修改Item实体类</h3><p>通过@Id、@Column、等注解完成Item与数据库表字段的映射：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.heima.item.pojo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.baomidou.mybatisplus.annotation.IdType;</span><br><span class="line"><span class="keyword">import</span> com.baomidou.mybatisplus.annotation.TableField;</span><br><span class="line"><span class="keyword">import</span> com.baomidou.mybatisplus.annotation.TableId;</span><br><span class="line"><span class="keyword">import</span> com.baomidou.mybatisplus.annotation.TableName;</span><br><span class="line"><span class="keyword">import</span> lombok.Data;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.annotation.Id;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.annotation.Transient;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.persistence.Column;</span><br><span class="line"><span class="keyword">import</span> java.util.Date;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@TableName(&quot;tb_item&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Item</span> &#123;</span><br><span class="line">    <span class="meta">@TableId(type = IdType.AUTO)</span></span><br><span class="line">    <span class="meta">@Id</span></span><br><span class="line">    <span class="keyword">private</span> Long id;<span class="comment">//商品id</span></span><br><span class="line">    <span class="meta">@Column(name = &quot;name&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String name;<span class="comment">//商品名称</span></span><br><span class="line">    <span class="keyword">private</span> String title;<span class="comment">//商品标题</span></span><br><span class="line">    <span class="keyword">private</span> Long price;<span class="comment">//价格（分）</span></span><br><span class="line">    <span class="keyword">private</span> String image;<span class="comment">//商品图片</span></span><br><span class="line">    <span class="keyword">private</span> String category;<span class="comment">//分类名称</span></span><br><span class="line">    <span class="keyword">private</span> String brand;<span class="comment">//品牌名称</span></span><br><span class="line">    <span class="keyword">private</span> String spec;<span class="comment">//规格</span></span><br><span class="line">    <span class="keyword">private</span> Integer status;<span class="comment">//商品状态 1-正常，2-下架</span></span><br><span class="line">    <span class="keyword">private</span> Date createTime;<span class="comment">//创建时间</span></span><br><span class="line">    <span class="keyword">private</span> Date updateTime;<span class="comment">//更新时间</span></span><br><span class="line">    <span class="meta">@TableField(exist = false)</span></span><br><span class="line">    <span class="meta">@Transient</span></span><br><span class="line">    <span class="keyword">private</span> Integer stock;</span><br><span class="line">    <span class="meta">@TableField(exist = false)</span></span><br><span class="line">    <span class="meta">@Transient</span></span><br><span class="line">    <span class="keyword">private</span> Integer sold;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="5-3-4-编写监听器"><a href="#5-3-4-编写监听器" class="headerlink" title="5.3.4.编写监听器"></a>5.3.4.编写监听器</h3><p>通过实现<code>EntryHandler&lt;T&gt;</code>接口编写监听器，监听Canal消息。注意两点：</p>
+<ul>
+<li>实现类通过<code>@CanalTable(&quot;tb_item&quot;)</code>指定监听的表信息</li>
+<li>EntryHandler的泛型是与表对应的实体类</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.heima.item.canal;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.github.benmanes.caffeine.cache.Cache;</span><br><span class="line"><span class="keyword">import</span> com.heima.item.config.RedisHandler;</span><br><span class="line"><span class="keyword">import</span> com.heima.item.pojo.Item;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Component;</span><br><span class="line"><span class="keyword">import</span> top.javatool.canal.client.annotation.CanalTable;</span><br><span class="line"><span class="keyword">import</span> top.javatool.canal.client.handler.EntryHandler;</span><br><span class="line"></span><br><span class="line"><span class="meta">@CanalTable(&quot;tb_item&quot;)</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ItemHandler</span> <span class="keyword">implements</span> <span class="title class_">EntryHandler</span>&lt;Item&gt; &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> RedisHandler redisHandler;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> Cache&lt;Long, Item&gt; itemCache;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">insert</span><span class="params">(Item item)</span> &#123;</span><br><span class="line">        <span class="comment">// 写数据到JVM进程缓存</span></span><br><span class="line">        itemCache.put(item.getId(), item);</span><br><span class="line">        <span class="comment">// 写数据到redis</span></span><br><span class="line">        redisHandler.saveItem(item);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">update</span><span class="params">(Item before, Item after)</span> &#123;</span><br><span class="line">        <span class="comment">// 写数据到JVM进程缓存</span></span><br><span class="line">        itemCache.put(after.getId(), after);</span><br><span class="line">        <span class="comment">// 写数据到redis</span></span><br><span class="line">        redisHandler.saveItem(after);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">delete</span><span class="params">(Item item)</span> &#123;</span><br><span class="line">        <span class="comment">// 删除数据到JVM进程缓存</span></span><br><span class="line">        itemCache.invalidate(item.getId());</span><br><span class="line">        <span class="comment">// 删除数据到redis</span></span><br><span class="line">        redisHandler.deleteItemById(item.getId());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>在这里对Redis的操作都封装到了RedisHandler这个对象中，是我们之前做缓存预热时编写的一个类，内容如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.heima.item.config;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.fasterxml.jackson.core.JsonProcessingException;</span><br><span class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.ObjectMapper;</span><br><span class="line"><span class="keyword">import</span> com.heima.item.pojo.Item;</span><br><span class="line"><span class="keyword">import</span> com.heima.item.pojo.ItemStock;</span><br><span class="line"><span class="keyword">import</span> com.heima.item.service.IItemService;</span><br><span class="line"><span class="keyword">import</span> com.heima.item.service.IItemStockService;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.InitializingBean;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.redis.core.StringRedisTemplate;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Component;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RedisHandler</span> <span class="keyword">implements</span> <span class="title class_">InitializingBean</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> StringRedisTemplate redisTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> IItemService itemService;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> IItemStockService stockService;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">ObjectMapper</span> <span class="variable">MAPPER</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectMapper</span>();</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">afterPropertiesSet</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="comment">// 初始化缓存</span></span><br><span class="line">        <span class="comment">// 1.查询商品信息</span></span><br><span class="line">        List&lt;Item&gt; itemList = itemService.list();</span><br><span class="line">        <span class="comment">// 2.放入缓存</span></span><br><span class="line">        <span class="keyword">for</span> (Item item : itemList) &#123;</span><br><span class="line">            <span class="comment">// 2.1.item序列化为JSON</span></span><br><span class="line">            <span class="type">String</span> <span class="variable">json</span> <span class="operator">=</span> MAPPER.writeValueAsString(item);</span><br><span class="line">            <span class="comment">// 2.2.存入redis</span></span><br><span class="line">            redisTemplate.opsForValue().set(<span class="string">&quot;item:id:&quot;</span> + item.getId(), json);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3.查询商品库存信息</span></span><br><span class="line">        List&lt;ItemStock&gt; stockList = stockService.list();</span><br><span class="line">        <span class="comment">// 4.放入缓存</span></span><br><span class="line">        <span class="keyword">for</span> (ItemStock stock : stockList) &#123;</span><br><span class="line">            <span class="comment">// 2.1.item序列化为JSON</span></span><br><span class="line">            <span class="type">String</span> <span class="variable">json</span> <span class="operator">=</span> MAPPER.writeValueAsString(stock);</span><br><span class="line">            <span class="comment">// 2.2.存入redis</span></span><br><span class="line">            redisTemplate.opsForValue().set(<span class="string">&quot;item:stock:id:&quot;</span> + stock.getId(), json);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">saveItem</span><span class="params">(Item item)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">json</span> <span class="operator">=</span> MAPPER.writeValueAsString(item);</span><br><span class="line">            redisTemplate.opsForValue().set(<span class="string">&quot;item:id:&quot;</span> + item.getId(), json);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (JsonProcessingException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">deleteItemById</span><span class="params">(Long id)</span> &#123;</span><br><span class="line">        redisTemplate.delete(<span class="string">&quot;item:id:&quot;</span> + id);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://example.com">John Doe</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://example.com/2024/08/17/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E5%90%8C%E6%AD%A5/">http://example.com/2024/08/17/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E5%90%8C%E6%AD%A5/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Canal/">Canal</a></div><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2024/08/18/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/" title="Redis高级-最佳实践"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">Previous</div><div class="info-item-2">Redis高级-最佳实践</div></div><div class="info-2"><div class="info-item-1">Redis高级篇之最佳实践今日内容   Redis键值设计 批处理优化 服务端优化 集群最佳实践   1、Redis键值设计1.1、优雅的key结构Redis的Key虽然可以自定义，但最好遵循下面的几个最佳实践约定：  遵循基本格式：[业务名称]:[数据名]:[id]  长度不超过44字节  不包含特殊字符   例如：我们的登录业务，保存用户信息，其key可以设计成如下格式：  这样设计的好处：  可读性强 避免key冲突 方便管理 更节省内存： key是string类型，底层编码包含int、embstr和raw三种。embstr在小于44字节使用，采用连续内存空间，内存占用更小。当字节数大于44字节时，会转为raw模式存储，在raw模式下，内存空间不是连续的，而是采用一个指针指向了另外一段内存空间，在这段空间里存储SDS内容，这样空间不连续，访问的时候性能也就会收到影响，还有可能产生内存碎片   1.2、拒绝BigKeyBigKey通常以Key的大小和Key中成员的数量来综合判定，例如：  Key本身的数据量过大：一个String类型的Key，它的值为5 MB Key中的成员数...</div></div></div></a><a class="pagination-related" href="/2024/08/17/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98/" title="Redis高级-多级缓存"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">Redis高级-多级缓存</div></div><div class="info-2"><div class="info-item-1">3.Lua语法入门Nginx编程需要用到Lua语言，因此我们必须先入门Lua的基本语法。 3.1.初识LuaLua 是一种轻量小巧的脚本语言，用标准C语言编写并以源代码形式开放， 其设计目的是为了嵌入应用程序中，从而为应用程序提供灵活的扩展和定制功能。官网：https://www.lua.org/    Lua经常嵌入到C语言开发的程序中，例如游戏开发、游戏插件等。 Nginx本身也是C语言开发，因此也允许基于Lua做拓展。 3.1.HelloWorldCentOS7默认已经安装了Lua语言环境，所以可以直接运行Lua代码。 1）在Linux虚拟机的任意目录下，新建一个hello.lua文件  2）添加下面的内容 1print(&quot;Hello World!&quot;)      3）运行  3.2.变量和循环学习任何语言必然离不开变量，而变量的声明必须先知道数据的类型。 3.2.1.Lua的数据类型Lua中支持的常见数据类型包括：  另外，Lua提供了type()函数来判断一个变量的数据类型：  3.2.2.声明变量Lua声明变量的时候无需指定数据类型，而是用local...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">John Doe</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">74</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">170</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#5-%E7%BC%93%E5%AD%98%E5%90%8C%E6%AD%A5"><span class="toc-number">1.</span> <span class="toc-text">5.缓存同步</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#5-1-%E6%95%B0%E6%8D%AE%E5%90%8C%E6%AD%A5%E7%AD%96%E7%95%A5"><span class="toc-number">1.1.</span> <span class="toc-text">5.1.数据同步策略</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-2-%E5%AE%89%E8%A3%85Canal"><span class="toc-number">1.2.</span> <span class="toc-text">5.2.安装Canal</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-1-%E8%AE%A4%E8%AF%86Canal"><span class="toc-number">1.2.1.</span> <span class="toc-text">5.2.1.认识Canal</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-2-%E5%AE%89%E8%A3%85Canal"><span class="toc-number">1.2.2.</span> <span class="toc-text">5.2.2.安装Canal</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-3-%E7%9B%91%E5%90%ACCanal"><span class="toc-number">1.3.</span> <span class="toc-text">5.3.监听Canal</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-1-%E5%BC%95%E5%85%A5%E4%BE%9D%E8%B5%96%EF%BC%9A"><span class="toc-number">1.3.1.</span> <span class="toc-text">5.3.1.引入依赖：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-2-%E7%BC%96%E5%86%99%E9%85%8D%E7%BD%AE%EF%BC%9A"><span class="toc-number">1.3.2.</span> <span class="toc-text">5.3.2.编写配置：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-3-%E4%BF%AE%E6%94%B9Item%E5%AE%9E%E4%BD%93%E7%B1%BB"><span class="toc-number">1.3.3.</span> <span class="toc-text">5.3.3.修改Item实体类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-4-%E7%BC%96%E5%86%99%E7%9B%91%E5%90%AC%E5%99%A8"><span class="toc-number">1.3.4.</span> <span class="toc-text">5.3.4.编写监听器</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/07/Java/LangChain4J/LangChain4j%E4%B9%8BRAG/" title="LangChain4j之RAG">LangChain4j之RAG</a><time datetime="2026-01-07T03:21:24.000Z" title="Created 2026-01-07 11:21:24">2026-01-07</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/06/Java/LangChain4J/LangChain4j%E4%B9%8B%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/" title="LangChain4j之函数调用">LangChain4j之函数调用</a><time datetime="2026-01-06T07:06:52.000Z" title="Created 2026-01-06 15:06:52">2026-01-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/05/Java/LangChain4J/LangChain4j%E4%B9%8B%E9%AB%98%E9%98%B6api/" title="LangChain4j之高阶api">LangChain4j之高阶api</a><time datetime="2026-01-05T12:08:53.000Z" title="Created 2026-01-05 20:08:53">2026-01-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/05/Java/LangChain4J/LangChain4j%E4%B9%8B%E4%BC%9A%E8%AF%9D%E8%AE%B0%E5%BF%86/" title="LangChain4j之会话记忆">LangChain4j之会话记忆</a><time datetime="2026-01-05T06:53:06.000Z" title="Created 2026-01-05 14:53:06">2026-01-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/05/Java/LangChain4J/LangChain4j%E5%85%A5%E9%97%A8/" title="LangChain4j入门">LangChain4j入门</a><time datetime="2026-01-05T01:08:25.000Z" title="Created 2026-01-05 09:08:25">2026-01-05</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By John Doe</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.5-b1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.5-b1"></script><script src="/js/main.js?v=5.5.5-b1"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

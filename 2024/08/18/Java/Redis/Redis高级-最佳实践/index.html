@@ -1,0 +1,588 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Redis高级-最佳实践 | Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Redis高级篇之最佳实践今日内容   Redis键值设计 批处理优化 服务端优化 集群最佳实践   1、Redis键值设计1.1、优雅的key结构Redis的Key虽然可以自定义，但最好遵循下面的几个最佳实践约定：  遵循基本格式：[业务名称]:[数据名]:[id]  长度不超过44字节  不包含特殊字符">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis高级-最佳实践">
+<meta property="og:url" content="http://example.com/2024/08/18/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Redis高级篇之最佳实践今日内容   Redis键值设计 批处理优化 服务端优化 集群最佳实践   1、Redis键值设计1.1、优雅的key结构Redis的Key虽然可以自定义，但最好遵循下面的几个最佳实践约定：  遵循基本格式：[业务名称]:[数据名]:[id]  长度不超过44字节  不包含特殊字符">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/butterfly-icon.png">
+<meta property="article:published_time" content="2024-08-18T14:31:03.000Z">
+<meta property="article:modified_time" content="2026-04-14T14:04:47.246Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="键值设计">
+<meta property="article:tag" content="BigKey">
+<meta property="article:tag" content="批处理">
+<meta property="article:tag" content="慢查询">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Redis高级-最佳实践",
+  "url": "http://example.com/2024/08/18/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/",
+  "image": "http://example.com/img/butterfly-icon.png",
+  "datePublished": "2024-08-18T14:31:03.000Z",
+  "dateModified": "2026-04-14T14:04:47.246Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "John Doe",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2024/08/18/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.5-b1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Redis高级-最佳实践',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Hexo</span></a><a class="nav-page-title" href="/"><span class="site-name">Redis高级-最佳实践</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">Redis高级-最佳实践</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2024-08-18T14:31:03.000Z" title="Created 2024-08-18 22:31:03">2024-08-18</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-04-14T14:04:47.246Z" title="Updated 2026-04-14 22:04:47">2026-04-14</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="Redis高级篇之最佳实践"><a href="#Redis高级篇之最佳实践" class="headerlink" title="Redis高级篇之最佳实践"></a>Redis高级篇之最佳实践</h2><p><strong>今日内容</strong></p>
+<blockquote>
+<ul>
+<li>Redis键值设计</li>
+<li>批处理优化</li>
+<li>服务端优化</li>
+<li>集群最佳实践</li>
+</ul>
+</blockquote>
+<h2 id="1、Redis键值设计"><a href="#1、Redis键值设计" class="headerlink" title="1、Redis键值设计"></a>1、Redis键值设计</h2><h3 id="1-1、优雅的key结构"><a href="#1-1、优雅的key结构" class="headerlink" title="1.1、优雅的key结构"></a>1.1、优雅的key结构</h3><p>Redis的Key虽然可以自定义，但最好遵循下面的几个最佳实践约定：</p>
+<ul>
+<li><p>遵循基本格式：[业务名称]:[数据名]:[id]</p>
+</li>
+<li><p>长度不超过44字节</p>
+</li>
+<li><p>不包含特殊字符</p>
+<span id="more"></span></li>
+</ul>
+<p>例如：我们的登录业务，保存用户信息，其key可以设计成如下格式：</p>
+<p><img src="/2024/08/18/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/image-20220521120213631.png" alt="image-20220521120213631"></p>
+<p>这样设计的好处：</p>
+<ul>
+<li>可读性强</li>
+<li>避免key冲突</li>
+<li>方便管理</li>
+<li>更节省内存： key是string类型，底层编码包含int、embstr和raw三种。embstr在小于44字节使用，采用连续内存空间，内存占用更小。当字节数大于44字节时，会转为raw模式存储，在raw模式下，内存空间不是连续的，而是采用一个指针指向了另外一段内存空间，在这段空间里存储SDS内容，这样空间不连续，访问的时候性能也就会收到影响，还有可能产生内存碎片</li>
+</ul>
+<p><img src="/2024/08/18/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/image-20220521122320482.png" alt="image-20220521122320482"></p>
+<h3 id="1-2、拒绝BigKey"><a href="#1-2、拒绝BigKey" class="headerlink" title="1.2、拒绝BigKey"></a>1.2、拒绝BigKey</h3><p>BigKey通常以Key的大小和Key中成员的数量来综合判定，例如：</p>
+<ul>
+<li>Key本身的数据量过大：一个String类型的Key，它的值为5 MB</li>
+<li>Key中的成员数过多：一个ZSET类型的Key，它的成员数量为10,000个</li>
+<li>Key中成员的数据量过大：一个Hash类型的Key，它的成员数量虽然只有1,000个但这些成员的Value（值）总大小为100 MB</li>
+</ul>
+<p>那么如何判断元素的大小呢？redis也给我们提供了命令</p>
+<p><img src="/2024/08/18/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/image-20220521124650117.png" alt="image-20220521124650117"></p>
+<p>推荐值：</p>
+<ul>
+<li>单个key的value小于10KB</li>
+<li>对于集合类型的key，建议元素数量小于1000</li>
+</ul>
+<h4 id="1-2-1、BigKey的危害"><a href="#1-2-1、BigKey的危害" class="headerlink" title="1.2.1、BigKey的危害"></a>1.2.1、BigKey的危害</h4><ul>
+<li>网络阻塞<ul>
+<li>对BigKey执行读请求时，少量的QPS就可能导致带宽使用率被占满，导致Redis实例，乃至所在物理机变慢</li>
+</ul>
+</li>
+<li>数据倾斜<ul>
+<li>BigKey所在的Redis实例内存使用率远超其他实例，无法使数据分片的内存资源达到均衡</li>
+</ul>
+</li>
+<li>Redis阻塞<ul>
+<li>对元素较多的hash、list、zset等做运算会耗时较旧，使主线程被阻塞</li>
+</ul>
+</li>
+<li>CPU压力<ul>
+<li>对BigKey的数据序列化和反序列化会导致CPU的使用率飙升，影响Redis实例和本机其它应用</li>
+</ul>
+</li>
+</ul>
+<h4 id="1-2-2、如何发现BigKey"><a href="#1-2-2、如何发现BigKey" class="headerlink" title="1.2.2、如何发现BigKey"></a>1.2.2、如何发现BigKey</h4><h5 id="①redis-cli-–bigkeys"><a href="#①redis-cli-–bigkeys" class="headerlink" title="①redis-cli –bigkeys"></a>①redis-cli –bigkeys</h5><p>利用redis-cli提供的–bigkeys参数，可以遍历分析所有key，并返回Key的整体统计信息与每个数据的Top1的big key</p>
+<p>命令：<code>redis-cli -a 密码 --bigkeys</code></p>
+<p><img src="/2024/08/18/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/image-20220521133359507.png" alt="image-20220521133359507"></p>
+<h5 id="②scan扫描"><a href="#②scan扫描" class="headerlink" title="②scan扫描"></a>②scan扫描</h5><p>自己编程，利用scan扫描Redis中的所有key，利用strlen、hlen等命令判断key的长度（此处不建议使用MEMORY USAGE）</p>
+<p><img src="/2024/08/18/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/image-20220521133703245.png" alt="image-20220521133703245"></p>
+<p>scan 命令调用完后每次会返回2个元素，第一个是下一次迭代的光标，第一次光标会设置为0，当最后一次scan 返回的光标等于0时，表示整个scan遍历结束了，第二个返回的是List，一个匹配的key的数组</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.heima.jedis.util.JedisConnectionFactory;</span><br><span class="line"><span class="keyword">import</span> org.junit.jupiter.api.AfterEach;</span><br><span class="line"><span class="keyword">import</span> org.junit.jupiter.api.BeforeEach;</span><br><span class="line"><span class="keyword">import</span> org.junit.jupiter.api.Test;</span><br><span class="line"><span class="keyword">import</span> redis.clients.jedis.Jedis;</span><br><span class="line"><span class="keyword">import</span> redis.clients.jedis.ScanResult;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JedisTest</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Jedis jedis;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@BeforeEach</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">setUp</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">// 1.建立连接</span></span><br><span class="line">        <span class="comment">// jedis = new Jedis(&quot;192.168.150.101&quot;, 6379);</span></span><br><span class="line">        jedis = JedisConnectionFactory.getJedis();</span><br><span class="line">        <span class="comment">// 2.设置密码</span></span><br><span class="line">        jedis.auth(<span class="string">&quot;123321&quot;</span>);</span><br><span class="line">        <span class="comment">// 3.选择库</span></span><br><span class="line">        jedis.select(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">static</span> <span class="type">int</span> <span class="variable">STR_MAX_LEN</span> <span class="operator">=</span> <span class="number">10</span> * <span class="number">1024</span>;</span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">static</span> <span class="type">int</span> <span class="variable">HASH_MAX_LEN</span> <span class="operator">=</span> <span class="number">500</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testScan</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">maxLen</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="type">long</span> <span class="variable">len</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">cursor</span> <span class="operator">=</span> <span class="string">&quot;0&quot;</span>;</span><br><span class="line">        <span class="keyword">do</span> &#123;</span><br><span class="line">            <span class="comment">// 扫描并获取一部分key</span></span><br><span class="line">            ScanResult&lt;String&gt; result = jedis.scan(cursor);</span><br><span class="line">            <span class="comment">// 记录cursor</span></span><br><span class="line">            cursor = result.getCursor();</span><br><span class="line">            List&lt;String&gt; list = result.getResult();</span><br><span class="line">            <span class="keyword">if</span> (list == <span class="literal">null</span> || list.isEmpty()) &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 遍历</span></span><br><span class="line">            <span class="keyword">for</span> (String key : list) &#123;</span><br><span class="line">                <span class="comment">// 判断key的类型</span></span><br><span class="line">                <span class="type">String</span> <span class="variable">type</span> <span class="operator">=</span> jedis.type(key);</span><br><span class="line">                <span class="keyword">switch</span> (type) &#123;</span><br><span class="line">                    <span class="keyword">case</span> <span class="string">&quot;string&quot;</span>:</span><br><span class="line">                        len = jedis.strlen(key);</span><br><span class="line">                        maxLen = STR_MAX_LEN;</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    <span class="keyword">case</span> <span class="string">&quot;hash&quot;</span>:</span><br><span class="line">                        len = jedis.hlen(key);</span><br><span class="line">                        maxLen = HASH_MAX_LEN;</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    <span class="keyword">case</span> <span class="string">&quot;list&quot;</span>:</span><br><span class="line">                        len = jedis.llen(key);</span><br><span class="line">                        maxLen = HASH_MAX_LEN;</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    <span class="keyword">case</span> <span class="string">&quot;set&quot;</span>:</span><br><span class="line">                        len = jedis.scard(key);</span><br><span class="line">                        maxLen = HASH_MAX_LEN;</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    <span class="keyword">case</span> <span class="string">&quot;zset&quot;</span>:</span><br><span class="line">                        len = jedis.zcard(key);</span><br><span class="line">                        maxLen = HASH_MAX_LEN;</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    <span class="keyword">default</span>:</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> (len &gt;= maxLen) &#123;</span><br><span class="line">                    System.out.printf(<span class="string">&quot;Found big key : %s, type: %s, length or size: %d %n&quot;</span>, key, type, len);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">while</span> (!cursor.equals(<span class="string">&quot;0&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@AfterEach</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">tearDown</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (jedis != <span class="literal">null</span>) &#123;</span><br><span class="line">            jedis.close();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="③第三方工具"><a href="#③第三方工具" class="headerlink" title="③第三方工具"></a>③第三方工具</h5><ul>
+<li>利用第三方工具，如 Redis-Rdb-Tools 分析RDB快照文件，全面分析内存使用情况</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/sripathikrishnan/redis-rdb-tools">https://github.com/sripathikrishnan/redis-rdb-tools</a></li>
+</ul>
+<h5 id="④网络监控"><a href="#④网络监控" class="headerlink" title="④网络监控"></a>④网络监控</h5><ul>
+<li>自定义工具，监控进出Redis的网络数据，超出预警值时主动告警</li>
+<li>一般阿里云搭建的云服务器就有相关监控页面</li>
+</ul>
+<p><img src="/2024/08/18/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/image-20220521140415785.png" alt="image-20220521140415785"></p>
+<h4 id="1-2-3、如何删除BigKey"><a href="#1-2-3、如何删除BigKey" class="headerlink" title="1.2.3、如何删除BigKey"></a>1.2.3、如何删除BigKey</h4><p>BigKey内存占用较多，即便时删除这样的key也需要耗费很长时间，导致Redis主线程阻塞，引发一系列问题。</p>
+<ul>
+<li><p>redis 3.0 及以下版本</p>
+<ul>
+<li>如果是集合类型，则遍历BigKey的元素，先逐个删除子元素，最后删除BigKey</li>
+</ul>
+</li>
+<li><p>Redis 4.0以后</p>
+<ul>
+<li>Redis在4.0后提供了异步删除的命令：unlink</li>
+</ul>
+</li>
+</ul>
+<h3 id="1-3、恰当的数据类型"><a href="#1-3、恰当的数据类型" class="headerlink" title="1.3、恰当的数据类型"></a>1.3、恰当的数据类型</h3><h4 id="例1：比如存储一个User对象，我们有三种存储方式："><a href="#例1：比如存储一个User对象，我们有三种存储方式：" class="headerlink" title="例1：比如存储一个User对象，我们有三种存储方式："></a>例1：比如存储一个User对象，我们有三种存储方式：</h4><h5 id="①方式一：json字符串"><a href="#①方式一：json字符串" class="headerlink" title="①方式一：json字符串"></a>①方式一：json字符串</h5><table>
+<thead>
+<tr>
+<th align="center">user:1</th>
+<th align="center">{“name”: “Jack”, “age”: 21}</th>
+</tr>
+</thead>
+</table>
+<p>优点：实现简单粗暴</p>
+<p>缺点：数据耦合，不够灵活</p>
+<h5 id="②方式二：字段打散"><a href="#②方式二：字段打散" class="headerlink" title="②方式二：字段打散"></a>②方式二：字段打散</h5><table>
+<thead>
+<tr>
+<th align="center">user:1:name</th>
+<th align="center">Jack</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">user:1:age</td>
+<td align="center">21</td>
+</tr>
+</tbody></table>
+<p>优点：可以灵活访问对象任意字段</p>
+<p>缺点：占用空间大、没办法做统一控制</p>
+<h5 id="③方式三：hash（推荐）"><a href="#③方式三：hash（推荐）" class="headerlink" title="③方式三：hash（推荐）"></a>③方式三：hash（推荐）</h5><table>
+    <tr>
+        <td rowspan="2">user:1</td>
+        <td>name</td>
+        <td>jack</td>
+    </tr>
+    <tr>
+        <td>age</td>
+        <td>21</td>
+    </tr>
+</table>
+
+
+<p>优点：底层使用ziplist，空间占用小，可以灵活访问对象的任意字段</p>
+<p>缺点：代码相对复杂</p>
+<h4 id="例2：假如有hash类型的key，其中有100万对field和value，field是自增id，这个key存在什么问题？如何优化？"><a href="#例2：假如有hash类型的key，其中有100万对field和value，field是自增id，这个key存在什么问题？如何优化？" class="headerlink" title="例2：假如有hash类型的key，其中有100万对field和value，field是自增id，这个key存在什么问题？如何优化？"></a>例2：假如有hash类型的key，其中有100万对field和value，field是自增id，这个key存在什么问题？如何优化？</h4><table>
+    <tr style="color:red">
+        <td>key</td>
+        <td>field</td>
+        <td>value</td>
+    </tr>
+    <tr>
+        <td rowspan="3">someKey</td>
+        <td>id:0</td>
+        <td>value0</td>
+    </tr>
+    <tr>
+        <td>.....</td>
+        <td>.....</td>
+    </tr>
+    <tr>
+        <td>id:999999</td>
+        <td>value999999</td>
+    </tr>
+</table>
+
+
+<p>存在的问题：</p>
+<ul>
+<li>hash的entry数量超过500时，会使用哈希表而不是ZipList，内存占用较多<ul>
+<li><img src="/2024/08/18/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/image-20220521142943350.png" alt="image-20220521142943350"></li>
+</ul>
+</li>
+<li>可以通过hash-max-ziplist-entries配置entry上限。但是如果entry过多就会导致BigKey问题</li>
+</ul>
+<h5 id="方案一"><a href="#方案一" class="headerlink" title="方案一"></a>方案一</h5><p>拆分为string类型</p>
+<table>
+    <tr style="color:red">
+        <td>key</td>
+        <td>value</td>
+    </tr>
+    <tr>
+        <td>id:0</td>
+        <td>value0</td>
+    </tr>
+    <tr>
+        <td>.....</td>
+        <td>.....</td>
+    </tr>
+    <tr>
+        <td>id:999999</td>
+        <td>value999999</td>
+    </tr>
+</table>
+
+
+<p>存在的问题：</p>
+<ul>
+<li>string结构底层没有太多内存优化，内存占用较多</li>
+</ul>
+<p><img src="/2024/08/18/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/image-20220521143458010.png" alt="image-20220521143458010"></p>
+<ul>
+<li>想要批量获取这些数据比较麻烦</li>
+</ul>
+<h5 id="方案二"><a href="#方案二" class="headerlink" title="方案二"></a>方案二</h5><p>拆分为小的hash，将 id &#x2F; 100 作为key， 将id % 100 作为field，这样每100个元素为一个Hash</p>
+<table>
+    <tr style="color:red">
+        <td>key</td>
+        <td>field</td>
+        <td>value</td>
+    </tr>
+    <tr>
+        <td rowspan="3">key:0</td>
+        <td>id:00</td>
+        <td>value0</td>
+    </tr>
+    <tr>
+        <td>.....</td>
+        <td>.....</td>
+    </tr>
+    <tr>
+        <td>id:99</td>
+        <td>value99</td>
+    </tr>
+    <tr>
+        <td rowspan="3">key:1</td>
+        <td>id:00</td>
+        <td>value100</td>
+    </tr>
+    <tr>
+        <td>.....</td>
+        <td>.....</td>
+    </tr>
+    <tr>
+        <td>id:99</td>
+        <td>value199</td>
+    </tr>
+    <tr>
+        <td colspan="3">....</td>
+    </tr>
+    <tr>
+        <td rowspan="3">key:9999</td>
+        <td>id:00</td>
+        <td>value999900</td>
+    </tr>
+    <tr>
+        <td>.....</td>
+        <td>.....</td>
+    </tr>
+    <tr>
+        <td>id:99</td>
+        <td>value999999</td>
+    </tr>
+</table>
+
+
+<p><img src="/2024/08/18/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/image-20220521144339377.png" alt="image-20220521144339377"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.heima.test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.heima.jedis.util.JedisConnectionFactory;</span><br><span class="line"><span class="keyword">import</span> org.junit.jupiter.api.AfterEach;</span><br><span class="line"><span class="keyword">import</span> org.junit.jupiter.api.BeforeEach;</span><br><span class="line"><span class="keyword">import</span> org.junit.jupiter.api.Test;</span><br><span class="line"><span class="keyword">import</span> redis.clients.jedis.Jedis;</span><br><span class="line"><span class="keyword">import</span> redis.clients.jedis.Pipeline;</span><br><span class="line"><span class="keyword">import</span> redis.clients.jedis.ScanResult;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JedisTest</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Jedis jedis;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@BeforeEach</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">setUp</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">// 1.建立连接</span></span><br><span class="line">        <span class="comment">// jedis = new Jedis(&quot;192.168.150.101&quot;, 6379);</span></span><br><span class="line">        jedis = JedisConnectionFactory.getJedis();</span><br><span class="line">        <span class="comment">// 2.设置密码</span></span><br><span class="line">        jedis.auth(<span class="string">&quot;123321&quot;</span>);</span><br><span class="line">        <span class="comment">// 3.选择库</span></span><br><span class="line">        jedis.select(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testSetBigKey</span><span class="params">()</span> &#123;</span><br><span class="line">        Map&lt;String, String&gt; map = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= <span class="number">650</span>; i++) &#123;</span><br><span class="line">            map.put(<span class="string">&quot;hello_&quot;</span> + i, <span class="string">&quot;world!&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        jedis.hmset(<span class="string">&quot;m2&quot;</span>, map);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testBigHash</span><span class="params">()</span> &#123;</span><br><span class="line">        Map&lt;String, String&gt; map = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= <span class="number">100000</span>; i++) &#123;</span><br><span class="line">            map.put(<span class="string">&quot;key_&quot;</span> + i, <span class="string">&quot;value_&quot;</span> + i);</span><br><span class="line">        &#125;</span><br><span class="line">        jedis.hmset(<span class="string">&quot;test:big:hash&quot;</span>, map);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testBigString</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= <span class="number">100000</span>; i++) &#123;</span><br><span class="line">            jedis.set(<span class="string">&quot;test:str:key_&quot;</span> + i, <span class="string">&quot;value_&quot;</span> + i);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testSmallHash</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">hashSize</span> <span class="operator">=</span> <span class="number">100</span>;</span><br><span class="line">        Map&lt;String, String&gt; map = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;(hashSize);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= <span class="number">100000</span>; i++) &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">k</span> <span class="operator">=</span> (i - <span class="number">1</span>) / hashSize;</span><br><span class="line">            <span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> i % hashSize;</span><br><span class="line">            map.put(<span class="string">&quot;key_&quot;</span> + v, <span class="string">&quot;value_&quot;</span> + v);</span><br><span class="line">            <span class="keyword">if</span> (v == <span class="number">0</span>) &#123;</span><br><span class="line">                jedis.hmset(<span class="string">&quot;test:small:hash_&quot;</span> + k, map);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@AfterEach</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">tearDown</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (jedis != <span class="literal">null</span>) &#123;</span><br><span class="line">            jedis.close();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-4、总结"><a href="#1-4、总结" class="headerlink" title="1.4、总结"></a>1.4、总结</h3><ul>
+<li>Key的最佳实践<ul>
+<li>固定格式：[业务名]:[数据名]:[id]</li>
+<li>足够简短：不超过44字节</li>
+<li>不包含特殊字符</li>
+</ul>
+</li>
+<li>Value的最佳实践：<ul>
+<li>合理的拆分数据，拒绝BigKey</li>
+<li>选择合适数据结构</li>
+<li>Hash结构的entry数量不要超过1000</li>
+<li>设置合理的超时时间</li>
+</ul>
+</li>
+</ul>
+<h2 id="2、批处理优化"><a href="#2、批处理优化" class="headerlink" title="2、批处理优化"></a>2、批处理优化</h2><h3 id="2-1、Pipeline"><a href="#2-1、Pipeline" class="headerlink" title="2.1、Pipeline"></a>2.1、Pipeline</h3><h4 id="2-1-1、我们的客户端与redis服务器是这样交互的"><a href="#2-1-1、我们的客户端与redis服务器是这样交互的" class="headerlink" title="2.1.1、我们的客户端与redis服务器是这样交互的"></a>2.1.1、我们的客户端与redis服务器是这样交互的</h4><p>单个命令的执行流程</p>
+<p><img src="/2024/08/18/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/image-20220521151459880.png" alt="image-20220521151459880"></p>
+<p>N条命令的执行流程</p>
+<p><img src="/2024/08/18/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/image-20220521151524621.png" alt="image-20220521151524621"></p>
+<p>redis处理指令是很快的，主要花费的时候在于网络传输。于是乎很容易想到将多条指令批量的传输给redis</p>
+<p><img src="/2024/08/18/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/image-20220521151902080.png" alt="image-20220521151902080"></p>
+<h4 id="2-1-2、MSet"><a href="#2-1-2、MSet" class="headerlink" title="2.1.2、MSet"></a>2.1.2、MSet</h4><p>Redis提供了很多Mxxx这样的命令，可以实现批量插入数据，例如：</p>
+<ul>
+<li>mset</li>
+<li>hmset</li>
+</ul>
+<p>利用mset批量插入10万条数据</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">testMxx</span><span class="params">()</span> &#123;</span><br><span class="line">    String[] arr = <span class="keyword">new</span> <span class="title class_">String</span>[<span class="number">2000</span>];</span><br><span class="line">    <span class="type">int</span> j;</span><br><span class="line">    <span class="type">long</span> <span class="variable">b</span> <span class="operator">=</span> System.currentTimeMillis();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= <span class="number">100000</span>; i++) &#123;</span><br><span class="line">        j = (i % <span class="number">1000</span>) &lt;&lt; <span class="number">1</span>;</span><br><span class="line">        arr[j] = <span class="string">&quot;test:key_&quot;</span> + i;</span><br><span class="line">        arr[j + <span class="number">1</span>] = <span class="string">&quot;value_&quot;</span> + i;</span><br><span class="line">        <span class="keyword">if</span> (j == <span class="number">0</span>) &#123;</span><br><span class="line">            jedis.mset(arr);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">long</span> <span class="variable">e</span> <span class="operator">=</span> System.currentTimeMillis();</span><br><span class="line">    System.out.println(<span class="string">&quot;time: &quot;</span> + (e - b));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-1-3、Pipeline"><a href="#2-1-3、Pipeline" class="headerlink" title="2.1.3、Pipeline"></a>2.1.3、Pipeline</h4><p>MSET虽然可以批处理，但是却只能操作部分数据类型，因此如果有对复杂数据类型的批处理需要，建议使用Pipeline</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">testPipeline</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">// 创建管道</span></span><br><span class="line">    <span class="type">Pipeline</span> <span class="variable">pipeline</span> <span class="operator">=</span> jedis.pipelined();</span><br><span class="line">    <span class="type">long</span> <span class="variable">b</span> <span class="operator">=</span> System.currentTimeMillis();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= <span class="number">100000</span>; i++) &#123;</span><br><span class="line">        <span class="comment">// 放入命令到管道</span></span><br><span class="line">        pipeline.set(<span class="string">&quot;test:key_&quot;</span> + i, <span class="string">&quot;value_&quot;</span> + i);</span><br><span class="line">        <span class="keyword">if</span> (i % <span class="number">1000</span> == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="comment">// 每放入1000条命令，批量执行</span></span><br><span class="line">            pipeline.sync();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">long</span> <span class="variable">e</span> <span class="operator">=</span> System.currentTimeMillis();</span><br><span class="line">    System.out.println(<span class="string">&quot;time: &quot;</span> + (e - b));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2、集群下的批处理"><a href="#2-2、集群下的批处理" class="headerlink" title="2.2、集群下的批处理"></a>2.2、集群下的批处理</h3><p>如MSET或Pipeline这样的批处理需要在一次请求中携带多条命令，而此时如果Redis是一个集群，那批处理命令的多个key必须落在一个插槽中，否则就会导致执行失败。大家可以想一想这样的要求其实很难实现，因为我们在批处理时，可能一次要插入很多条数据，这些数据很有可能不会都落在相同的节点上，这就会导致报错了</p>
+<p>这个时候，我们可以找到4种解决方案</p>
+<p><img src="/2024/08/18/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/1653126446641.png" alt="1653126446641"></p>
+<p>第一种方案：串行执行，所以这种方式没有什么意义，当然，执行起来就很简单了，缺点就是耗时过久。</p>
+<p>第二种方案：串行slot，简单来说，就是执行前，客户端先计算一下对应的key的slot，一样slot的key就放到一个组里边，不同的，就放到不同的组里边，然后对每个组执行pipeline的批处理，他就能串行执行各个组的命令，这种做法比第一种方法耗时要少，但是缺点呢，相对来说复杂一点，所以这种方案还需要优化一下</p>
+<p>第三种方案：并行slot，相较于第二种方案，在分组完成后串行执行，第三种方案，就变成了并行执行各个命令，所以他的耗时就非常短，但是实现呢，也更加复杂。</p>
+<p>第四种：hash_tag，redis计算key的slot的时候，其实是根据key的有效部分来计算的，通过这种方式就能一次处理所有的key，这种方式耗时最短，实现也简单，但是如果通过操作key的有效部分，那么就会导致所有的key都落在一个节点上，产生数据倾斜的问题，所以我们推荐使用第三种方式。</p>
+<h4 id="2-2-1-串行化执行代码实践"><a href="#2-2-1-串行化执行代码实践" class="headerlink" title="2.2.1 串行化执行代码实践"></a>2.2.1 串行化执行代码实践</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JedisClusterTest</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> JedisCluster jedisCluster;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@BeforeEach</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">setUp</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">// 配置连接池</span></span><br><span class="line">        <span class="type">JedisPoolConfig</span> <span class="variable">poolConfig</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JedisPoolConfig</span>();</span><br><span class="line">        poolConfig.setMaxTotal(<span class="number">8</span>);</span><br><span class="line">        poolConfig.setMaxIdle(<span class="number">8</span>);</span><br><span class="line">        poolConfig.setMinIdle(<span class="number">0</span>);</span><br><span class="line">        poolConfig.setMaxWaitMillis(<span class="number">1000</span>);</span><br><span class="line">        HashSet&lt;HostAndPort&gt; nodes = <span class="keyword">new</span> <span class="title class_">HashSet</span>&lt;&gt;();</span><br><span class="line">        nodes.add(<span class="keyword">new</span> <span class="title class_">HostAndPort</span>(<span class="string">&quot;192.168.150.101&quot;</span>, <span class="number">7001</span>));</span><br><span class="line">        nodes.add(<span class="keyword">new</span> <span class="title class_">HostAndPort</span>(<span class="string">&quot;192.168.150.101&quot;</span>, <span class="number">7002</span>));</span><br><span class="line">        nodes.add(<span class="keyword">new</span> <span class="title class_">HostAndPort</span>(<span class="string">&quot;192.168.150.101&quot;</span>, <span class="number">7003</span>));</span><br><span class="line">        nodes.add(<span class="keyword">new</span> <span class="title class_">HostAndPort</span>(<span class="string">&quot;192.168.150.101&quot;</span>, <span class="number">8001</span>));</span><br><span class="line">        nodes.add(<span class="keyword">new</span> <span class="title class_">HostAndPort</span>(<span class="string">&quot;192.168.150.101&quot;</span>, <span class="number">8002</span>));</span><br><span class="line">        nodes.add(<span class="keyword">new</span> <span class="title class_">HostAndPort</span>(<span class="string">&quot;192.168.150.101&quot;</span>, <span class="number">8003</span>));</span><br><span class="line">        jedisCluster = <span class="keyword">new</span> <span class="title class_">JedisCluster</span>(nodes, poolConfig);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testMSet</span><span class="params">()</span> &#123;</span><br><span class="line">        jedisCluster.mset(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;Jack&quot;</span>, <span class="string">&quot;age&quot;</span>, <span class="string">&quot;21&quot;</span>, <span class="string">&quot;sex&quot;</span>, <span class="string">&quot;male&quot;</span>);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testMSet2</span><span class="params">()</span> &#123;</span><br><span class="line">        Map&lt;String, String&gt; map = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;(<span class="number">3</span>);</span><br><span class="line">        map.put(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;Jack&quot;</span>);</span><br><span class="line">        map.put(<span class="string">&quot;age&quot;</span>, <span class="string">&quot;21&quot;</span>);</span><br><span class="line">        map.put(<span class="string">&quot;sex&quot;</span>, <span class="string">&quot;Male&quot;</span>);</span><br><span class="line">        <span class="comment">//对Map数据进行分组。根据相同的slot放在一个分组</span></span><br><span class="line">        <span class="comment">//key就是slot，value就是一个组</span></span><br><span class="line">        Map&lt;Integer, List&lt;Map.Entry&lt;String, String&gt;&gt;&gt; result = map.entrySet()</span><br><span class="line">                .stream()</span><br><span class="line">                .collect(Collectors.groupingBy(</span><br><span class="line">                        entry -&gt; ClusterSlotHashUtil.calculateSlot(entry.getKey()))</span><br><span class="line">                );</span><br><span class="line">        <span class="comment">//串行的去执行mset的逻辑</span></span><br><span class="line">        <span class="keyword">for</span> (List&lt;Map.Entry&lt;String, String&gt;&gt; list : result.values()) &#123;</span><br><span class="line">            String[] arr = <span class="keyword">new</span> <span class="title class_">String</span>[list.size() * <span class="number">2</span>];</span><br><span class="line">            <span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; list.size(); i++) &#123;</span><br><span class="line">                j = i&lt;&lt;<span class="number">2</span>;</span><br><span class="line">                Map.Entry&lt;String, String&gt; e = list.get(<span class="number">0</span>);</span><br><span class="line">                arr[j] = e.getKey();</span><br><span class="line">                arr[j + <span class="number">1</span>] = e.getValue();</span><br><span class="line">            &#125;</span><br><span class="line">            jedisCluster.mset(arr);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@AfterEach</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">tearDown</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (jedisCluster != <span class="literal">null</span>) &#123;</span><br><span class="line">            jedisCluster.close();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>2.2.2 Spring集群环境下批处理代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"> <span class="keyword">void</span> <span class="title function_">testMSetInCluster</span><span class="params">()</span> &#123;</span><br><span class="line">     Map&lt;String, String&gt; map = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;(<span class="number">3</span>);</span><br><span class="line">     map.put(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;Rose&quot;</span>);</span><br><span class="line">     map.put(<span class="string">&quot;age&quot;</span>, <span class="string">&quot;21&quot;</span>);</span><br><span class="line">     map.put(<span class="string">&quot;sex&quot;</span>, <span class="string">&quot;Female&quot;</span>);</span><br><span class="line">     stringRedisTemplate.opsForValue().multiSet(map);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">     List&lt;String&gt; strings = stringRedisTemplate.opsForValue().multiGet(Arrays.asList(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;age&quot;</span>, <span class="string">&quot;sex&quot;</span>));</span><br><span class="line">     strings.forEach(System.out::println);</span><br><span class="line"></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>原理分析</strong></p>
+<p>在RedisAdvancedClusterAsyncCommandsImpl 类中</p>
+<p>首先根据slotHash算出来一个partitioned的map，map中的key就是slot，而他的value就是对应的对应相同slot的key对应的数据</p>
+<p>通过 RedisFuture<String> mset &#x3D; super.mset(op);进行异步的消息发送</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> RedisFuture&lt;String&gt; <span class="title function_">mset</span><span class="params">(Map&lt;K, V&gt; map)</span> &#123;</span><br><span class="line"></span><br><span class="line">    Map&lt;Integer, List&lt;K&gt;&gt; partitioned = SlotHash.partition(codec, map.keySet());</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (partitioned.size() &lt; <span class="number">2</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">super</span>.mset(map);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Map&lt;Integer, RedisFuture&lt;String&gt;&gt; executions = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (Map.Entry&lt;Integer, List&lt;K&gt;&gt; entry : partitioned.entrySet()) &#123;</span><br><span class="line"></span><br><span class="line">        Map&lt;K, V&gt; op = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">        entry.getValue().forEach(k -&gt; op.put(k, map.get(k)));</span><br><span class="line"></span><br><span class="line">        RedisFuture&lt;String&gt; mset = <span class="built_in">super</span>.mset(op);</span><br><span class="line">        executions.put(entry.getKey(), mset);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> MultiNodeExecution.firstOfAsync(executions);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3、服务器端优化-持久化配置"><a href="#3、服务器端优化-持久化配置" class="headerlink" title="3、服务器端优化-持久化配置"></a>3、服务器端优化-持久化配置</h2><p>Redis的持久化虽然可以保证数据安全，但也会带来很多额外的开销，因此持久化请遵循下列建议：</p>
+<ul>
+<li>用来做缓存的Redis实例尽量不要开启持久化功能</li>
+<li>建议关闭RDB持久化功能，使用AOF持久化</li>
+<li>利用脚本定期在slave节点做RDB，实现数据备份</li>
+<li>设置合理的rewrite阈值，避免频繁的bgrewrite</li>
+<li>配置no-appendfsync-on-rewrite &#x3D; yes，禁止在rewrite期间做aof，避免因AOF引起的阻塞</li>
+<li>部署有关建议：<ul>
+<li>Redis实例的物理机要预留足够内存，应对fork和rewrite</li>
+<li>单个Redis实例内存上限不要太大，例如4G或8G。可以加快fork的速度、减少主从同步、数据迁移压力</li>
+<li>不要与CPU密集型应用部署在一起</li>
+<li>不要与高硬盘负载应用一起部署。例如：数据库、消息队列</li>
+</ul>
+</li>
+</ul>
+<h2 id="4、服务器端优化-慢查询优化"><a href="#4、服务器端优化-慢查询优化" class="headerlink" title="4、服务器端优化-慢查询优化"></a>4、服务器端优化-慢查询优化</h2><h3 id="4-1-什么是慢查询"><a href="#4-1-什么是慢查询" class="headerlink" title="4.1 什么是慢查询"></a>4.1 什么是慢查询</h3><p>并不是很慢的查询才是慢查询，而是：在Redis执行时耗时超过某个阈值的命令，称为慢查询。</p>
+<p>慢查询的危害：由于Redis是单线程的，所以当客户端发出指令后，他们都会进入到redis底层的queue来执行，如果此时有一些慢查询的数据，就会导致大量请求阻塞，从而引起报错，所以我们需要解决慢查询问题。</p>
+<p><img src="/2024/08/18/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/1653129590210.png" alt="1653129590210"></p>
+<p>慢查询的阈值可以通过配置指定：</p>
+<p>slowlog-log-slower-than：慢查询阈值，单位是微秒。默认是10000，建议1000</p>
+<p>慢查询会被放入慢查询日志中，日志的长度有上限，可以通过配置指定：</p>
+<p>slowlog-max-len：慢查询日志（本质是一个队列）的长度。默认是128，建议1000</p>
+<p><img src="/2024/08/18/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/1653130457771.png" alt="1653130457771"></p>
+<p>修改这两个配置可以使用：config set命令：</p>
+<p><img src="/2024/08/18/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/1653130475979.png" alt="1653130475979"></p>
+<h3 id="4-2-如何查看慢查询"><a href="#4-2-如何查看慢查询" class="headerlink" title="4.2 如何查看慢查询"></a>4.2 如何查看慢查询</h3><p>知道了以上内容之后，那么咱们如何去查看慢查询日志列表呢：</p>
+<ul>
+<li>slowlog len：查询慢查询日志长度</li>
+<li>slowlog get [n]：读取n条慢查询日志</li>
+<li>slowlog reset：清空慢查询列表</li>
+</ul>
+<p><img src="/2024/08/18/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/1653130858066.png" alt="1653130858066"></p>
+<h2 id="5、服务器端优化-命令及安全配置"><a href="#5、服务器端优化-命令及安全配置" class="headerlink" title="5、服务器端优化-命令及安全配置"></a>5、服务器端优化-命令及安全配置</h2><p> 安全可以说是服务器端一个非常重要的话题，如果安全出现了问题，那么一旦这个漏洞被一些坏人知道了之后，并且进行攻击，那么这就会给咱们的系统带来很多的损失，所以我们这节课就来解决这个问题。</p>
+<p>Redis会绑定在0.0.0.0:6379，这样将会将Redis服务暴露到公网上，而Redis如果没有做身份认证，会出现严重的安全漏洞.<br>漏洞重现方式：<a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1039000">https://cloud.tencent.com/developer/article/1039000</a></p>
+<p>为什么会出现不需要密码也能够登录呢，主要是Redis考虑到每次登录都比较麻烦，所以Redis就有一种ssh免秘钥登录的方式，生成一对公钥和私钥，私钥放在本地，公钥放在redis端，当我们登录时服务器，再登录时候，他会去解析公钥和私钥，如果没有问题，则不需要利用redis的登录也能访问，这种做法本身也很常见，但是这里有一个前提，前提就是公钥必须保存在服务器上，才行，但是Redis的漏洞在于在不登录的情况下，也能把秘钥送到Linux服务器，从而产生漏洞</p>
+<p>漏洞出现的核心的原因有以下几点：</p>
+<ul>
+<li>Redis未设置密码</li>
+<li>利用了Redis的config set命令动态修改Redis配置</li>
+<li>使用了Root账号权限启动Redis</li>
+</ul>
+<p>所以：如何解决呢？我们可以采用如下几种方案</p>
+<p>为了避免这样的漏洞，这里给出一些建议：</p>
+<ul>
+<li>Redis一定要设置密码</li>
+<li>禁止线上使用下面命令：keys、flushall、flushdb、config set等命令。可以利用rename-command禁用。</li>
+<li>bind：限制网卡，禁止外网网卡访问</li>
+<li>开启防火墙</li>
+<li>不要使用Root账户启动Redis</li>
+<li>尽量不是有默认的端口</li>
+</ul>
+<h2 id="6、服务器端优化-Redis内存划分和内存配置"><a href="#6、服务器端优化-Redis内存划分和内存配置" class="headerlink" title="6、服务器端优化-Redis内存划分和内存配置"></a>6、服务器端优化-Redis内存划分和内存配置</h2><p>当Redis内存不足时，可能导致Key频繁被删除、响应时间变长、QPS不稳定等问题。当内存使用率达到90%以上时就需要我们警惕，并快速定位到内存占用的原因。</p>
+<p><strong>有关碎片问题分析</strong></p>
+<p>Redis底层分配并不是这个key有多大，他就会分配多大，而是有他自己的分配策略，比如8,16,20等等，假定当前key只需要10个字节，此时分配8肯定不够，那么他就会分配16个字节，多出来的6个字节就不能被使用，这就是我们常说的 碎片问题</p>
+<p><strong>进程内存问题分析：</strong></p>
+<p>这片内存，通常我们都可以忽略不计</p>
+<p><strong>缓冲区内存问题分析：</strong></p>
+<p>一般包括客户端缓冲区、AOF缓冲区、复制缓冲区等。客户端缓冲区又包括输入缓冲区和输出缓冲区两种。这部分内存占用波动较大，所以这片内存也是我们需要重点分析的内存问题。</p>
+<table>
+<thead>
+<tr>
+<th><strong>内存占用</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>数据内存</td>
+<td>是Redis最主要的部分，存储Redis的键值信息。主要问题是BigKey问题、内存碎片问题</td>
+</tr>
+<tr>
+<td>进程内存</td>
+<td>Redis主进程本身运⾏肯定需要占⽤内存，如代码、常量池等等；这部分内存⼤约⼏兆，在⼤多数⽣产环境中与Redis数据占⽤的内存相⽐可以忽略。</td>
+</tr>
+<tr>
+<td>缓冲区内存</td>
+<td>一般包括客户端缓冲区、AOF缓冲区、复制缓冲区等。客户端缓冲区又包括输入缓冲区和输出缓冲区两种。这部分内存占用波动较大，不当使用BigKey，可能导致内存溢出。</td>
+</tr>
+</tbody></table>
+<p>于是我们就需要通过一些命令，可以查看到Redis目前的内存分配状态：</p>
+<ul>
+<li>info memory：查看内存分配的情况</li>
+</ul>
+<p><img src="/2024/08/18/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/1653132073570.png" alt="1653132073570"></p>
+<ul>
+<li>memory xxx：查看key的主要占用情况</li>
+</ul>
+<p><img src="/2024/08/18/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/1653132098823.png" alt="1653132098823"></p>
+<p>接下来我们看到了这些配置，最关键的缓存区内存如何定位和解决呢？</p>
+<p>内存缓冲区常见的有三种：</p>
+<ul>
+<li>复制缓冲区：主从复制的repl_backlog_buf，如果太小可能导致频繁的全量复制，影响性能。通过replbacklog-size来设置，默认1mb</li>
+<li>AOF缓冲区：AOF刷盘之前的缓存区域，AOF执行rewrite的缓冲区。无法设置容量上限</li>
+<li>客户端缓冲区：分为输入缓冲区和输出缓冲区，输入缓冲区最大1G且不能设置。输出缓冲区可以设置</li>
+</ul>
+<p>以上复制缓冲区和AOF缓冲区 不会有问题，最关键就是客户端缓冲区的问题</p>
+<p>客户端缓冲区：指的就是我们发送命令时，客户端用来缓存命令的一个缓冲区，也就是我们向redis输入数据的输入端缓冲区和redis向客户端返回数据的响应缓存区，输入缓冲区最大1G且不能设置，所以这一块我们根本不用担心，如果超过了这个空间，redis会直接断开，因为本来此时此刻就代表着redis处理不过来了，我们需要担心的就是输出端缓冲区</p>
+<p><img src="/2024/08/18/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/1653132410073.png" alt="1653132410073"></p>
+<p>我们在使用redis过程中，处理大量的big value，那么会导致我们的输出结果过多，如果输出缓存区过大，会导致redis直接断开，而默认配置的情况下， 其实他是没有大小的，这就比较坑了，内存可能一下子被占满，会直接导致咱们的redis断开，所以解决方案有两个</p>
+<p>1、设置一个大小</p>
+<p>2、增加我们带宽的大小，避免我们出现大量数据从而直接超过了redis的承受能力</p>
+<h2 id="7、服务器端集群优化-集群还是主从"><a href="#7、服务器端集群优化-集群还是主从" class="headerlink" title="7、服务器端集群优化-集群还是主从"></a>7、服务器端集群优化-集群还是主从</h2><p>集群虽然具备高可用特性，能实现自动故障恢复，但是如果使用不当，也会存在一些问题：</p>
+<ul>
+<li>集群完整性问题</li>
+<li>集群带宽问题</li>
+<li>数据倾斜问题</li>
+<li>客户端性能问题</li>
+<li>命令的集群兼容性问题</li>
+<li>lua和事务问题</li>
+</ul>
+<p> <strong>问题1、在Redis的默认配置中，如果发现任意一个插槽不可用，则整个集群都会停止对外服务：</strong> </p>
+<p>大家可以设想一下，如果有几个slot不能使用，那么此时整个集群都不能用了，我们在开发中，其实最重要的是可用性，所以需要把如下配置修改成no，即有slot不能使用时，我们的redis集群还是可以对外提供服务</p>
+<p><img src="/2024/08/18/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/1653132740637.png" alt="1653132740637"></p>
+<p><strong>问题2、集群带宽问题</strong></p>
+<p>集群节点之间会不断的互相Ping来确定集群中其它节点的状态。每次Ping携带的信息至少包括：</p>
+<ul>
+<li>插槽信息</li>
+<li>集群状态信息</li>
+</ul>
+<p>集群中节点越多，集群状态信息数据量也越大，10个节点的相关信息可能达到1kb，此时每次集群互通需要的带宽会非常高，这样会导致集群中大量的带宽都会被ping信息所占用，这是一个非常可怕的问题，所以我们需要去解决这样的问题</p>
+<p><strong>解决途径：</strong></p>
+<ul>
+<li>避免大集群，集群节点数不要太多，最好少于1000，如果业务庞大，则建立多个集群。</li>
+<li>避免在单个物理机中运行太多Redis实例</li>
+<li>配置合适的cluster-node-timeout值</li>
+</ul>
+<p><strong>问题3、命令的集群兼容性问题</strong></p>
+<p>有关这个问题咱们已经探讨过了，当我们使用批处理的命令时，redis要求我们的key必须落在相同的slot上，然后大量的key同时操作时，是无法完成的，所以客户端必须要对这样的数据进行处理，这些方案我们之前已经探讨过了，所以不再这个地方赘述了。</p>
+<p><strong>问题4、lua和事务的问题</strong></p>
+<p>lua和事务都是要保证原子性问题，如果你的key不在一个节点，那么是无法保证lua的执行和事务的特性的，所以在集群模式是没有办法执行lua和事务的</p>
+<p><strong>那我们到底是集群还是主从</strong></p>
+<p>单体Redis（主从Redis）已经能达到万级别的QPS，并且也具备很强的高可用特性。如果主从能满足业务需求的情况下，所以如果不是在万不得已的情况下，尽量不搭建Redis集群</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://example.com">John Doe</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://example.com/2024/08/18/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/">http://example.com/2024/08/18/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E9%94%AE%E5%80%BC%E8%AE%BE%E8%AE%A1/">键值设计</a><a class="post-meta__tags" href="/tags/BigKey/">BigKey</a><a class="post-meta__tags" href="/tags/%E6%89%B9%E5%A4%84%E7%90%86/">批处理</a><a class="post-meta__tags" href="/tags/%E6%85%A2%E6%9F%A5%E8%AF%A2/">慢查询</a></div><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2024/08/20/Java/Nginx/%E8%AE%A4%E8%AF%86Nginx/" title="认识Nginx"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">Previous</div><div class="info-item-2">认识Nginx</div></div><div class="info-2"><div class="info-item-1">Nginx简介背景介绍Nginx（“engine x”）一个具有高性能的【HTTP】和【反向代理】的【WEB服务器】，同时也是一个【POP3&#x2F;SMTP&#x2F;IMAP代理服务器】，是由伊戈尔·赛索耶夫(俄罗斯人)使用C语言编写的，Nginx的第一个版本是2004年10月4号发布的0.1.0版本。另外值得一提的是伊戈尔·赛索耶夫将Nginx的源码进行了开源，这也为Nginx的发展提供了良好的保障。    名词解释 WEB服务器：  WEB服务器也叫网页服务器，英文名叫Web Server，主要功能是为用户提供网上信息浏览服务。  HTTP:  HTTP是超文本传输协议的缩写，是用于从WEB服务器传输超文本到本地浏览器的传输协议，也是互联网上应用最为广泛的一种网络协议。HTTP是一个客户端和服务器端请求和应答的标准，客户端是终端用户，服务端是网站，通过使用Web浏览器、网络爬虫或者其他工具，客户端发起一个到服务器上指定端口的HTTP请求。  POP3&#x2F;SMTP&#x2F;IMAP：  POP3(Post Offic Protocol 3)邮局协议的第三个版本，...</div></div></div></a><a class="pagination-related" href="/2024/08/17/Java/Redis/Redis%E9%AB%98%E7%BA%A7-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E5%90%8C%E6%AD%A5/" title="Redis高级-多级缓存同步"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">Redis高级-多级缓存同步</div></div><div class="info-2"><div class="info-item-1">5.缓存同步大多数情况下，浏览器查询到的都是缓存数据，如果缓存数据与数据库数据存在较大差异，可能会产生比较严重的后果。 所以我们必须保证数据库数据、缓存数据的一致性，这就是缓存与数据库的同步。 5.1.数据同步策略缓存数据同步的常见方式有三种： 设置有效期：给缓存设置有效期，到期后自动删除。再次查询时更新  优势：简单、方便  缺点：时效性差，缓存过期之前可能不一致  场景：更新频率较低，时效性要求低的业务   同步双写：在修改数据库的同时，直接修改缓存  优势：时效性强，缓存与数据库强一致 缺点：有代码侵入，耦合度高； 场景：对一致性、时效性要求较高的缓存数据  异步通知：修改数据库时发送事件通知，相关服务监听到通知后修改缓存数据  优势：低耦合，可以同时通知多个缓存服务 缺点：时效性一般，可能存在中间不一致状态 场景：时效性要求一般，有多个服务需要同步  而异步实现又可以基于MQ或者Canal来实现： 1）基于MQ的异步通知：  解读：  商品服务完成对数据的修改后，只需要发送一条消息到MQ中。 缓存服务监听MQ消息，然后完成对缓存的更新  依然有少量的代码侵入。 2）基于C...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">John Doe</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">74</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">170</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis%E9%AB%98%E7%BA%A7%E7%AF%87%E4%B9%8B%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="toc-number">1.</span> <span class="toc-text">Redis高级篇之最佳实践</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81Redis%E9%94%AE%E5%80%BC%E8%AE%BE%E8%AE%A1"><span class="toc-number">2.</span> <span class="toc-text">1、Redis键值设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1%E3%80%81%E4%BC%98%E9%9B%85%E7%9A%84key%E7%BB%93%E6%9E%84"><span class="toc-number">2.1.</span> <span class="toc-text">1.1、优雅的key结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2%E3%80%81%E6%8B%92%E7%BB%9DBigKey"><span class="toc-number">2.2.</span> <span class="toc-text">1.2、拒绝BigKey</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-1%E3%80%81BigKey%E7%9A%84%E5%8D%B1%E5%AE%B3"><span class="toc-number">2.2.1.</span> <span class="toc-text">1.2.1、BigKey的危害</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-2%E3%80%81%E5%A6%82%E4%BD%95%E5%8F%91%E7%8E%B0BigKey"><span class="toc-number">2.2.2.</span> <span class="toc-text">1.2.2、如何发现BigKey</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E2%91%A0redis-cli-%E2%80%93bigkeys"><span class="toc-number">2.2.2.1.</span> <span class="toc-text">①redis-cli –bigkeys</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E2%91%A1scan%E6%89%AB%E6%8F%8F"><span class="toc-number">2.2.2.2.</span> <span class="toc-text">②scan扫描</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E2%91%A2%E7%AC%AC%E4%B8%89%E6%96%B9%E5%B7%A5%E5%85%B7"><span class="toc-number">2.2.2.3.</span> <span class="toc-text">③第三方工具</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E2%91%A3%E7%BD%91%E7%BB%9C%E7%9B%91%E6%8E%A7"><span class="toc-number">2.2.2.4.</span> <span class="toc-text">④网络监控</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-3%E3%80%81%E5%A6%82%E4%BD%95%E5%88%A0%E9%99%A4BigKey"><span class="toc-number">2.2.3.</span> <span class="toc-text">1.2.3、如何删除BigKey</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3%E3%80%81%E6%81%B0%E5%BD%93%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">2.3.</span> <span class="toc-text">1.3、恰当的数据类型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BE%8B1%EF%BC%9A%E6%AF%94%E5%A6%82%E5%AD%98%E5%82%A8%E4%B8%80%E4%B8%AAUser%E5%AF%B9%E8%B1%A1%EF%BC%8C%E6%88%91%E4%BB%AC%E6%9C%89%E4%B8%89%E7%A7%8D%E5%AD%98%E5%82%A8%E6%96%B9%E5%BC%8F%EF%BC%9A"><span class="toc-number">2.3.1.</span> <span class="toc-text">例1：比如存储一个User对象，我们有三种存储方式：</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E2%91%A0%E6%96%B9%E5%BC%8F%E4%B8%80%EF%BC%9Ajson%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="toc-number">2.3.1.1.</span> <span class="toc-text">①方式一：json字符串</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E2%91%A1%E6%96%B9%E5%BC%8F%E4%BA%8C%EF%BC%9A%E5%AD%97%E6%AE%B5%E6%89%93%E6%95%A3"><span class="toc-number">2.3.1.2.</span> <span class="toc-text">②方式二：字段打散</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E2%91%A2%E6%96%B9%E5%BC%8F%E4%B8%89%EF%BC%9Ahash%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="toc-number">2.3.1.3.</span> <span class="toc-text">③方式三：hash（推荐）</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BE%8B2%EF%BC%9A%E5%81%87%E5%A6%82%E6%9C%89hash%E7%B1%BB%E5%9E%8B%E7%9A%84key%EF%BC%8C%E5%85%B6%E4%B8%AD%E6%9C%89100%E4%B8%87%E5%AF%B9field%E5%92%8Cvalue%EF%BC%8Cfield%E6%98%AF%E8%87%AA%E5%A2%9Eid%EF%BC%8C%E8%BF%99%E4%B8%AAkey%E5%AD%98%E5%9C%A8%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98%EF%BC%9F%E5%A6%82%E4%BD%95%E4%BC%98%E5%8C%96%EF%BC%9F"><span class="toc-number">2.3.2.</span> <span class="toc-text">例2：假如有hash类型的key，其中有100万对field和value，field是自增id，这个key存在什么问题？如何优化？</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%96%B9%E6%A1%88%E4%B8%80"><span class="toc-number">2.3.2.1.</span> <span class="toc-text">方案一</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%96%B9%E6%A1%88%E4%BA%8C"><span class="toc-number">2.3.2.2.</span> <span class="toc-text">方案二</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4%E3%80%81%E6%80%BB%E7%BB%93"><span class="toc-number">2.4.</span> <span class="toc-text">1.4、总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81%E6%89%B9%E5%A4%84%E7%90%86%E4%BC%98%E5%8C%96"><span class="toc-number">3.</span> <span class="toc-text">2、批处理优化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1%E3%80%81Pipeline"><span class="toc-number">3.1.</span> <span class="toc-text">2.1、Pipeline</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-1%E3%80%81%E6%88%91%E4%BB%AC%E7%9A%84%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8Eredis%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%98%AF%E8%BF%99%E6%A0%B7%E4%BA%A4%E4%BA%92%E7%9A%84"><span class="toc-number">3.1.1.</span> <span class="toc-text">2.1.1、我们的客户端与redis服务器是这样交互的</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-2%E3%80%81MSet"><span class="toc-number">3.1.2.</span> <span class="toc-text">2.1.2、MSet</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-3%E3%80%81Pipeline"><span class="toc-number">3.1.3.</span> <span class="toc-text">2.1.3、Pipeline</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2%E3%80%81%E9%9B%86%E7%BE%A4%E4%B8%8B%E7%9A%84%E6%89%B9%E5%A4%84%E7%90%86"><span class="toc-number">3.2.</span> <span class="toc-text">2.2、集群下的批处理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-1-%E4%B8%B2%E8%A1%8C%E5%8C%96%E6%89%A7%E8%A1%8C%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5"><span class="toc-number">3.2.1.</span> <span class="toc-text">2.2.1 串行化执行代码实践</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%E3%80%81%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AB%AF%E4%BC%98%E5%8C%96-%E6%8C%81%E4%B9%85%E5%8C%96%E9%85%8D%E7%BD%AE"><span class="toc-number">4.</span> <span class="toc-text">3、服务器端优化-持久化配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4%E3%80%81%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AB%AF%E4%BC%98%E5%8C%96-%E6%85%A2%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96"><span class="toc-number">5.</span> <span class="toc-text">4、服务器端优化-慢查询优化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E4%BB%80%E4%B9%88%E6%98%AF%E6%85%A2%E6%9F%A5%E8%AF%A2"><span class="toc-number">5.1.</span> <span class="toc-text">4.1 什么是慢查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E5%A6%82%E4%BD%95%E6%9F%A5%E7%9C%8B%E6%85%A2%E6%9F%A5%E8%AF%A2"><span class="toc-number">5.2.</span> <span class="toc-text">4.2 如何查看慢查询</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5%E3%80%81%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AB%AF%E4%BC%98%E5%8C%96-%E5%91%BD%E4%BB%A4%E5%8F%8A%E5%AE%89%E5%85%A8%E9%85%8D%E7%BD%AE"><span class="toc-number">6.</span> <span class="toc-text">5、服务器端优化-命令及安全配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6%E3%80%81%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AB%AF%E4%BC%98%E5%8C%96-Redis%E5%86%85%E5%AD%98%E5%88%92%E5%88%86%E5%92%8C%E5%86%85%E5%AD%98%E9%85%8D%E7%BD%AE"><span class="toc-number">7.</span> <span class="toc-text">6、服务器端优化-Redis内存划分和内存配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7%E3%80%81%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AB%AF%E9%9B%86%E7%BE%A4%E4%BC%98%E5%8C%96-%E9%9B%86%E7%BE%A4%E8%BF%98%E6%98%AF%E4%B8%BB%E4%BB%8E"><span class="toc-number">8.</span> <span class="toc-text">7、服务器端集群优化-集群还是主从</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/07/Java/LangChain4J/LangChain4j%E4%B9%8BRAG/" title="LangChain4j之RAG">LangChain4j之RAG</a><time datetime="2026-01-07T03:21:24.000Z" title="Created 2026-01-07 11:21:24">2026-01-07</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/06/Java/LangChain4J/LangChain4j%E4%B9%8B%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/" title="LangChain4j之函数调用">LangChain4j之函数调用</a><time datetime="2026-01-06T07:06:52.000Z" title="Created 2026-01-06 15:06:52">2026-01-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/05/Java/LangChain4J/LangChain4j%E4%B9%8B%E9%AB%98%E9%98%B6api/" title="LangChain4j之高阶api">LangChain4j之高阶api</a><time datetime="2026-01-05T12:08:53.000Z" title="Created 2026-01-05 20:08:53">2026-01-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/05/Java/LangChain4J/LangChain4j%E4%B9%8B%E4%BC%9A%E8%AF%9D%E8%AE%B0%E5%BF%86/" title="LangChain4j之会话记忆">LangChain4j之会话记忆</a><time datetime="2026-01-05T06:53:06.000Z" title="Created 2026-01-05 14:53:06">2026-01-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/05/Java/LangChain4J/LangChain4j%E5%85%A5%E9%97%A8/" title="LangChain4j入门">LangChain4j入门</a><time datetime="2026-01-05T01:08:25.000Z" title="Created 2026-01-05 09:08:25">2026-01-05</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By John Doe</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.5-b1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.5-b1"></script><script src="/js/main.js?v=5.5.5-b1"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
