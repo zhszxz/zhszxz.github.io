@@ -1,0 +1,14 @@
+#bgvideo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+
+/* 首页文字区域保持可见 */
+#page-header {
+  background: transparent !important;
+}
