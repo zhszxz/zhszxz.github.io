@@ -1,0 +1,664 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>集成学习 | Yang's Blog</title><meta name="author" content="Yang"><meta name="copyright" content="Yang"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="集成学习集成学习简介学习目标： 1.知道集成学习是什么？ 2.了解集成学习的分类 3.理解bagging集成的思想 4.理解boosting集成的思想 【知道】集成学习是什么？集成学习是机器学习中的一种思想，它通过多个模型的组合形成一个精度更高的模型，参与组合的模型成为弱学习器（基学习器）。训练时，使用训练集依次训练出这些弱学习器，对未知的样本进行预测时，使用这些弱学习器联合进行预测。  传统机器">
+<meta property="og:type" content="article">
+<meta property="og:title" content="集成学习">
+<meta property="og:url" content="http://example.com/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="Yang&#39;s Blog">
+<meta property="og:description" content="集成学习集成学习简介学习目标： 1.知道集成学习是什么？ 2.了解集成学习的分类 3.理解bagging集成的思想 4.理解boosting集成的思想 【知道】集成学习是什么？集成学习是机器学习中的一种思想，它通过多个模型的组合形成一个精度更高的模型，参与组合的模型成为弱学习器（基学习器）。训练时，使用训练集依次训练出这些弱学习器，对未知的样本进行预测时，使用这些弱学习器联合进行预测。  传统机器">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/avatar.png">
+<meta property="article:published_time" content="2026-04-28T13:34:17.000Z">
+<meta property="article:modified_time" content="2026-04-28T13:50:58.167Z">
+<meta property="article:author" content="Yang">
+<meta property="article:tag" content="bagging">
+<meta property="article:tag" content="boosting">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/avatar.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "集成学习",
+  "url": "http://example.com/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/",
+  "image": "http://example.com/img/avatar.png",
+  "datePublished": "2026-04-28T13:34:17.000Z",
+  "dateModified": "2026-04-28T13:50:58.167Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Yang",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="http://example.com/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.5-b1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '集成学习',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Yang's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">集成学习</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">集成学习</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-04-28T13:34:17.000Z" title="发表于 2026-04-28 21:34:17">2026-04-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-04-28T13:50:58.167Z" title="更新于 2026-04-28 21:50:58">2026-04-28</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="集成学习"><a href="#集成学习" class="headerlink" title="集成学习"></a>集成学习</h1><h2 id="集成学习简介"><a href="#集成学习简介" class="headerlink" title="集成学习简介"></a>集成学习简介</h2><p><strong>学习目标：</strong></p>
+<p>1.知道集成学习是什么？</p>
+<p>2.了解集成学习的分类</p>
+<p>3.理解bagging集成的思想</p>
+<p>4.理解boosting集成的思想</p>
+<h3 id="【知道】集成学习是什么？"><a href="#【知道】集成学习是什么？" class="headerlink" title="【知道】集成学习是什么？"></a>【知道】集成学习是什么？</h3><p>集成学习是机器学习中的一种思想，它通过多个模型的组合形成一个精度更高的模型，参与组合的模型成为弱学习器（基学习器）。训练时，使用训练集依次训练出这些弱学习器，对未知的样本进行预测时，使用这些弱学习器联合进行预测。</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/01.png"></p>
+<p>传统机器学习算法 (例如：决策树，逻辑回归等) 的目标都是寻找一个最优分类器尽可能的将训练数据分开。集成学习 (Ensemble Learning) 算法的基本思想就是将多个分类器组合，从而实现一个预测效果更好的集成分类器。集成算法可以说从一方面验证了中国的一句老话：三个臭皮匠，赛过诸葛亮</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/2021-1.png" alt="img"> </p>
+<p>集成学习通过建立几个模型来解决单一预测问题。它的工作原理是 生成多个分类器&#x2F;模型，各自独立地学习和作出预测。这些预测最后结合成组合预测，因此优于任何一个单分类的做出预测。</p>
+<h3 id="【了解】集成学习分类"><a href="#【了解】集成学习分类" class="headerlink" title="【了解】集成学习分类"></a>【了解】集成学习分类</h3><p>集成学习算法一般分为：bagging和boosting。</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/2021-2.png" alt="img"></p>
+<h3 id="【理解】bagging集成"><a href="#【理解】bagging集成" class="headerlink" title="【理解】bagging集成"></a>【理解】bagging集成</h3><p>Baggging 框架通过有放回的抽样产生不同的训练集，从而训练具有差异性的弱学习器，然后通过平权投票、多数表决的方式决定预测结果。</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/02.png"></p>
+<p><strong>例子：</strong></p>
+<p>目标：把下面的圈和方块进行分类</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/06.png"></p>
+<ol>
+<li>采样不同数据集<br><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/07.png"></li>
+</ol>
+<p>2)训练分类器<br><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/08.png"></p>
+<p>3)平权投票，获取最终结果<br><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/09.png"></p>
+<p>4)主要实现过程小结<br><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/10.png"></p>
+<h3 id="【理解】boosting集成"><a href="#【理解】boosting集成" class="headerlink" title="【理解】boosting集成"></a>【理解】boosting集成</h3><p>Boosting 体现了提升思想，每一个训练器重点关注前一个训练器不足的地方进行训练，通过加权投票的方式，得出预测结果。</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/11.png"></p>
+<p>Boosting是一组可将弱学习器升为强学习器算法。这类算法的工作机制类似：</p>
+<p>1.先从初始训练集训练出一个基学习器</p>
+<p>2.在根据基学习器的表现对训练样本分布进行调整，使得先前基学习器做错的训练样本在后续得到最大的关注。</p>
+<p>3.然后基于调整后的样本分布来训练下一个基学习器；</p>
+<p>4.如此重复进行，直至基学习器数目达到实现指定的值T为止。</p>
+<p>5.再将这T个基学习器进行加权结合得到集成学习器。</p>
+<p><strong>简而言之：每新加入一个弱学习器，整体能力就会得到提升</strong></p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/image-20230905233552550.png" alt="image-20230905233552550"></p>
+<p>Bagging 与 Boosting</p>
+<p><strong>区别一:数据方面</strong></p>
+<ul>
+<li>Bagging：有放回采样</li>
+<li>Boosting：全部数据集, 重点关注前一个弱学习器不足</li>
+</ul>
+<p><strong>区别二:投票方面</strong></p>
+<ul>
+<li>Bagging：平权投票</li>
+<li>Boosting：加权投票</li>
+</ul>
+<p><strong>区别三:学习顺序</strong></p>
+<ul>
+<li>Bagging的学习是并行的，每个学习器没有依赖关系</li>
+<li>Boosting学习是串行，学习有先后顺序</li>
+</ul>
+<h2 id="随机森林"><a href="#随机森林" class="headerlink" title="随机森林"></a>随机森林</h2><p><strong>学习目标：</strong></p>
+<p>1.理解随机森林的构建方法</p>
+<p>2.知道随机森林的API</p>
+<p>3.能够使用随机森林完成分类任务</p>
+<h3 id="【理解】算法思想"><a href="#【理解】算法思想" class="headerlink" title="【理解】算法思想"></a>【理解】算法思想</h3><p>随机森林是基于 Bagging 思想实现的一种集成学习算法，它采用决策树模型作为每一个基学习器。其构造过程：</p>
+<ol>
+<li>训练：<ol>
+<li>有放回的产生训练样本</li>
+<li>随机挑选 n 个特征（n 小于总特征数量）</li>
+</ol>
+</li>
+<li>预测：平权投票，多数表决输出预测结果</li>
+</ol>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/image-20230905235742221.png" alt="image-20230905235742221"></p>
+<p>随机森林的步骤</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/image-20230905235722201.png" alt="image-20230905235722201"></p>
+<p>如上图：</p>
+<p>  首先，对样本数据进行有放回的抽样，得到多个样本集。具体来讲就是每次从原来的N个训练样本中有放回地随机抽取m个样本(包括可能重复样本)。</p>
+<p>  然后，从候选的特征中随机抽取k个特征，作为当前节点下决策的备选特征，从这些特征中选择最好地划分训练样本的特征。用每个样本集作为训练样本构造决策树。单个决策树在产生样本集和确定特征后，使用CART算法计算，不剪枝。</p>
+<p>  最后，得到所需数目的决策树后，随机森林方法对这些树的输出进行投票，以得票最多的类作为随机森林的决策。</p>
+<p>说明：</p>
+<p>（1）随机森林的方法即对训练样本进行了采样，又对特征进行了采样，充分保证了所构建的每个树之间的独立性，使得投票结果更准确。</p>
+<p>（2）随机森林的随机性体现在每棵树的训练样本是随机的，树中每个节点的分裂属性也是随机选择的。有了这2个随机因素，即使每棵决策树没有进行剪枝，随机森林也不会产生过拟合的现象。</p>
+<p>随机森林中有两个可控制参数：</p>
+<ul>
+<li><p>森林中树的数量（一般选取值较大）</p>
+</li>
+<li><p>抽取的属性值m的大小。</p>
+</li>
+</ul>
+<p><strong>思考</strong></p>
+<ol>
+<li>为什么要随机抽样训练集？</li>
+</ol>
+<p>　　</p>
+<p>如果不进行随机抽样，每棵树的训练集都一样，那么最终训练出的树分类结果也是完全一样。</p>
+<ol start="2">
+<li>为什么要有放回地抽样？</li>
+</ol>
+<p>如果不是有放回的抽样，那么每棵树的训练样本都是不同的，都是没有交集的，这样每棵树都是“有偏的”，都是绝对“片面的”，也就是说每棵树训练出来都是有很大的差异的；而随机森林最后分类取决于多棵树（弱分类器）的投票表决。</p>
+<h3 id="【知道】随机森林-API"><a href="#【知道】随机森林-API" class="headerlink" title="【知道】随机森林 API"></a>【知道】<strong>随机森林 API</strong></h3><p><strong>sklearn.ensemble.RandomForestClassifier()</strong></p>
+<p><strong>n_estimators</strong>：决策树数量，(default &#x3D; 10) </p>
+<p><strong>Criterion</strong>：entropy、或者 gini, (default &#x3D; gini)</p>
+<p><strong>max_depth</strong>：指定树的最大深度，(default &#x3D; None 表示树会尽可能的生长)</p>
+<p><strong>max_features&#x3D;”auto”</strong>, 决策树构建时使用的最大特征数量</p>
+<ul>
+<li>If “auto”, then <code>max_features=sqrt(n_features)</code>.</li>
+<li>If “sqrt”, then <code>max_features=sqrt(n_features)</code>(same as “auto”).</li>
+<li>If “log2”, then <code>max_features=log2(n_features)</code>.</li>
+<li>If None, then <code>max_features=n_features</code>.</li>
+</ul>
+<p><strong>bootstrap</strong>：是否采用有放回抽样，如果为 False 将会使用全部训练样本，(default &#x3D; True)</p>
+<p><strong>min_samples_split：</strong> 结点分裂所需最小样本数，(default &#x3D; 2)</p>
+<ul>
+<li>如果节点样本数少于min_samples_split，则不会再进行划分.</li>
+<li>如果样本量不大，不需要设置这个值.</li>
+<li>如果样本量数量级非常大，则推荐增大这个值.</li>
+</ul>
+<p><strong>min_samples_leaf：</strong> 叶子节点的最小样本数，(default &#x3D; 1)</p>
+<ul>
+<li>如果某叶子节点数目小于样本数，则会和兄弟节点一起被剪枝.</li>
+<li>较小的叶子结点样本数量使模型更容易捕捉训练数据中的噪声.</li>
+</ul>
+<p><strong>min_impurity_split:</strong> 节点划分最小不纯度</p>
+<ul>
+<li>如果某节点的不纯度(基尼系数，均方差)小于这个阈值，则该节点不再生成子节点，并变为叶子节点.</li>
+<li>一般不推荐改动默认值1e-7。</li>
+</ul>
+<h3 id="【实践】-随机森林泰坦尼克号生存预测"><a href="#【实践】-随机森林泰坦尼克号生存预测" class="headerlink" title="【实践】 随机森林泰坦尼克号生存预测"></a>【实践】 随机森林泰坦尼克号生存预测</h3><p>这泰坦尼克号案例实战：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#1.数据导入</span></span><br><span class="line"><span class="comment">#1.1导入数据</span></span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="comment">#1.2.利用pandas的read.csv模块从互联网中收集泰坦尼克号数据集</span></span><br><span class="line">titanic=pd.read_csv(<span class="string">&quot;data/泰坦尼克号.csv&quot;</span>)</span><br><span class="line">titanic.info() <span class="comment">#查看信息</span></span><br><span class="line"><span class="comment">#2人工选择特征pclass,age,sex</span></span><br><span class="line">X=titanic[[<span class="string">&#x27;Pclass&#x27;</span>,<span class="string">&#x27;Age&#x27;</span>,<span class="string">&#x27;Sex&#x27;</span>]]</span><br><span class="line">y=titanic[<span class="string">&#x27;Survived&#x27;</span>]</span><br><span class="line"><span class="comment">#3.特征工程</span></span><br><span class="line"><span class="comment">#数据的填补</span></span><br><span class="line">X[<span class="string">&#x27;Age&#x27;</span>].fillna(X[<span class="string">&#x27;Age&#x27;</span>].mean(),inplace=<span class="literal">True</span>)</span><br><span class="line">X = pd.get_dummies(X)</span><br><span class="line"><span class="comment">#数据的切分</span></span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line">X_train, X_test, y_train, y_test =train_test_split(X,y,test_size=<span class="number">0.25</span>,random_state=<span class="number">22</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#4.使用单一的决策树进行模型的训练及预测分析</span></span><br><span class="line"><span class="keyword">from</span> sklearn.tree <span class="keyword">import</span> DecisionTreeClassifier</span><br><span class="line">dtc=DecisionTreeClassifier()</span><br><span class="line">dtc.fit(X_train,y_train)</span><br><span class="line">dtc_y_pred=dtc.predict(X_test)</span><br><span class="line">dtc.score(X_test,y_test)</span><br><span class="line"></span><br><span class="line"><span class="comment">#5.随机森林进行模型的训练和预测分析</span></span><br><span class="line"><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestClassifier</span><br><span class="line">rfc=RandomForestClassifier(max_depth=<span class="number">6</span>,random_state=<span class="number">9</span>)</span><br><span class="line">rfc.fit(X_train,y_train)</span><br><span class="line">rfc_y_pred=rfc.predict(X_test)</span><br><span class="line">rfc.score(X_test,y_test)</span><br><span class="line"></span><br><span class="line"><span class="comment">#6.性能评估</span></span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> classification_report</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;dtc_report:&quot;</span>,classification_report(dtc_y_pred,y_test))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;rfc_report:&quot;</span>,classification_report(rfc_y_pred,y_test))</span><br></pre></td></tr></table></figure>
+
+<p>超参数选择代码:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 随机森林去进行预测</span></span><br><span class="line"><span class="comment"># 1 实例化随机森林</span></span><br><span class="line">rf = RandomForestClassifier()</span><br><span class="line"><span class="comment"># 2 定义超参数的选择列表</span></span><br><span class="line">param=&#123;<span class="string">&quot;n_estimators&quot;</span>:[<span class="number">80</span>,<span class="number">100</span>,<span class="number">200</span>], <span class="string">&quot;max_depth&quot;</span>: [<span class="number">2</span>,<span class="number">4</span>,<span class="number">6</span>,<span class="number">8</span>,<span class="number">10</span>,<span class="number">12</span>],<span class="string">&quot;random_state&quot;</span>:[<span class="number">9</span>]&#125;</span><br><span class="line"><span class="comment"># 超参数调优</span></span><br><span class="line"><span class="comment"># 3 使用GridSearchCV进行网格搜索</span></span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> GridSearchCV</span><br><span class="line">gc = GridSearchCV(rf, param_grid=param, cv=<span class="number">2</span>)</span><br><span class="line">gc.fit(X_train, y_train)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;随机森林预测的准确率为：&quot;</span>, gc.score(X_test, y_test))</span><br></pre></td></tr></table></figure>
+
+<h2 id="Adaboost"><a href="#Adaboost" class="headerlink" title="Adaboost"></a>Adaboost</h2><p><strong>学习目标：</strong></p>
+<p>1、理解adaboost算法的思想</p>
+<p>2、知道adaboost的构建过程</p>
+<p>3、实践泰坦尼克号生存预测案例</p>
+<h3 id="【知道】adaboost算法简介"><a href="#【知道】adaboost算法简介" class="headerlink" title="【知道】adaboost算法简介"></a>【知道】adaboost算法简介</h3><p>Adaptive Boosting(自适应提升)基于 Boosting思想实现的一种集成学习算法核心思想是通过逐步提高那些被前一步分类错误的样本的权重来训练一个强分类器。弱分类器的性能比随机猜测强就行，即可构造出一个非常准确的强分类器。其特点是：<strong>训练时，样本具有权重，并且在训练过程中动态调整。被分错的样本的样本会加大权重，算法更加关注难分的样本。</strong></p>
+<p>Adaboost自适应在于：“关注”被错分的样本，“器重”性能好的弱分类器:<strong>（观察下图）</strong></p>
+<p> （1）不同的训练集—&gt;调整样本权重</p>
+<p> （2）“关注”—&gt;增加错分样本权重</p>
+<p> （3）“器重”—&gt;好的分类器权重大</p>
+<p> （4） 样本权重间接影响分类器权重</p>
+<p>主要过程演示如下：</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/boosting2.png"></p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/boosting3.png"></p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/boostin4.png"></p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/boosting5.png"></p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/boosting6.png"></p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/boosting7.png"></p>
+<p>AdaBoost算法的两个核心步骤：</p>
+<p><strong>权值调整：</strong> AdaBoost算法提高那些被前一轮基分类器错误分类样本的权值，而降低那些被正确分类样本的权值。从而使得那些没有得到正确分类的样本，由于权值的加大而受到后一轮基分类器的更大关注。</p>
+<p><strong>基分类器组合：</strong> AdaBoost采用加权多数表决的方法。</p>
+<ul>
+<li><p>分类误差率较小的弱分类器的权值大，在表决中起较大作用。</p>
+</li>
+<li><p>分类误差率较大的弱分类器的权值小，在表决中起较小作用。</p>
+</li>
+</ul>
+<h3 id="【理解】AdaBoost算法推导"><a href="#【理解】AdaBoost算法推导" class="headerlink" title="【理解】AdaBoost算法推导"></a>【理解】AdaBoost算法推导</h3><p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/image-20230906004228553.png" alt="image-20230906004228553"></p>
+<p>AdaBoost 模型公式中<br><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/12.png"></p>
+<ol>
+<li>α 为模型的权重</li>
+<li>m 为弱学习器数量</li>
+<li>h<sub>i</sub>(x) 表示弱学习器</li>
+<li>H(x) 输出结果大于 0 则归为正类，小于 0 则归为负类。</li>
+</ol>
+<p><strong>AdaBoost 权重更新公式:</strong></p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/13.png"><br>ε<sub>t</sub> 表示第 t 个弱学习器的错误率</p>
+<p><strong>AdaBoost 样本权重更新公式:</strong></p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/14.png"></p>
+<ol>
+<li>Z<sub>t</sub> 为归一化值（所有样本权重的总和）</li>
+<li>D<sub>t</sub>(x) 为样本权重</li>
+<li>α<sub>t</sub> 为模型权重。</li>
+</ol>
+<h3 id="【理解】-AdaBoost-构建过程"><a href="#【理解】-AdaBoost-构建过程" class="headerlink" title="【理解】 AdaBoost 构建过程"></a>【理解】 AdaBoost 构建过程</h3><p>下面为训练数数据，假设弱分类器由 x 产生，其阈值 v 使该分类器在训练数据集上的分类误差率最低，试用 Adaboost 算法学习一个强分类器。</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/15.png"></p>
+<ul>
+<li>构建第一个弱学习器</li>
+</ul>
+<ol>
+<li><p>初始化工作：初始化 10 个样本的权重，每个样本的权重为：0.1</p>
+</li>
+<li><p>构建第一个基学习器：</p>
+<ol>
+<li><p>寻找最优分裂点</p>
+<ol>
+<li>对特征值 x 进行排序，确定分裂点为：0.5、1.5、2.5、3.5、4.5、5.5、6.5、7.5、8.5</li>
+<li>当以 0.5 为分裂点时，有 5 个样本分类错误</li>
+<li>当以 1.5 为分裂点时，有 4 个样本分类错误</li>
+<li>当以 2.5 为分裂点时，有 3 个样本分类错误</li>
+<li>当以 3.5 为分裂点时，有 4 个样本分类错误</li>
+<li>当以 4.5 为分裂点时，有 5 个样本分类错误</li>
+<li>当以 5.5 为分裂点时，有 4 个样本分类错误</li>
+<li>当以 6.5 为分裂点时，有 5 个样本分类错误</li>
+<li>当以 7.5 为分裂点时，有 4 个样本分类错误</li>
+<li>当以 8.5 为分裂点时，有 3 个样本分类错误</li>
+<li>最终，选择以 2.5 作为分裂点，计算得出基学习器错误率为：3&#x2F;10&#x3D;0.3</li>
+</ol>
+</li>
+<li><p>计算模型权重: <code>1/2 * np.log((1-0.3)/0.3)=0.4236</code></p>
+</li>
+<li><p>更新样本权重：</p>
+<ol>
+<li>分类正确样本为：1、2、3、4、5、6、10 共 7 个，其计算公式为：e<sup>-α<sub>t</sub></sup>，则正确样本权重变化系数为：e<sup>-0.4236</sup> &#x3D; 0.6547</li>
+<li>分类错误样本为：7、8、9 共 3 个，其计算公式为：e<sup>α<sub>t</sub></sup>，则错误样本权重变化系数为：e<sup>0.4236</sup> &#x3D; 1.5275</li>
+<li>样本 1、2、3、4、5、6、10  权重值为：<code>0.06547</code></li>
+<li>样本 7、8、9  的样本权重值为：<code>0.15275</code></li>
+<li>归一化 Z<sub>t</sub>  值为：<code>0.06547 * 7 + 0.15275 * 3 = 0.9165 </code></li>
+<li>样本 1、2、3、4、5、6、10  最终权重值为： <code>0.07143</code></li>
+<li>样本 7、8、9  的样本权重值为：<code>0.1667</code></li>
+</ol>
+</li>
+<li><p>此时得到：</p>
+</li>
+</ol>
+<p> <img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/16.png"><br> <img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/17.png"></p>
+</li>
+</ol>
+<ul>
+<li>构建第二个弱学习器</li>
+</ul>
+<ol>
+<li><p>寻找最优分裂点：</p>
+<ol>
+<li><p>对特征值 x 进行排序，确定分裂点为：0.5、1.5、2.5、3.5、4.5、5.5、6.5、7.5、8.5</p>
+</li>
+<li><p>当以 0.5 为分裂点时，有 5 个样本分类错误，错误率为：<strong>0.07143 * 5 &#x3D; 0.35715</strong></p>
+</li>
+<li><p>当以 1.5 为分裂点时，有 4 个样本分类错误，错误率为：<strong>0.07143 * 1 + 0.16667 * 3 &#x3D; 0.57144</strong>       </p>
+</li>
+<li><p>当以 2.5 为分裂点时，有 3 个样本分类错误，错误率为：<strong>0.16667 * 3 &#x3D; 0.57144</strong></p>
+<p>。。。 。。。</p>
+</li>
+<li><p>当以 8.5 为分裂点时，有 3 个样本分类错误，错误率为：<strong>0.07143 * 3  &#x3D; 0.21429</strong></p>
+</li>
+<li><p>最终，选择以 8.5 作为分裂点，计算得出基学习器错误率为：0.21429</p>
+</li>
+</ol>
+</li>
+<li><p>计算模型权重：<code>1/2 * np.log((1-0.21429)/0.21429)=0.64963</code></p>
+</li>
+<li><p>分类正确的样本：1、2、3、7、8、9、10，其权重调整系数为：0.5222</p>
+</li>
+<li><p>分类错误的样本：4、5、6，其权重调整系数为：1.9148</p>
+</li>
+<li><p>分类正确样本权重值：</p>
+<ol>
+<li>样本 0、1、2、、9 为：0.0373</li>
+<li>样本 6、7、8 为：0.087</li>
+</ol>
+</li>
+<li><p>分类错误样本权重值：0.1368</p>
+</li>
+<li><p>归一化 Z<sub>t</sub>  值为：<code>0.0373 * 4 + 0.087 * 3 + 0.1368 * 3 = 0.8206 </code></p>
+</li>
+<li><p>最终权重：</p>
+<ol>
+<li>样本 0、1、2、9 为 ：0.0455</li>
+<li>样本 6、7、8 为：0.1060</li>
+<li>样本 3、4、5 为：0.1667</li>
+</ol>
+</li>
+<li><p>此时得到：</p>
+</li>
+</ol>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/18.png"></p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/19.png"></p>
+<ul>
+<li>构建第三个弱学习器</li>
+</ul>
+<p>错误率：0.1820，模型权重：0.7514<br><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/20.png"></p>
+<ul>
+<li>强学习器</li>
+</ul>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/21.png"></p>
+<h3 id="【实践】AdaBoost实战葡萄酒数据"><a href="#【实践】AdaBoost实战葡萄酒数据" class="headerlink" title="【实践】AdaBoost实战葡萄酒数据"></a>【实践】AdaBoost实战葡萄酒数据</h3><p> 葡萄酒分为白葡萄酒和红葡萄酒两类。<br>该分析涉及白葡萄酒，并基于数据集中显示的13个变量&#x2F;特征：<br>固定酸度，挥发性酸度，柠檬酸，残留糖，氯化物，游离二氧化硫，总二氧化硫，密度，pH值，硫酸盐，酒精，质量等。为了评估葡萄酒的质量，我们提出的方法就是根据酒的物理化学性质与质量的关系，找出高品质的葡萄酒具体与什么性质密切相关，这些性质又是如何影响葡萄酒的质量。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 获取数据</span></span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line">df_wine = pd.read_csv(<span class="string">&#x27;data/wine.data&#x27;</span>)</span><br><span class="line"><span class="comment"># 修改列名</span></span><br><span class="line">df_wine.columns = [<span class="string">&#x27;Class label&#x27;</span>, <span class="string">&#x27;Alcohol&#x27;</span>, <span class="string">&#x27;Malic acid&#x27;</span>, <span class="string">&#x27;Ash&#x27;</span>, <span class="string">&#x27;Alcalinity of ash&#x27;</span>, <span class="string">&#x27;Magnesium&#x27;</span>, <span class="string">&#x27;Total phenols&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;Flavanoids&#x27;</span>, <span class="string">&#x27;Nonflavanoid phenols&#x27;</span>, <span class="string">&#x27;Proanthocyanins&#x27;</span>, <span class="string">&#x27;Color intensity&#x27;</span>, <span class="string">&#x27;Hue&#x27;</span>, <span class="string">&#x27;OD280/OD315 of diluted wines&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;Proline&#x27;</span>]</span><br><span class="line"><span class="comment"># 去掉一类(1,2，3)</span></span><br><span class="line">df_wine = df_wine[df_wine[<span class="string">&#x27;Class label&#x27;</span>] != <span class="number">1</span>]</span><br><span class="line"><span class="comment"># 获取特征值和目标值</span></span><br><span class="line">X = df_wine[[<span class="string">&#x27;Alcohol&#x27;</span>, <span class="string">&#x27;Hue&#x27;</span>]].values</span><br><span class="line">y = df_wine[<span class="string">&#x27;Class label&#x27;</span>].values</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> LabelEncoder</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line"><span class="comment"># 类别转化 (2,3)=&gt;(0,1)</span></span><br><span class="line">le = LabelEncoder()</span><br><span class="line">y = le.fit_transform(y)</span><br><span class="line"><span class="comment"># 划分训练集和测试集</span></span><br><span class="line">X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=<span class="number">0.4</span>,random_state=<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.tree <span class="keyword">import</span> DecisionTreeClassifier</span><br><span class="line"><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> AdaBoostClassifier</span><br><span class="line"><span class="comment"># 机器学习(决策树和AdaBoost)</span></span><br><span class="line">tree = DecisionTreeClassifier(criterion=<span class="string">&#x27;entropy&#x27;</span>,max_depth=<span class="number">1</span>,random_state=<span class="number">0</span>)</span><br><span class="line">ada= AdaBoostClassifier(base_estimator=tree,n_estimators=<span class="number">500</span>,learning_rate=<span class="number">0.1</span>,random_state=<span class="number">0</span>)</span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> accuracy_score</span><br><span class="line"><span class="comment"># 决策树和AdaBoost分类器性能评估</span></span><br><span class="line"><span class="comment"># 决策树性能评估</span></span><br><span class="line">tree = tree.fit(X_train,y_train)</span><br><span class="line">y_train_pred = tree.predict(X_train)</span><br><span class="line">y_test_pred = tree.predict(X_test)</span><br><span class="line">tree_train = accuracy_score(y_train,y_train_pred)</span><br><span class="line">tree_test = accuracy_score(y_test,y_test_pred)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;Decision tree train/test accuracies %.3f/%.3f&#x27;</span> % (tree_train,tree_test))</span><br><span class="line"><span class="comment"># Decision tree train/test accuracies 0.845/0.854</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># AdaBoost性能评估</span></span><br><span class="line">ada = ada.fit(X_train,y_train)</span><br><span class="line">y_train_pred = ada.predict(X_train)</span><br><span class="line">y_test_pred = ada.predict(X_test)</span><br><span class="line">ada_train = accuracy_score(y_train,y_train_pred)</span><br><span class="line">ada_test = accuracy_score(y_test,y_test_pred)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;Adaboost train/test accuracies %.3f/%.3f&#x27;</span> % (ada_train,ada_test))</span><br><span class="line"><span class="comment"># Adaboost train/test accuracies 1/0.875 </span></span><br></pre></td></tr></table></figure>
+
+<p>总结：AdaBosst预测准确了所有的训练集类标，与单层决策树相比，它在测试机上表现稍微好一些。单决策树对于训练数据过拟合的程度更加严重一些。总之，我们可以发现Adaboost分类器能够些许提高分类器性能，并且与bagging分类器的准确率接近.</p>
+<h2 id="GBDT"><a href="#GBDT" class="headerlink" title="GBDT"></a>GBDT</h2><p><strong>学习目标：</strong></p>
+<ol>
+<li>掌握提升树的算法原理思想</li>
+<li>了解梯度提升树的原理思想</li>
+</ol>
+<h3 id="【理解】-提升树（Boosting-Tree）"><a href="#【理解】-提升树（Boosting-Tree）" class="headerlink" title="【理解】 提升树（Boosting Tree）"></a>【理解】 提升树（Boosting Tree）</h3><p>梯度提升树（Gradient Boosting Decision Tre）是提升树（Boosting Decision Tree）的一种改进算法，所以在讲梯度提升树之前先来介绍一下提升树。</p>
+<p>假如有个人30岁，我们首先用20岁去拟合，发现损失有10岁，这时我们用6岁去拟合剩下的损失，发现差距还有4岁，第三轮我们用3岁拟合剩下的差距，差距就只有一岁了。如果我们的迭代轮数还没有完，可以继续迭代下面，每一轮迭代，拟合的岁数误差都会减小。最后将每次拟合的岁数加起来便是模型输出的结果。</p>
+<h3 id="【理解】梯度提升树"><a href="#【理解】梯度提升树" class="headerlink" title="【理解】梯度提升树"></a>【理解】梯度提升树</h3><p>梯度提升树不再使用拟合残差，而是利用最速下降的近似方法，利用损失函数的负梯度作为提升树算法中的残差近似值。</p>
+<p>假设:</p>
+<ol>
+<li>我们前一轮迭代得到的强学习器是：f<sub>i-1</sub>(x)</li>
+<li>损失函数是：L(y,f<sub>​i−1</sub>(x))</li>
+<li>本轮迭代的目标是找到一个弱学习器：h<sub>i</sub>(x)</li>
+<li>让本轮的损失最小化: L(y, f<sub>i</sub>(x))&#x3D;L(y, f<sub>i−1</sub>(x)) + h<sub>i</sub>(x))</li>
+</ol>
+<p>当采用平方损失函数时:</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/23.png"></p>
+<p>则:</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/24.png"></p>
+<p>损失函数为平方损失, 则每个样本要拟合的负梯度为:</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/26.png"></p>
+<p>此时, 我们发现 GBDT 拟合的负梯度就是残差，或者说对于回归问题，拟合的目标值就是残差。</p>
+<p>如果我们的 GBDT 进行的是分类问题，则损失函数变为 logloss，此时拟合的目标值就是该损失函数的负梯度值。</p>
+<h3 id="【理解】GBDT例子"><a href="#【理解】GBDT例子" class="headerlink" title="【理解】GBDT例子"></a>【理解】GBDT例子</h3><p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/28.png"></p>
+<ul>
+<li>初始化弱学习器（CART树）</li>
+</ul>
+<p>我们通过计算当模型预测值为何值时，会使得第一个基学习器的平方误差最小，即：求损失函数对 f(x<sub>i</sub>) 的导数，并令导数为0.</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/29.png"></p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/30.png"></p>
+<ul>
+<li>构建第一个弱学习器（CART树）</li>
+</ul>
+<p>由于我们拟合的是样本的负梯度，即：</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/31.png"></p>
+<p>由此得到数据表如下：</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/32.png"></p>
+<blockquote>
+<p>上表中平方损失计算过程说明（以切分点1.5为例）：</p>
+<ol>
+<li><p>切分点1.5 将数据集分成两份 [5.56],[5.56 5.7  5.91 6.4  6.8  7.05 8.9  8.7  9.   9.05]</p>
+</li>
+<li><p>第一份的平均值为5.56  第二份数据的平均值为（5.7+5.91+6.4+6.8+7.05+8.9+8.7+9+9.05）&#x2F;9 &#x3D;  7.5011</p>
+</li>
+<li><p>由于是回归树，每份数据的平均值即为预测值，则可以计算误差，第一份数据的误差为0，第二份数据的平方误差为 :</p>
+</li>
+</ol>
+<p>$(5.70-7.5011)^2+(5.91-7.5011)^2+…+(9.05-7.5011)^2 &#x3D; 15.72308$</p>
+</blockquote>
+<p>以 6.5 作为切分点损失最小，构建决策树如下：</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/33.png"></p>
+<ul>
+<li>构建第二个弱学习器（CART树）</li>
+</ul>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/34.png"></p>
+<p>以 3.5 作为切分点损失最小，构建决策树如下：</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/35.png"></p>
+<ul>
+<li>构建第三个弱学习器（CART树）</li>
+</ul>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/36.png"></p>
+<p>以 6.5 作为切分点损失最小，构建决策树如下：</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/37.png"></p>
+<ul>
+<li>最终强学习器</li>
+</ul>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/38.png"></p>
+<ul>
+<li>GBDT算法流程</li>
+</ul>
+<p>1 初始化弱学习器（目标值的均值作为预测值）</p>
+<p>2 迭代构建学习器，每一个学习器拟合上一个学习器的负梯度</p>
+<p>3 直到达到指定的学习器个数</p>
+<p>4 当输入未知样本时，将所有弱学习器的输出结果组合起来作为强学习器的输出</p>
+<h3 id="【实践】泰坦尼克号案例实战"><a href="#【实践】泰坦尼克号案例实战" class="headerlink" title="【实践】泰坦尼克号案例实战"></a>【实践】泰坦尼克号案例实战</h3><p>该案例是在随机森林的基础上修改的，可以对比理解</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#1.数据导入</span></span><br><span class="line"><span class="comment">#1.1导入数据</span></span><br><span class="line"><span class="keyword">import</span>  pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="comment">#1.2.利用pandas的read.csv模块泰坦尼克号数据集</span></span><br><span class="line">titanic=pd.read_csv(<span class="string">&quot;../data/泰坦尼克号数据集.csv&quot;</span>)</span><br><span class="line">titanic.info() <span class="comment">#查看信息</span></span><br><span class="line"><span class="comment">#2人工选择特征pclass,age,sex</span></span><br><span class="line">X=titanic[[<span class="string">&#x27;Pclass&#x27;</span>,<span class="string">&#x27;Age&#x27;</span>,<span class="string">&#x27;Sex&#x27;</span>]]</span><br><span class="line">y=titanic[<span class="string">&#x27;Survived&#x27;</span>]</span><br><span class="line"><span class="comment">#3.特征工程</span></span><br><span class="line"><span class="comment">#数据的填补</span></span><br><span class="line">X[<span class="string">&#x27;Age&#x27;</span>].fillna(X[<span class="string">&#x27;Age&#x27;</span>].mean(),inplace=<span class="literal">True</span>)</span><br><span class="line"><span class="comment">#数据的切分</span></span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line">X_train, X_test, y_train, y_test =train_test_split(X,y,test_size=<span class="number">0.25</span>,random_state=<span class="number">22</span>)</span><br><span class="line"><span class="comment">#将数据转化为特征向量</span></span><br><span class="line"><span class="keyword">from</span> sklearn.feature_extraction <span class="keyword">import</span> DictVectorizer</span><br><span class="line">vec=DictVectorizer(sparse=<span class="literal">False</span>)</span><br><span class="line">X_train=vec.fit_transform(X_train.to_dict(orient=<span class="string">&#x27;records&#x27;</span>))</span><br><span class="line">X_test=vec.transform(X_test.to_dict(orient=<span class="string">&#x27;records&#x27;</span>))</span><br><span class="line"><span class="comment">#4.使用单一的决策树进行模型的训练及预测分析</span></span><br><span class="line"><span class="keyword">from</span> sklearn.tree <span class="keyword">import</span> DecisionTreeClassifier</span><br><span class="line">dtc=DecisionTreeClassifier()</span><br><span class="line">dtc.fit(X_train,y_train)</span><br><span class="line">dtc_y_pred=dtc.predict(X_test)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;score&quot;</span>,dtc.score(X_test,y_test))</span><br><span class="line"><span class="comment">#5.随机森林进行模型的训练和预测分析</span></span><br><span class="line"><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestClassifier</span><br><span class="line">rfc=RandomForestClassifier(random_state=<span class="number">9</span>)</span><br><span class="line">rfc.fit(X_train,y_train)</span><br><span class="line">rfc_y_pred=rfc.predict(X_test)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;score:forest&quot;</span>,rfc.score(X_test,y_test))</span><br><span class="line"><span class="comment">#6.GBDT进行模型的训练和预测分析</span></span><br><span class="line"><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> GradientBoostingClassifier</span><br><span class="line">gbc=GradientBoostingClassifier()</span><br><span class="line">gbc.fit(X_train,y_train)</span><br><span class="line">gbc_y_pred=gbc.predict(X_test)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;score:GradientBoosting&quot;</span>,gbc.score(X_test,y_test))</span><br><span class="line"><span class="comment">#7.性能评估</span></span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> classification_report</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;dtc_report:&quot;</span>,classification_report(dtc_y_pred,y_test))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;rfc_report:&quot;</span>,classification_report(rfc_y_pred,y_test))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;gbc_report:&quot;</span>,classification_report(gbc_y_pred,y_test))</span><br></pre></td></tr></table></figure>
+
+<h2 id="XGBoost"><a href="#XGBoost" class="headerlink" title="XGBoost"></a>XGBoost</h2><p><strong>学习目标：</strong></p>
+<p>1.知道XGBoost算法的思想</p>
+<p>2.理解XGBoost目标函数</p>
+<p>3.了解XGBoost的算法API</p>
+<p>4.实现红酒品质预测案例</p>
+<p>XGBoost（Extreme Gradient Boosting）全名叫极端梯度提升树，XGBoost是集成学习方法的王牌，在Kaggle数据挖掘比赛中，大部分获胜者用了XGBoost。</p>
+<p>XGBoost在绝大多数的回归和分类问题上表现的十分顶尖</p>
+<h3 id="【知道】XGBoost算法思想"><a href="#【知道】XGBoost算法思想" class="headerlink" title="【知道】XGBoost算法思想"></a>【知道】XGBoost算法思想</h3><p>XGBoost 是对GBDT的改进：</p>
+<ol>
+<li>求解损失函数极值时使用泰勒二阶展开</li>
+<li>在损失函数中加入了正则化项</li>
+<li>XGB 自创一个树节点分裂指标。这个分裂指标就是从损失函数推导出来的。XGB 分裂树时考虑到了树的复杂度。</li>
+</ol>
+<p>构建最优模型的方法是<strong>最小化训练数据的损失函数</strong> 。</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/39.png"></p>
+<p>预测值和真实值经过某个函数计算出损失，并求解所有样本的平均损失，并且使得损失最小。这种方法训练得到的模型复杂度较高，很容易出现过拟合。因此，为了降低模型的复杂度，在损失函数中添加了正则化项，如下所示：：</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/40.png"></p>
+<p>提高模型对未知数据的泛化能力。</p>
+<h3 id="【理解】XGboost的目标函数"><a href="#【理解】XGboost的目标函数" class="headerlink" title="【理解】XGboost的目标函数"></a>【理解】XGboost的目标函数</h3><p>XGBoost（Extreme Gradient Boosting）是对梯度提升树的改进，并且在损失函数中加入了正则化项。</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/41.png"></p>
+<p>目标函数的第一项表示整个强学习器的损失，第二部分表示强学习器中 K 个弱学习器的复杂度。</p>
+<p>xgboost 每一个弱学习器的复杂度主要从两个方面来考量：</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/42.png"></p>
+<ol>
+<li>γT 中的 T 表示一棵树的叶子结点数量，γ 是对该项的调节系数</li>
+<li>λ||w||<sup>2</sup> 中的 w 表示叶子结点输出值组成的向量，λ 是对该项的调节系数</li>
+</ol>
+<ul>
+<li>模型复杂度的介绍</li>
+</ul>
+<p>假设我们要预测一家人对电子游戏的喜好程度，考虑到年轻和年老相比，年轻更可能喜欢电子游戏，以及男性和女性相比，男性更喜欢电子游戏，故先根据年龄大小区分小孩和大人，然后再通过性别区分开是男是女，逐一给各人在电子游戏喜好程度上打分，如下图所示：</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/image-20230906170712026.png" alt="image-20230906170712026"></p>
+<p>就这样，训练出了2棵树tree1和tree2，类似之前gbdt的原理，两棵树的结论累加起来便是最终的结论，所以：</p>
+<ul>
+<li>小男孩的预测分数就是两棵树中小孩所落到的结点的分数相加：2 + 0.9 &#x3D; 2.9。</li>
+<li>爷爷的预测分数同理：-1 + 0.9 &#x3D; -0.1。</li>
+</ul>
+<p>具体如下图所示：</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/image-20230906170739818.png" alt="image-20230906170739818"></p>
+<p>如下树tree1的复杂度表示为：</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/image-20230906170804514.png" alt="image-20230906170804514"></p>
+<ul>
+<li>泰勒公式展开</li>
+</ul>
+<p>我们直接对目标函数求解比较困难，通过泰勒展开将目标函数换一种近似的表示方式。接下来对 y<sub>i</sub><sup>(t-1)</sup> 进行泰勒二阶展开，得到如下近似表示的公式：</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/45.png"></p>
+<p>其中，g<sub>i</sub> 和 h<sub>i</sub> 的分别为损失函数的一阶导、二阶导：</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/46-3996485.png"></p>
+<ul>
+<li>化简目标函数</li>
+</ul>
+<p>我们观察目标函数，发现以下两项都是常数项，我们可以将其去掉。</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/47.png"></p>
+<p>为什么说是常数项呢？这是因为当前学习器之前的学习器都已经训练完了，可以直接通过样本得出结果。化简之后的结果为：</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/48.png"></p>
+<p>我们再将 Ω(f<sub>t</sub>) 展开，结果如下：</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/49.png"></p>
+<p>这个公式中只有 f<sub>t</sub> ，该公式可以理解为，当前这棵树如何构建能够降低损失。</p>
+<ul>
+<li>问题再次转换</li>
+</ul>
+<p>我们再次理解下这个公式表示的含义：</p>
+<ol>
+<li>g<sub>i</sub> 表示每个样本的一阶导，h<sub>i</sub> 表示每个样本的二阶导</li>
+<li>f<sub>t</sub>(x<sub>i</sub>) 表示样本的预测值</li>
+<li>T 表示叶子结点的数目</li>
+<li>||w||<sup>2</sup> 由叶子结点值组成向量的模</li>
+</ol>
+<p>现在，我们发现公式的各个部分考虑的角度不同，有的从样本角度来看，例如：f<sub>t</sub>(x<sub>i</sub>) ，有的从叶子结点的角度来看，例如：T、||w||<sup>2</sup>。我们下面就要将其转换为相同角度的问题，这样方便进一步合并项、化简公式。我们统一将其转换为从叶子角度的问题：</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/50.png"></p>
+<p>例如：10 个样本，落在 D 结点 3 个样本，落在 E 结点 2 个样本，落在 F 结点 2 个样本，落在 G 结点 3 个样本</p>
+<ol>
+<li><p>D 结点计算： w1 * gi1 + w1 * gi2 + w1 * gi3 &#x3D; (gi1 + gi2 + gi3) * w1 </p>
+</li>
+<li><p>E 结点计算： w2 * gi4 + w2 * gi5 &#x3D; (gi4 + gi5) * w2 </p>
+</li>
+<li><p>F 结点计算： w3 * gi6 + w3 * gi6 &#x3D; (gi6 + gi7) * w3 </p>
+</li>
+<li><p>G 节点计算：w4 * gi8 + w4 * gi9 + w4 * gi10 &#x3D; (gi8 + gi9 + gi10) * w4</p>
+</li>
+</ol>
+<p>g<sub>i</sub> f<sub>t</sub>(x<sub>i</sub>)  表示样本的预测值，我们将其转换为如下形式：</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/51.png"></p>
+<ul>
+<li>w<sub>j</sub> 表示第 j 个叶子结点的值</li>
+<li>g<sub>i</sub> 表示每个样本的一阶导</li>
+</ul>
+<p>h<sub>i</sub>f<sub>t</sub><sup>2</sup>(x<sub>i</sub>) 转换从叶子结点的问题，如下：</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/52.png"></p>
+<p>λ||w||<sup>2</sup> 由于本身就是从叶子角度来看，我们将其转换一种表示形式：</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/53-3996485.png"></p>
+<p>我们重新梳理下整理后的公式，如下：</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/54.png"></p>
+<p>上面的公式太复杂了，我们令：</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/55.png"></p>
+<p>Gi 表示样本的一阶导之和，Hi 表示样本的二阶导之和，当确定损失函数时，就可以通过计算得到结果。</p>
+<p>现在我们的公式变为：</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/56.png"></p>
+<ul>
+<li>对叶子结点求导</li>
+</ul>
+<p>此时，公式可以看作是关于叶子结点 w 的一元二次函数，我们可以对 w 求导并令其等于 0，可得到 w 的最优值，将其代入到公式中，即可再次化简上面的公式。</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/57.png"></p>
+<p>将 w<sub>j</sub> 代入到公式中，即可得到：</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/58.png"></p>
+<ul>
+<li>XGBoost的树构建方法</li>
+</ul>
+<p>该公式也叫做打分函数 (scoring function)，它可以从树的损失函数、树的复杂度两个角度来衡量一棵树的优劣。</p>
+<p>这个公式，我们怎么用呢？</p>
+<p>当我们构建树时，可以用来选择树的最佳划分点。</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/59.png"></p>
+<p>其过程如下：</p>
+<ol>
+<li>对树中的每个叶子结点尝试进行分裂</li>
+<li>计算分裂前 - 分裂后的分数：<ol>
+<li>如果gain &gt; 0，则分裂之后树的损失更小，我们会考虑此次分裂</li>
+<li>如果gain&lt; 0，说明分裂后的分数比分裂前的分数大，此时不建议分裂</li>
+</ol>
+</li>
+<li>当触发以下条件时停止分裂：<ol>
+<li>达到最大深度</li>
+<li>叶子结点样本数量低于某个阈值</li>
+<li>等等…</li>
+</ol>
+</li>
+</ol>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/image-20230917143542540.png" alt="image-20230917143542540"></p>
+<h3 id="【了解】XGboost-API"><a href="#【了解】XGboost-API" class="headerlink" title="【了解】XGboost API"></a>【了解】XGboost API</h3><p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/image-20230906184836062.png" alt="image-20230906184836062"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bst = XGBClassifier(n_estimators, max_depth, learning_rate, objective)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/image-20230906184748265.png" alt="image-20230906184748265"></p>
+<h3 id="【实践】红酒品质预测"><a href="#【实践】红酒品质预测" class="headerlink" title="【实践】红酒品质预测"></a>【实践】红酒品质预测</h3><h4 id="数据集介绍"><a href="#数据集介绍" class="headerlink" title="数据集介绍"></a>数据集介绍</h4><p>数据集共包含 11 个特征，共计 3269 条数据. 我们通过训练模型来预测红酒的品质, 品质共有 6 个各类别，分别使用数字: 1、2、3、4、5 来表示。</p>
+<p><img src="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/60.png"></p>
+<h4 id="案例实现"><a href="#案例实现" class="headerlink" title="案例实现"></a>案例实现</h4><ul>
+<li>导入需要的库文件</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> joblib</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> xgboost <span class="keyword">as</span> xgb</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> classification_report</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> StratifiedKFold</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>数据基本处理</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">test01</span>():</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 1. 加载训练数据</span></span><br><span class="line">    data = pd.read_csv(<span class="string">&#x27;data/红酒品质分类.csv&#x27;</span>)</span><br><span class="line">    x = data.iloc[:, :-<span class="number">1</span>]</span><br><span class="line">    y = data.iloc[:, -<span class="number">1</span>] - <span class="number">3</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 2. 数据集分割</span></span><br><span class="line">    x_train, x_valid, y_train, y_valid = train_test_split(x, y, test_size=<span class="number">0.2</span>, stratify=y, random_state=<span class="number">22</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 3. 存储数据</span></span><br><span class="line">    pd.concat([x_train, y_train], axis=<span class="number">1</span>).to_csv(<span class="string">&#x27;data/红酒品质分类-train.csv&#x27;</span>)</span><br><span class="line">    pd.concat([x_valid, y_valid], axis=<span class="number">1</span>).to_csv(<span class="string">&#x27;data/红酒品质分类-valid.csv&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>模型基本训练</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">test02</span>():</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 1. 加载训练数据</span></span><br><span class="line">    train_data = pd.read_csv(<span class="string">&#x27;data/红酒品质分类-train.csv&#x27;</span>)</span><br><span class="line">    valid_data = pd.read_csv(<span class="string">&#x27;data/红酒品质分类-valid.csv&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 训练集</span></span><br><span class="line">    x_train = train_data.iloc[:, :-<span class="number">1</span>]</span><br><span class="line">    y_train = train_data.iloc[:, -<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 测试集</span></span><br><span class="line">    x_valid = valid_data.iloc[:, :-<span class="number">1</span>]</span><br><span class="line">    y_valid = valid_data.iloc[:, -<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 2. XGBoost模型训练</span></span><br><span class="line">    estimator = xgb.XGBClassifier(n_estimators=<span class="number">100</span>,</span><br><span class="line">                                  objective=<span class="string">&#x27;multi:softmax&#x27;</span>,</span><br><span class="line">                                  eval_metric=<span class="string">&#x27;merror&#x27;</span>,</span><br><span class="line">                                  eta=<span class="number">0.1</span>,</span><br><span class="line">                                  use_label_encoder=<span class="literal">False</span>,</span><br><span class="line">                                  random_state=<span class="number">22</span>)</span><br><span class="line">    estimator.fit(x_train, y_train)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 3. 模型评估</span></span><br><span class="line">    y_pred = estimator.predict(x_valid)</span><br><span class="line">    <span class="built_in">print</span>(classification_report(y_true=y_valid, y_pred=y_pred))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 4. 模型保存</span></span><br><span class="line">    joblib.dump(estimator, <span class="string">&#x27;model/xgboost.pth&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>模型参数调优</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 样本不均衡问题处理</span></span><br><span class="line"><span class="keyword">from</span> sklearn.utils <span class="keyword">import</span> class_weight</span><br><span class="line">classes_weights = class_weight.compute_sample_weight(class_weight=<span class="string">&#x27;balanced&#x27;</span>,y=y_train)</span><br><span class="line"><span class="comment"># 训练的时候，指定样本的权重</span></span><br><span class="line">estimator.fit(x_train, y_train,sample_weight = classes_weights)</span><br><span class="line">y_pred = estimator.predict(x_valid)</span><br><span class="line"><span class="built_in">print</span>(classification_report(y_true=y_valid, y_pred=y_pred))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 交叉验证，网格搜索</span></span><br><span class="line">train_data = pd.read_csv(<span class="string">&#x27;data/红酒品质分类-train.csv&#x27;</span>)</span><br><span class="line">valid_data = pd.read_csv(<span class="string">&#x27;data/红酒品质分类-valid.csv&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 训练集</span></span><br><span class="line">x_train = train_data.iloc[:, :-<span class="number">1</span>]</span><br><span class="line">y_train = train_data.iloc[:, -<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 测试集</span></span><br><span class="line">x_valid = valid_data.iloc[:, :-<span class="number">1</span>]</span><br><span class="line">y_valid = valid_data.iloc[:, -<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">spliter = StratifiedKFold(n_splits=<span class="number">5</span>, shuffle=<span class="literal">True</span>)</span><br><span class="line"><span class="comment"># 2. 定义超参数</span></span><br><span class="line">param_grid = &#123;<span class="string">&#x27;max_depth&#x27;</span>: np.arange(<span class="number">3</span>, <span class="number">5</span>, <span class="number">1</span>),</span><br><span class="line">              <span class="string">&#x27;n_estimators&#x27;</span>: np.arange(<span class="number">50</span>, <span class="number">150</span>, <span class="number">50</span>),</span><br><span class="line">              <span class="string">&#x27;eta&#x27;</span>: np.arange(<span class="number">0.1</span>, <span class="number">1</span>, <span class="number">0.3</span>)&#125;</span><br><span class="line">estimator = xgb.XGBClassifier(n_estimators=<span class="number">100</span>,</span><br><span class="line">                              objective=<span class="string">&#x27;multi:softmax&#x27;</span>,</span><br><span class="line">                              eval_metric=<span class="string">&#x27;merror&#x27;</span>,</span><br><span class="line">                              eta=<span class="number">0.1</span>,</span><br><span class="line">                              use_label_encoder=<span class="literal">False</span>,</span><br><span class="line">                              random_state=<span class="number">22</span>)</span><br><span class="line">cv = GridSearchCV(estimator,param_grid,cv=spliter)</span><br><span class="line">y_pred = cv.predict(x_valid)</span><br><span class="line"><span class="built_in">print</span>(classification_report(y_true=y_valid, y_pred=y_pred))</span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Yang</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/">http://example.com/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">Yang's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/bagging/">bagging</a><a class="post-meta__tags" href="/tags/boosting/">boosting</a></div><div class="post-share"><div class="social-share" data-image="/img/avatar.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/04/25/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%86%B3%E7%AD%96%E6%A0%91/" title="决策树"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">决策树</div></div><div class="info-2"><div class="info-item-1">决策树决策树简介学习目标 1.理解决策树算法的基本思想 2.知道构建决策树的步骤  【理解】决策树例子决策树算法是一种监督学习算法，英文是Decision tree。 决策树思想的来源非常朴素，试想每个人的大脑都有类似于if-else这样的逻辑判断，这其中的if表示的是条件，if之后的else就是一种选择或决策。程序设计中的条件分支结构就是if-else结构，最早的决策树就是利用这类结构分割数据的一种分类学习方法。 比如：你母亲要给你介绍男朋友，是这么来对话的： 女儿：多大年纪了？ 母亲：26。 女儿：长的帅不帅？ 母亲：挺帅的。 女儿：收入高不？ 母亲：不算很高，中等情况。 女儿：是公务员不？ 母亲：是，在税务局上班呢。 女儿：那好，我去见见。 于是你在脑袋里面就有了下面这张图：   作为女孩的你在决策过程就是典型的分类树决策。相当于通过年龄、长相、收入和是否公务员对将男人分为两个类别：见和不见。 【知道】决策树简介决策树是什么？ 决策树是一种树形结构，树中每个内部节点表示一个特征上的判断，每个分支代表一个判断结果的输出，每个叶子节点代表一种分类结果 决策树的建立过程： 1.特...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Yang</div><div class="author-info-description">萌新打怪升级中......</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">84</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">194</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">16</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0"><span class="toc-number">1.</span> <span class="toc-text">集成学习</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0%E7%AE%80%E4%BB%8B"><span class="toc-number">1.1.</span> <span class="toc-text">集成学习简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E7%9F%A5%E9%81%93%E3%80%91%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">1.1.1.</span> <span class="toc-text">【知道】集成学习是什么？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E4%BA%86%E8%A7%A3%E3%80%91%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0%E5%88%86%E7%B1%BB"><span class="toc-number">1.1.2.</span> <span class="toc-text">【了解】集成学习分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E7%90%86%E8%A7%A3%E3%80%91bagging%E9%9B%86%E6%88%90"><span class="toc-number">1.1.3.</span> <span class="toc-text">【理解】bagging集成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E7%90%86%E8%A7%A3%E3%80%91boosting%E9%9B%86%E6%88%90"><span class="toc-number">1.1.4.</span> <span class="toc-text">【理解】boosting集成</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9A%8F%E6%9C%BA%E6%A3%AE%E6%9E%97"><span class="toc-number">1.2.</span> <span class="toc-text">随机森林</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E7%90%86%E8%A7%A3%E3%80%91%E7%AE%97%E6%B3%95%E6%80%9D%E6%83%B3"><span class="toc-number">1.2.1.</span> <span class="toc-text">【理解】算法思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E7%9F%A5%E9%81%93%E3%80%91%E9%9A%8F%E6%9C%BA%E6%A3%AE%E6%9E%97-API"><span class="toc-number">1.2.2.</span> <span class="toc-text">【知道】随机森林 API</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E5%AE%9E%E8%B7%B5%E3%80%91-%E9%9A%8F%E6%9C%BA%E6%A3%AE%E6%9E%97%E6%B3%B0%E5%9D%A6%E5%B0%BC%E5%85%8B%E5%8F%B7%E7%94%9F%E5%AD%98%E9%A2%84%E6%B5%8B"><span class="toc-number">1.2.3.</span> <span class="toc-text">【实践】 随机森林泰坦尼克号生存预测</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Adaboost"><span class="toc-number">1.3.</span> <span class="toc-text">Adaboost</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E7%9F%A5%E9%81%93%E3%80%91adaboost%E7%AE%97%E6%B3%95%E7%AE%80%E4%BB%8B"><span class="toc-number">1.3.1.</span> <span class="toc-text">【知道】adaboost算法简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E7%90%86%E8%A7%A3%E3%80%91AdaBoost%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC"><span class="toc-number">1.3.2.</span> <span class="toc-text">【理解】AdaBoost算法推导</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E7%90%86%E8%A7%A3%E3%80%91-AdaBoost-%E6%9E%84%E5%BB%BA%E8%BF%87%E7%A8%8B"><span class="toc-number">1.3.3.</span> <span class="toc-text">【理解】 AdaBoost 构建过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E5%AE%9E%E8%B7%B5%E3%80%91AdaBoost%E5%AE%9E%E6%88%98%E8%91%A1%E8%90%84%E9%85%92%E6%95%B0%E6%8D%AE"><span class="toc-number">1.3.4.</span> <span class="toc-text">【实践】AdaBoost实战葡萄酒数据</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GBDT"><span class="toc-number">1.4.</span> <span class="toc-text">GBDT</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E7%90%86%E8%A7%A3%E3%80%91-%E6%8F%90%E5%8D%87%E6%A0%91%EF%BC%88Boosting-Tree%EF%BC%89"><span class="toc-number">1.4.1.</span> <span class="toc-text">【理解】 提升树（Boosting Tree）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E7%90%86%E8%A7%A3%E3%80%91%E6%A2%AF%E5%BA%A6%E6%8F%90%E5%8D%87%E6%A0%91"><span class="toc-number">1.4.2.</span> <span class="toc-text">【理解】梯度提升树</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E7%90%86%E8%A7%A3%E3%80%91GBDT%E4%BE%8B%E5%AD%90"><span class="toc-number">1.4.3.</span> <span class="toc-text">【理解】GBDT例子</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E5%AE%9E%E8%B7%B5%E3%80%91%E6%B3%B0%E5%9D%A6%E5%B0%BC%E5%85%8B%E5%8F%B7%E6%A1%88%E4%BE%8B%E5%AE%9E%E6%88%98"><span class="toc-number">1.4.4.</span> <span class="toc-text">【实践】泰坦尼克号案例实战</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#XGBoost"><span class="toc-number">1.5.</span> <span class="toc-text">XGBoost</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E7%9F%A5%E9%81%93%E3%80%91XGBoost%E7%AE%97%E6%B3%95%E6%80%9D%E6%83%B3"><span class="toc-number">1.5.1.</span> <span class="toc-text">【知道】XGBoost算法思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E7%90%86%E8%A7%A3%E3%80%91XGboost%E7%9A%84%E7%9B%AE%E6%A0%87%E5%87%BD%E6%95%B0"><span class="toc-number">1.5.2.</span> <span class="toc-text">【理解】XGboost的目标函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E4%BA%86%E8%A7%A3%E3%80%91XGboost-API"><span class="toc-number">1.5.3.</span> <span class="toc-text">【了解】XGboost API</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E5%AE%9E%E8%B7%B5%E3%80%91%E7%BA%A2%E9%85%92%E5%93%81%E8%B4%A8%E9%A2%84%E6%B5%8B"><span class="toc-number">1.5.4.</span> <span class="toc-text">【实践】红酒品质预测</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.5.4.1.</span> <span class="toc-text">数据集介绍</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.5.4.2.</span> <span class="toc-text">案例实现</span></a></li></ol></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/" title="集成学习">集成学习</a><time datetime="2026-04-28T13:34:17.000Z" title="发表于 2026-04-28 21:34:17">2026-04-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/25/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%86%B3%E7%AD%96%E6%A0%91/" title="决策树">决策树</a><time datetime="2026-04-25T07:46:42.000Z" title="发表于 2026-04-25 15:46:42">2026-04-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/22/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/" title="逻辑回归">逻辑回归</a><time datetime="2026-04-22T13:42:49.000Z" title="发表于 2026-04-22 21:42:49">2026-04-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/18/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/" title="线性回归">线性回归</a><time datetime="2026-04-18T14:07:18.000Z" title="发表于 2026-04-18 22:07:18">2026-04-18</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/15/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/KNN%E7%AE%97%E6%B3%95/" title="KNN算法">KNN算法</a><time datetime="2026-04-15T14:02:35.000Z" title="发表于 2026-04-15 22:02:35">2026-04-15</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Yang</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.5-b1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.5-b1"></script><script src="/js/main.js?v=5.5.5-b1"></script><div class="js-pjax"></div><video id="bgvideo" autoplay muted loop playsinline> <source src="/video/bg.mp4" type="video/mp4"> </video><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
