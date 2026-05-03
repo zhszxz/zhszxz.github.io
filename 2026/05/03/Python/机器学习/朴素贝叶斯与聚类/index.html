@@ -1,0 +1,422 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>朴素贝叶斯与聚类 | Yang's Blog</title><meta name="author" content="Yang"><meta name="copyright" content="Yang"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="朴素贝叶斯朴素贝叶斯介绍 复习常见概率的计算 知道贝叶斯公式 了解朴素贝叶斯是什么 了解拉普拉斯平滑系数的作用  【知道】常见的概率公式 条件概率： 表示事件A在另外一个事件B已经发生条件下的发生概率，P(A|B) 在女神喜欢的条件下，职业是程序员的概率？  女神喜欢条件下，有 2、3、4、7 共 4 个样本 4 个样本中，有程序员 3、4 共 2 个样本 则 P(程序员|喜欢) &#x3D; 2">
+<meta property="og:type" content="article">
+<meta property="og:title" content="朴素贝叶斯与聚类">
+<meta property="og:url" content="http://example.com/2026/05/03/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E4%B8%8E%E8%81%9A%E7%B1%BB/index.html">
+<meta property="og:site_name" content="Yang&#39;s Blog">
+<meta property="og:description" content="朴素贝叶斯朴素贝叶斯介绍 复习常见概率的计算 知道贝叶斯公式 了解朴素贝叶斯是什么 了解拉普拉斯平滑系数的作用  【知道】常见的概率公式 条件概率： 表示事件A在另外一个事件B已经发生条件下的发生概率，P(A|B) 在女神喜欢的条件下，职业是程序员的概率？  女神喜欢条件下，有 2、3、4、7 共 4 个样本 4 个样本中，有程序员 3、4 共 2 个样本 则 P(程序员|喜欢) &#x3D; 2">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/avatar.png">
+<meta property="article:published_time" content="2026-05-03T01:51:43.000Z">
+<meta property="article:modified_time" content="2026-05-03T02:00:10.413Z">
+<meta property="article:author" content="Yang">
+<meta property="article:tag" content="朴素贝叶斯">
+<meta property="article:tag" content="KMeans">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/avatar.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "朴素贝叶斯与聚类",
+  "url": "http://example.com/2026/05/03/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E4%B8%8E%E8%81%9A%E7%B1%BB/",
+  "image": "http://example.com/img/avatar.png",
+  "datePublished": "2026-05-03T01:51:43.000Z",
+  "dateModified": "2026-05-03T02:00:10.413Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Yang",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="http://example.com/2026/05/03/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E4%B8%8E%E8%81%9A%E7%B1%BB/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.5-b1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '朴素贝叶斯与聚类',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Yang's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">朴素贝叶斯与聚类</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">朴素贝叶斯与聚类</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-03T01:51:43.000Z" title="发表于 2026-05-03 09:51:43">2026-05-03</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-03T02:00:10.413Z" title="更新于 2026-05-03 10:00:10">2026-05-03</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="朴素贝叶斯"><a href="#朴素贝叶斯" class="headerlink" title="朴素贝叶斯"></a>朴素贝叶斯</h1><h2 id="朴素贝叶斯介绍"><a href="#朴素贝叶斯介绍" class="headerlink" title="朴素贝叶斯介绍"></a>朴素贝叶斯介绍</h2><ol>
+<li>复习常见概率的计算</li>
+<li>知道贝叶斯公式</li>
+<li>了解朴素贝叶斯是什么</li>
+<li>了解拉普拉斯平滑系数的作用</li>
+</ol>
+<h3 id="【知道】常见的概率公式"><a href="#【知道】常见的概率公式" class="headerlink" title="【知道】常见的概率公式"></a>【知道】常见的概率公式</h3><p><img src="/2026/05/03/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E4%B8%8E%E8%81%9A%E7%B1%BB/01.png"></p>
+<p><strong>条件概率：</strong> 表示事件A在另外一个事件B已经发生条件下的发生概率，P(A|B)</p>
+<p>在女神喜欢的条件下，职业是程序员的概率？</p>
+<ol>
+<li>女神喜欢条件下，有 2、3、4、7 共 4 个样本</li>
+<li>4 个样本中，有程序员 3、4 共 2 个样本</li>
+<li>则 P(程序员|喜欢) &#x3D; 2&#x2F;4 &#x3D; 0.5</li>
+</ol>
+<p><strong>联合概率：</strong> 表示多个条件同时成立的概率，P(AB)   &#x3D;  P(A)   P(B|A)<br>特征条件独立性假设：P(AB) &#x3D; P(A) P(B)</p>
+<p>职业是程序员并且体型匀称的概率？</p>
+<ol>
+<li>数据集中，共有 7 个样本	</li>
+<li>职业是程序员有 1、3、4 共 3 个样本，则其概率为：3&#x2F;7</li>
+<li>在职业是程序员，体型是匀称有 3  共 1 个样本，则其概率为：1&#x2F;3</li>
+<li>则即是程序员又体型匀称的概率为：3&#x2F;7 * 1&#x2F;3 &#x3D; 1&#x2F;7</li>
+</ol>
+<p><strong>联合概率 + 条件概率：</strong></p>
+<p>在女神喜欢的条件下，职业是程序员、体重超重的概率？  P(AB|C) &#x3D; P(A|C) P(B|AC)</p>
+<ol>
+<li>在女神喜欢的条件下，有 2、3、4、7 共 4 个样本</li>
+<li>在这 4 个样本中，职业是程序员有 3、4 共 2 个样本，则其概率为：2&#x2F;4&#x3D;0.5</li>
+<li>在在 2 个样本中，体型超重的有 4 共 1 个样本，则其概率为：1&#x2F;2 &#x3D; 0.5</li>
+<li>则 P(程序员, 超重|喜欢) &#x3D; 0.5 * 0.5 &#x3D; 0.25</li>
+</ol>
+<blockquote>
+<p>简言之：<br>条件概率：在去掉部分样本的情况下，计算某些样本的出现的概率，表示为：P(B|A)<br>联合概率：多个事件同时发生的概率是多少，表示为：P(AB) &#x3D; P(B)*P(A|B)</p>
+</blockquote>
+<h3 id="【理解】贝叶斯公式"><a href="#【理解】贝叶斯公式" class="headerlink" title="【理解】贝叶斯公式"></a>【理解】贝叶斯公式</h3><p><img src="/2026/05/03/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E4%B8%8E%E8%81%9A%E7%B1%BB/03.png"></p>
+<ol>
+<li>P(C) 表示 C 出现的概率</li>
+<li>P(W|C) 表示 C 条件 W 出现的概率</li>
+<li>P(W) 表示 W 出现的概率</li>
+</ol>
+<p><img src="/2026/05/03/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E4%B8%8E%E8%81%9A%E7%B1%BB/04.png"></p>
+<ol>
+<li>P(C|W) &#x3D; P(喜欢|程序员，超重)</li>
+<li>P(W|C) &#x3D; P(程序员，超重|喜欢)</li>
+<li>P(C) &#x3D; P(喜欢)</li>
+<li>P(W) &#x3D; P(程序员，超重)</li>
+</ol>
+<br />
+
+<ol>
+<li>根据训练样本估计先验概率P(C)：P(喜欢) &#x3D; 4&#x2F;7</li>
+<li>根据条件概率P(W|C)调整先验概率：P(程序员,超重|喜欢) &#x3D; 1&#x2F;4</li>
+<li>此时我们的后验概率P(C|W)为：P(程序员,超重|喜欢) * P(喜欢) &#x3D; 4&#x2F;7 * 1&#x2F;4 &#x3D; 1&#x2F;7 </li>
+<li>那么该部分数据占所有既为程序员，又超重的人中的比例是多少呢？<ol>
+<li>P(程序员,超重) &#x3D; P(程序员) * P(超重|程序员) &#x3D; 3&#x2F;7 * 2&#x2F;3 &#x3D; 2&#x2F;7</li>
+<li>P(喜欢|程序员, 超重) &#x3D; 1&#x2F;7 ➗ 2&#x2F;7 &#x3D; 0.5</li>
+</ol>
+</li>
+</ol>
+<h3 id="【理解】朴素贝叶斯"><a href="#【理解】朴素贝叶斯" class="headerlink" title="【理解】朴素贝叶斯"></a>【理解】朴素贝叶斯</h3><p>我们发现，在前面的贝叶斯概率计算过程中，需要计算 P(程序员,超重|喜欢) 和 P(程序员, 超重) 等联合概率，为了简化联合概率的计算，朴素贝叶斯在贝叶斯基础上增加：<strong>特征条件独立假设</strong>，即：特征之间是互为独立的。</p>
+<p>此时，联合概率的计算即可简化为：</p>
+<ol>
+<li>P(程序员,超重|喜欢)  &#x3D; P(程序员|喜欢) * P(超重|喜欢)</li>
+<li>P(程序员,超重) &#x3D; P(程序员) * P(超重)</li>
+</ol>
+<h3 id="【知道】拉普拉斯平滑系数"><a href="#【知道】拉普拉斯平滑系数" class="headerlink" title="【知道】拉普拉斯平滑系数"></a>【知道】拉普拉斯平滑系数</h3><p>由于训练样本的不足，导致概率计算时出现 0 的情况。为了解决这个问题，我们引入了拉普拉斯平滑系数。</p>
+<p>我们只需要知道为了避免概率值为 0，我们在分子和分母分别加上一个数值，这就是拉普拉斯平滑系数的作用。</p>
+<h2 id="【案例】情感分析"><a href="#【案例】情感分析" class="headerlink" title="【案例】情感分析"></a>【案例】情感分析</h2><p><strong>学习目标：</strong></p>
+<p>1.知道朴素贝叶斯的API</p>
+<p>2.能够应用朴素贝叶斯实现商品评论情感分析</p>
+<h3 id="【知道】api介绍"><a href="#【知道】api介绍" class="headerlink" title="【知道】api介绍"></a>【知道】api介绍</h3><ul>
+<li>sklearn.naive_bayes.MultinomialNB(alpha &#x3D; 1.0)<ul>
+<li>朴素贝叶斯分类</li>
+<li>alpha：拉普拉斯平滑系数</li>
+</ul>
+</li>
+</ul>
+<h3 id="【实践】商品评论情感分析"><a href="#【实践】商品评论情感分析" class="headerlink" title="【实践】商品评论情感分析"></a>【实践】商品评论情感分析</h3><p>已知商品评论数据，根据数据进行情感分类（好评、差评</p>
+<p><img src="/2026/05/03/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E4%B8%8E%E8%81%9A%E7%B1%BB/image-20230906224506412.png" alt="image-20230906224506412"></p>
+<h4 id="步骤分析"><a href="#步骤分析" class="headerlink" title="步骤分析"></a>步骤分析</h4><ul>
+<li>1）获取数据</li>
+<li>2）数据基本处理<ul>
+<li>2.1） 取出内容列，对数据进行分析</li>
+<li>2.2） 判定评判标准</li>
+<li>2.3） 选择停用词</li>
+<li>2.4） 把内容处理，转化成标准格式</li>
+<li>2.5） 统计词的个数</li>
+<li>2.6）准备训练集和测试集</li>
+</ul>
+</li>
+<li>3）模型训练</li>
+<li>4）模型评估</li>
+</ul>
+<h4 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> jieba</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> sklearn.feature_extraction.text <span class="keyword">import</span> CountVectorizer</span><br><span class="line"><span class="keyword">from</span> sklearn.naive_bayes <span class="keyword">import</span> MultinomialNB</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>1）获取数据</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 加载数据</span></span><br><span class="line">data = pd.read_csv(<span class="string">&quot;./data/书籍评价.csv&quot;</span>, encoding=<span class="string">&quot;gbk&quot;</span>)</span><br><span class="line">data</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>2）数据基本处理</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 2.1） 取出内容列，对数据进行分析</span></span><br><span class="line">content = data[<span class="string">&quot;内容&quot;</span>]</span><br><span class="line">content.head()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2.2） 判定评判标准 -- 1好评;0差评</span></span><br><span class="line">data.loc[data.loc[:, <span class="string">&#x27;评价&#x27;</span>] == <span class="string">&quot;好评&quot;</span>, <span class="string">&quot;评论标号&quot;</span>] = <span class="number">1</span>  <span class="comment"># 把好评修改为1</span></span><br><span class="line">data.loc[data.loc[:, <span class="string">&#x27;评价&#x27;</span>] == <span class="string">&#x27;差评&#x27;</span>, <span class="string">&#x27;评论标号&#x27;</span>] = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># data.head()</span></span><br><span class="line">good_or_bad = data[<span class="string">&#x27;评价&#x27;</span>].values  <span class="comment"># 获取数据</span></span><br><span class="line"><span class="built_in">print</span>(good_or_bad)</span><br><span class="line"><span class="comment"># [&#x27;好评&#x27; &#x27;好评&#x27; &#x27;好评&#x27; &#x27;好评&#x27; &#x27;差评&#x27; &#x27;差评&#x27; &#x27;差评&#x27; &#x27;差评&#x27; &#x27;差评&#x27; &#x27;好评&#x27; &#x27;差评&#x27; &#x27;差评&#x27; &#x27;差评&#x27;]</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2.3） 选择停用词</span></span><br><span class="line"><span class="comment"># 加载停用词</span></span><br><span class="line">stopwords=[]</span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;./data/stopwords.txt&#x27;</span>,<span class="string">&#x27;r&#x27;</span>,encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    lines=f.readlines()</span><br><span class="line">    <span class="built_in">print</span>(lines)</span><br><span class="line">    <span class="keyword">for</span> tmp <span class="keyword">in</span> lines:</span><br><span class="line">        line=tmp.strip()</span><br><span class="line">        <span class="built_in">print</span>(line)</span><br><span class="line">        stopwords.append(line)</span><br><span class="line"><span class="comment"># stopwords  # 查看新产生列表</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#对停用词表进行去重</span></span><br><span class="line">stopwords=<span class="built_in">list</span>(<span class="built_in">set</span>(stopwords))<span class="comment">#去重  列表形式</span></span><br><span class="line"><span class="built_in">print</span>(stopwords)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2.4） 把“内容”处理，转化成标准格式</span></span><br><span class="line">comment_list = []</span><br><span class="line"><span class="keyword">for</span> tmp <span class="keyword">in</span> content:</span><br><span class="line">    <span class="built_in">print</span>(tmp)</span><br><span class="line">    <span class="comment"># 对文本数据进行切割</span></span><br><span class="line">    <span class="comment"># cut_all 参数默认为 False,所有使用 cut 方法时默认为精确模式</span></span><br><span class="line">    seg_list = jieba.cut(tmp, cut_all=<span class="literal">False</span>)</span><br><span class="line">    <span class="built_in">print</span>(seg_list)  <span class="comment"># &lt;generator object Tokenizer.cut at 0x0000000007CF7DB0&gt;</span></span><br><span class="line">    seg_str = <span class="string">&#x27;,&#x27;</span>.join(seg_list)  <span class="comment"># 拼接字符串</span></span><br><span class="line">    <span class="built_in">print</span>(seg_str)</span><br><span class="line">    comment_list.append(seg_str)  <span class="comment"># 目的是转化成列表形式</span></span><br><span class="line"><span class="comment"># print(comment_list)  # 查看comment_list列表。</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2.5） 统计词的个数</span></span><br><span class="line"><span class="comment"># 进行统计词个数</span></span><br><span class="line"><span class="comment"># 实例化对象</span></span><br><span class="line"><span class="comment"># CountVectorizer 类会将文本中的词语转换为词频矩阵</span></span><br><span class="line">con = CountVectorizer(stop_words=stopwords)</span><br><span class="line"><span class="comment"># 进行词数统计</span></span><br><span class="line">X = con.fit_transform(comment_list)  <span class="comment"># 它通过 fit_transform 函数计算各个词语出现的次数</span></span><br><span class="line">name = con.get_feature_names()  <span class="comment"># 通过 get_feature_names()可获取词袋中所有文本的关键字</span></span><br><span class="line"><span class="built_in">print</span>(X.toarray())  <span class="comment"># 通过 toarray()可看到词频矩阵的结果</span></span><br><span class="line"><span class="built_in">print</span>(name)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2.6）准备训练集和测试集</span></span><br><span class="line"><span class="comment"># 准备训练集   这里将文本前10行当做训练集  后3行当做测试集</span></span><br><span class="line">x_train = X.toarray()[:<span class="number">10</span>, :]</span><br><span class="line">y_train = good_or_bad[:<span class="number">10</span>]</span><br><span class="line"><span class="comment"># 准备测试集</span></span><br><span class="line">x_text = X.toarray()[<span class="number">10</span>:, :]</span><br><span class="line">y_text = good_or_bad[<span class="number">10</span>:]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>3）模型训练</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 构建贝叶斯算法分类器</span></span><br><span class="line">mb = MultinomialNB(alpha=<span class="number">1</span>)  <span class="comment"># alpha 为可选项，默认 1.0，添加拉普拉修/Lidstone 平滑参数</span></span><br><span class="line"><span class="comment"># 训练数据</span></span><br><span class="line">mb.fit(x_train, y_train)</span><br><span class="line"><span class="comment"># 预测数据</span></span><br><span class="line">y_predict = mb.predict(x_text)</span><br><span class="line"><span class="comment">#预测值与真实值展示</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;预测值：&#x27;</span>,y_predict)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;真实值：&#x27;</span>,y_text)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>4）模型评估</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mb.score(x_text, y_text)</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="聚类"><a href="#聚类" class="headerlink" title="聚类"></a>聚类</h1><h2 id="聚类算法简介"><a href="#聚类算法简介" class="headerlink" title="聚类算法简介"></a>聚类算法简介</h2><p><strong>学习目标：</strong></p>
+<p>1.知道什么是聚类</p>
+<p>2.了解聚类算法的应用场景</p>
+<p>3.知道聚类算法的分类</p>
+<h3 id="【知道】聚类算法介绍"><a href="#【知道】聚类算法介绍" class="headerlink" title="【知道】聚类算法介绍"></a>【知道】聚类算法介绍</h3><p>一种典型的无监督学习算法，主要用于将相似的样本自动归到一个类别中。</p>
+<p>在聚类算法中根据样本之间的相似性，将样本划分到不同的类别中，对于不同的相似度计算方法，会得到不同的聚类结果，常用的相似度计算方法有欧式距离法。</p>
+<p><img src="/2026/05/03/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E4%B8%8E%E8%81%9A%E7%B1%BB/image-20230907095150331.png" alt="image-20230907095150331"></p>
+<h3 id="【了解】聚类算法在现实中的应用"><a href="#【了解】聚类算法在现实中的应用" class="headerlink" title="【了解】聚类算法在现实中的应用"></a>【了解】聚类算法在现实中的应用</h3><ul>
+<li>用户画像，广告推荐，Data Segmentation，搜索引擎的流量推荐，恶意流量识别</li>
+<li>基于位置信息的商业推送，新闻聚类，筛选排序</li>
+<li>图像分割，降维，识别；离群点检测；信用卡异常消费；发掘相同功能的基因片段</li>
+</ul>
+<p><img src="/2026/05/03/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E4%B8%8E%E8%81%9A%E7%B1%BB/image-20230907095330384.png" alt="image-20230907095330384"></p>
+<h3 id="【知道】分类"><a href="#【知道】分类" class="headerlink" title="【知道】分类"></a>【知道】分类</h3><p><img src="/2026/05/03/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E4%B8%8E%E8%81%9A%E7%B1%BB/image-20230907101036326.png" alt="image-20230907101036326"></p>
+<h2 id="聚类API的初步使用"><a href="#聚类API的初步使用" class="headerlink" title="聚类API的初步使用"></a>聚类API的初步使用</h2><p><strong>学习目标：</strong></p>
+<p>1.了解Kmeans算法的API</p>
+<p>2.动手实践Kmeans算法</p>
+<h3 id="【了解】api介绍"><a href="#【了解】api介绍" class="headerlink" title="【了解】api介绍"></a>【了解】api介绍</h3><ul>
+<li>sklearn.cluster.KMeans(n_clusters&#x3D;8)<ul>
+<li>参数:<ul>
+<li>n_clusters:开始的聚类中心数量<ul>
+<li>整型，缺省值&#x3D;8，生成的聚类数，即产生的质心（centroids）数。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>方法:<ul>
+<li>estimator.fit(x)</li>
+<li>estimator.predict(x)</li>
+<li>estimator.fit_predict(x)<ul>
+<li>计算聚类中心并预测每个样本属于哪个类别,相当于先调用fit(x),然后再调用predict(x)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="【实践】-案例"><a href="#【实践】-案例" class="headerlink" title="【实践】 案例"></a>【实践】 案例</h3><p>随机创建不同二维数据集作为训练集，并结合k-means算法将其聚类，你可以尝试分别聚类不同数量的簇，并观察聚类效果：</p>
+<p><img src="/2026/05/03/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E4%B8%8E%E8%81%9A%E7%B1%BB/image-20230907102501138.png" alt="image-20230907102501138"></p>
+<p>1.创建数据集</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> sklearn.datasets.samples_generator <span class="keyword">import</span> make_blobs</span><br><span class="line"><span class="keyword">from</span> sklearn.cluster <span class="keyword">import</span> KMeans</span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> calinski_harabaz_score</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建数据集</span></span><br><span class="line"><span class="comment"># X为样本特征，Y为样本簇类别， 共1000个样本，每个样本2个特征，共4个簇，</span></span><br><span class="line"><span class="comment"># 簇中心在[-1,-1], [0,0],[1,1], [2,2]， 簇方差分别为[0.4, 0.2, 0.2, 0.2]</span></span><br><span class="line">X, y = make_blobs(n_samples=<span class="number">1000</span>, n_features=<span class="number">2</span>, centers=[[-<span class="number">1</span>, -<span class="number">1</span>], [<span class="number">0</span>, <span class="number">0</span>], [<span class="number">1</span>, <span class="number">1</span>], [<span class="number">2</span>, <span class="number">2</span>]],</span><br><span class="line">                  cluster_std=[<span class="number">0.4</span>, <span class="number">0.2</span>, <span class="number">0.2</span>, <span class="number">0.2</span>],</span><br><span class="line">                  random_state=<span class="number">9</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 数据集可视化</span></span><br><span class="line">plt.scatter(X[:, <span class="number">0</span>], X[:, <span class="number">1</span>], marker=<span class="string">&#x27;o&#x27;</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+<p>2.使用k-means进行聚类,并使用CH方法评估</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">y_pred = KMeans(n_clusters=<span class="number">2</span>, random_state=<span class="number">9</span>).fit_predict(X)</span><br><span class="line"><span class="comment"># 分别尝试n_cluses=2\3\4,然后查看聚类效果</span></span><br><span class="line">plt.scatter(X[:, <span class="number">0</span>], X[:, <span class="number">1</span>], c=y_pred)</span><br><span class="line">plt.show()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 用Calinski-Harabasz Index评估的聚类分数</span></span><br><span class="line"><span class="built_in">print</span>(calinski_harabasz_score(X, y_pred))</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Kmeans算法流程"><a href="#Kmeans算法流程" class="headerlink" title="Kmeans算法流程"></a>Kmeans算法流程</h2><p><strong>学习目标</strong></p>
+<p>1、理解Kmeans算法的执行过程</p>
+<h3 id="【掌握】k-means聚类流程"><a href="#【掌握】k-means聚类流程" class="headerlink" title="【掌握】k-means聚类流程"></a>【掌握】k-means聚类流程</h3><p>1、随机设置K个特征空间内的点作为初始的聚类中心</p>
+<p>2、对于其他每个点计算到K个中心的距离，未知的点选择最近的一个聚类中心点作为标记类别</p>
+<p>3、接着对着标记的聚类中心之后，重新计算出每个聚类的新中心点（平均值）</p>
+<p>4、如果计算得出的新中心点与原中心点一样（质心不再移动），那么结束，否则重新进行第二步过程</p>
+<p>通过下图解释实现流程：</p>
+<p><img src="/2026/05/03/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E4%B8%8E%E8%81%9A%E7%B1%BB/image-20230907103735327.png" alt="image-20230907103735327"></p>
+<p>k-means聚类动态效果图：</p>
+<p><img src="/2026/05/03/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E4%B8%8E%E8%81%9A%E7%B1%BB/image-20230907103801026.png" alt="image-20230907103801026"></p>
+<h3 id="【练习】案例练习"><a href="#【练习】案例练习" class="headerlink" title="【练习】案例练习"></a>【练习】案例练习</h3><ul>
+<li>案例：</li>
+</ul>
+<p><img src="/2026/05/03/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E4%B8%8E%E8%81%9A%E7%B1%BB/image-20230907103836985.png" alt="image-20230907103836985"></p>
+<p>1、随机设置K个特征空间内的点作为初始的聚类中心（本案例中设置p1和p2）</p>
+<p><img src="/2026/05/03/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E4%B8%8E%E8%81%9A%E7%B1%BB/image-20230907103854967.png" alt="image-20230907103854967"></p>
+<p>2、对于其他每个点计算到K个中心的距离，未知的点选择最近的一个聚类中心点作为标记类别</p>
+<p><img src="/2026/05/03/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E4%B8%8E%E8%81%9A%E7%B1%BB/image-20230907104250565.png" alt="image-20230907104250565"></p>
+<p><img src="/2026/05/03/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E4%B8%8E%E8%81%9A%E7%B1%BB/image-20230907104255878.png" alt="image-20230907104255878"></p>
+<p>3、接着对着标记的聚类中心之后，重新计算出每个聚类的新中心点（平均值）</p>
+<p><img src="/2026/05/03/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E4%B8%8E%E8%81%9A%E7%B1%BB/image-20230907104345786.png" alt="image-20230907104345786"></p>
+<p>注意：这里P2′&#x3D;(2.3,3.3)，下同。</p>
+<p>4、如果计算得出的新中心点与原中心点一样（质心不再移动），那么结束，否则重新进行第二步过程【经过判断，需要重复上述步骤，开始新一轮迭代】</p>
+<p><img src="/2026/05/03/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E4%B8%8E%E8%81%9A%E7%B1%BB/image-20230907104603930.png" alt="image-20230907104603930"></p>
+<p><img src="/2026/05/03/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E4%B8%8E%E8%81%9A%E7%B1%BB/image-20230907104612455.png" alt="image-20230907104612455"></p>
+<p>5、当每次迭代结果不变时，认为算法收敛，聚类完成，<strong>K-Means一定会停下，不可能陷入一直选质心的过程。</strong></p>
+<p><img src="/2026/05/03/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E4%B8%8E%E8%81%9A%E7%B1%BB/image-20230907104715886.png" alt="image-20230907104715886"></p>
+<h2 id="评价指标"><a href="#评价指标" class="headerlink" title="评价指标"></a>评价指标</h2><p>学习目标:</p>
+<ol>
+<li>了解 SSE 聚类评估指标</li>
+<li>了解 SC 聚类评估指标</li>
+<li>了解 CH 聚类评估指标</li>
+<li>了解肘方法的作用</li>
+</ol>
+<h3 id="【了解】-SSE-误差平方和"><a href="#【了解】-SSE-误差平方和" class="headerlink" title="【了解】 SSE-误差平方和"></a>【了解】 SSE-误差平方和</h3><p><img src="/2026/05/03/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E4%B8%8E%E8%81%9A%E7%B1%BB/image-20230907110141764.png" alt="image-20230907110141764"></p>
+<ol>
+<li><p>K 表示聚类中心的个数</p>
+</li>
+<li><p>C<sub>i</sub> 表示簇</p>
+</li>
+<li><p>p 表示样本</p>
+</li>
+<li><p>m<sub>i</sub> 表示簇的质心</p>
+<p><img src="/2026/05/03/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E4%B8%8E%E8%81%9A%E7%B1%BB/image-20230907110135000.png" alt="image-20230907110135000"></p>
+</li>
+</ol>
+<p>SSE 越小，表示数据点越接近它们的中心，聚类效果越好。</p>
+<h3 id="【了解】SC-系数"><a href="#【了解】SC-系数" class="headerlink" title="【了解】SC 系数"></a>【了解】SC 系数</h3><p>结合了聚类的凝聚度（Cohesion）和分离度（Separation），用于评估聚类的效果。</p>
+<p><img src="/2026/05/03/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E4%B8%8E%E8%81%9A%E7%B1%BB/image-20230907111546495.png" alt="image-20230907111546495"></p>
+<p>其计算过程如下：</p>
+<ol>
+<li>计算每一个样本 i 到同簇内其他样本的平均距离 a<sub>i</sub>，该值越小，说明簇内的相似程度越大</li>
+<li>计算每一个样本 i 到最近簇 j 内的所有样本的平均距离 b<sub>ij</sub>，该值越大，说明该样本越不属于其他簇 j</li>
+<li>计算所有样本的平均轮廓系数</li>
+<li>轮廓系数的范围为：[-1, 1]，值越大聚类效果越好</li>
+</ol>
+<h3 id="【了解】肘部法"><a href="#【了解】肘部法" class="headerlink" title="【了解】肘部法"></a>【了解】肘部法</h3><p>肘部法可以用来确定 K 值.</p>
+<ul>
+<li><p>对于n个点的数据集，迭代计算 k from 1 to n，每次聚类完成后计算 SSE </p>
+</li>
+<li><p>SSE 是会逐渐变小的，因为每个点都是它所在的簇中心本身。</p>
+</li>
+<li><p>SSE 变化过程中会出现一个拐点，下降率突然变缓时即认为是最佳 n_clusters 值。</p>
+</li>
+<li><p>在决定什么时候停止训练时，肘形判据同样有效，数据通常有更多的噪音，在增加分类无法带来更多回报时，我们停止增加类别。</p>
+</li>
+</ul>
+<p><img src="/2026/05/03/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E4%B8%8E%E8%81%9A%E7%B1%BB/image-20230907113314803.png" alt="image-20230907113314803"></p>
+<h3 id="【了解】CH-系数"><a href="#【了解】CH-系数" class="headerlink" title="【了解】CH 系数"></a>【了解】CH 系数</h3><p>CH 系数结合了聚类的凝聚度（Cohesion）和分离度（Separation）、质心的个数，希望用最少的簇进行聚类。</p>
+<p><img src="/2026/05/03/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E4%B8%8E%E8%81%9A%E7%B1%BB/image-20230907111524608.png" alt="image-20230907111524608"></p>
+<p>SSW 的含义：</p>
+<ol>
+<li>C<sub>pi</sub> 表示质心</li>
+<li>x<sub>i</sub> 表示某个样本</li>
+<li>SSW 值是计算每个样本点到质心的距离，并累加起来</li>
+<li>SSW 表示表示簇内的内聚程度，越小越好</li>
+<li>m 表示样本数量</li>
+<li>k 表示质心个数</li>
+</ol>
+<p>SSB 的含义：</p>
+<ol>
+<li>C<sub>j</sub> 表示质心，X 表示质心与质心之间的中心点，n<sub>j</sub> 表示样本的个数</li>
+<li>SSB 表示簇与簇之间的分离度，SSB 越大越好</li>
+</ol>
+<h3 id="【实践】聚类评估的使用"><a href="#【实践】聚类评估的使用" class="headerlink" title="【实践】聚类评估的使用"></a>【实践】聚类评估的使用</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> make_blobs</span><br><span class="line"><span class="keyword">from</span> sklearn.cluster <span class="keyword">import</span> KMeans</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> silhouette_score</span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> calinski_harabasz_score</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    x, y = make_blobs(n_samples=<span class="number">1000</span>,</span><br><span class="line">                      n_features=<span class="number">2</span>,</span><br><span class="line">                      centers=[[-<span class="number">1</span>, -<span class="number">1</span>], [<span class="number">0</span>, <span class="number">0</span>], [<span class="number">1</span>, <span class="number">1</span>], [<span class="number">2</span>, <span class="number">2</span>]],</span><br><span class="line">                      cluster_std=[<span class="number">0.4</span>, <span class="number">0.2</span>, <span class="number">0.2</span>, <span class="number">0.2</span>],</span><br><span class="line">                      random_state=<span class="number">9</span>)</span><br><span class="line"></span><br><span class="line">    plt.figure(figsize=(<span class="number">18</span>, <span class="number">8</span>), dpi=<span class="number">80</span>)</span><br><span class="line">    plt.scatter(x[:, <span class="number">0</span>], x[:, <span class="number">1</span>], c=y)</span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line">    estimator = KMeans(n_clusters=<span class="number">4</span>, random_state=<span class="number">0</span>)</span><br><span class="line">    estimator.fit(x)</span><br><span class="line">    y_pred = estimator.predict(x)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 1. 计算 SSE 值</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;SSE:&#x27;</span>, estimator.inertia_)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 2. 计算 SC 系数</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;SC:&#x27;</span>, silhouette_score(x, y_pred))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 3. 计算 CH 系数</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;CH:&#x27;</span>, calinski_harabasz_score(x, y_pred))</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="【实践】案例"><a href="#【实践】案例" class="headerlink" title="【实践】案例"></a>【实践】案例</h2><h3 id="【了解】案例介绍"><a href="#【了解】案例介绍" class="headerlink" title="【了解】案例介绍"></a>【了解】案例介绍</h3><p>已知：客户性别、年龄、年收入、消费指数</p>
+<p>需求：对客户进行分析，找到业务突破口，寻找黄金客户</p>
+<p><img src="/2026/05/03/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E4%B8%8E%E8%81%9A%E7%B1%BB/image-20230907112055346.png" alt="image-20230907112055346"></p>
+<p>数据集共包含顾客的数据, 数据共有 4 个特征, 数据共有 200 条。接下来，使用聚类算法对具有相似特征的的顾客进行聚类，并可视化聚类结果。</p>
+<h3 id="【实践】案例实现"><a href="#【实践】案例实现" class="headerlink" title="【实践】案例实现"></a>【实践】案例实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.colors</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> sklearn.cluster <span class="keyword">import</span> KMeans</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">from</span> sklearn.manifold <span class="keyword">import</span> TSNE</span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> StandardScaler</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">pd.set_option(<span class="string">&#x27;display.max_columns&#x27;</span>, <span class="literal">None</span>)</span><br><span class="line">pd.set_option(<span class="string">&#x27;display.max_rows&#x27;</span>, <span class="literal">None</span>)</span><br><span class="line">pd.set_option(<span class="string">&#x27;display.width&#x27;</span>, <span class="number">1000</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 1. 读取顾客数据</span></span><br><span class="line">    data = pd.read_csv(<span class="string">&#x27;data/customers.csv&#x27;</span>)</span><br><span class="line">    data.columns = [<span class="string">&#x27;CustomerID&#x27;</span>, <span class="string">&#x27;Gender&#x27;</span>, <span class="string">&#x27;Age&#x27;</span>, <span class="string">&#x27;Annual Income&#x27;</span>, <span class="string">&#x27;Spending Score&#x27;</span>]</span><br><span class="line">    <span class="comment"># print(data.head())</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 2. 对 Gender 特征进行独热编码</span></span><br><span class="line">    data = pd.get_dummies(data, columns=[<span class="string">&#x27;Gender&#x27;</span>])</span><br><span class="line">    <span class="comment"># print(data.head())</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 3. 数据标准化</span></span><br><span class="line">    scaler = StandardScaler()</span><br><span class="line">    data = scaler.fit_transform(data)</span><br><span class="line">    <span class="built_in">print</span>(data)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 4. 去除非 ID 列进行聚类分析</span></span><br><span class="line">    data = data[:, <span class="number">1</span>:]</span><br><span class="line">    <span class="comment"># print(data[:5])</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 5. 肘部法寻找质心个数</span></span><br><span class="line">    sse = []</span><br><span class="line">    <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">20</span>):</span><br><span class="line">        estimator = KMeans(n_clusters=k, random_state=<span class="number">0</span>)</span><br><span class="line">        estimator.fit(data)</span><br><span class="line">        sse.append(estimator.inertia_)</span><br><span class="line"></span><br><span class="line">    plt.plot(<span class="built_in">range</span>(<span class="number">1</span>, <span class="number">20</span>), sse)</span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 6. 确定质心的个数</span></span><br><span class="line">    estimator = KMeans(n_clusters=<span class="number">10</span>, n_init=<span class="number">10</span>, random_state=<span class="number">0</span>)</span><br><span class="line">    y_pred = estimator.fit_predict(data)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 7. 聚类结果可视化</span></span><br><span class="line">    plt.scatter(X.values[y_kmeans == <span class="number">0</span>, <span class="number">0</span>], X.values[y_kmeans == <span class="number">0</span>, <span class="number">1</span>], s=<span class="number">100</span>, c=<span class="string">&#x27;red&#x27;</span>, label=<span class="string">&#x27;Standard&#x27;</span>)    		</span><br><span class="line">    plt.scatter(X.values[y_kmeans == <span class="number">1</span>, <span class="number">0</span>], X.values[y_kmeans == <span class="number">1</span>, <span class="number">1</span>], s=<span class="number">100</span>, c=<span class="string">&#x27;blue&#x27;</span>, label=<span class="string">&#x27;Traditional&#x27;</span>)  </span><br><span class="line">    plt.scatter(X.values[y_kmeans == <span class="number">2</span>, <span class="number">0</span>], X.values[y_kmeans == <span class="number">2</span>, <span class="number">1</span>], s=<span class="number">100</span>, c=<span class="string">&#x27;green&#x27;</span>, label=<span class="string">&#x27;Normal&#x27;</span>)  </span><br><span class="line">    plt.scatter(X.values[y_kmeans == <span class="number">3</span>, <span class="number">0</span>], X.values[y_kmeans == <span class="number">3</span>, <span class="number">1</span>], s=<span class="number">100</span>, c=<span class="string">&#x27;cyan&#x27;</span>, label=<span class="string">&#x27;Youth&#x27;</span>)</span><br><span class="line">    plt.scatter(X.values[y_kmeans == <span class="number">4</span>, <span class="number">0</span>], X.values[y_kmeans == <span class="number">4</span>, <span class="number">1</span>], s=<span class="number">100</span>, c=<span class="string">&#x27;magenta&#x27;</span>, label=<span class="string">&#x27;TA&#x27;</span>)</span><br><span class="line">    plt.scatter(mykeans.cluster_centers_[:, <span class="number">0</span>], mykeans.cluster_centers_[:, <span class="number">1</span>], s=<span class="number">300</span>, c=<span class="string">&#x27;black&#x27;</span>, label=<span class="string">&#x27;Centroids’)</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    plt.title(&#x27;</span>Clusters of customers<span class="string">&#x27;)</span></span><br><span class="line"><span class="string">    plt.xlabel(&#x27;</span>Annual Income (k$)<span class="string">&#x27;)</span></span><br><span class="line"><span class="string">    plt.ylabel(&#x27;</span>Spending Score (<span class="number">1</span>-<span class="number">100</span>)<span class="string">&#x27;)   </span></span><br><span class="line"><span class="string">    plt.legend() </span></span><br><span class="line"><span class="string">    plt.show()</span></span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Yang</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2026/05/03/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E4%B8%8E%E8%81%9A%E7%B1%BB/">http://example.com/2026/05/03/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E4%B8%8E%E8%81%9A%E7%B1%BB/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">Yang's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF/">朴素贝叶斯</a><a class="post-meta__tags" href="/tags/KMeans/">KMeans</a></div><div class="post-share"><div class="social-share" data-image="/img/avatar.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/" title="集成学习"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">集成学习</div></div><div class="info-2"><div class="info-item-1">集成学习集成学习简介学习目标： 1.知道集成学习是什么？ 2.了解集成学习的分类 3.理解bagging集成的思想 4.理解boosting集成的思想 【知道】集成学习是什么？集成学习是机器学习中的一种思想，它通过多个模型的组合形成一个精度更高的模型，参与组合的模型成为弱学习器（基学习器）。训练时，使用训练集依次训练出这些弱学习器，对未知的样本进行预测时，使用这些弱学习器联合进行预测。  传统机器学习算法 (例如：决策树，逻辑回归等) 的目标都是寻找一个最优分类器尽可能的将训练数据分开。集成学习 (Ensemble Learning) 算法的基本思想就是将多个分类器组合，从而实现一个预测效果更好的集成分类器。集成算法可以说从一方面验证了中国的一句老话：三个臭皮匠，赛过诸葛亮   集成学习通过建立几个模型来解决单一预测问题。它的工作原理是 生成多个分类器&#x2F;模型，各自独立地学习和作出预测。这些预测最后结合成组合预测，因此优于任何一个单分类的做出预测。 【了解】集成学习分类集成学习算法一般分为：bagging和boosting。  【理解】bagging集成Baggging ...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Yang</div><div class="author-info-description">萌新打怪升级中......</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">85</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">196</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">16</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF"><span class="toc-number">1.</span> <span class="toc-text">朴素贝叶斯</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.1.</span> <span class="toc-text">朴素贝叶斯介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E7%9F%A5%E9%81%93%E3%80%91%E5%B8%B8%E8%A7%81%E7%9A%84%E6%A6%82%E7%8E%87%E5%85%AC%E5%BC%8F"><span class="toc-number">1.1.1.</span> <span class="toc-text">【知道】常见的概率公式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E7%90%86%E8%A7%A3%E3%80%91%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%85%AC%E5%BC%8F"><span class="toc-number">1.1.2.</span> <span class="toc-text">【理解】贝叶斯公式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E7%90%86%E8%A7%A3%E3%80%91%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF"><span class="toc-number">1.1.3.</span> <span class="toc-text">【理解】朴素贝叶斯</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E7%9F%A5%E9%81%93%E3%80%91%E6%8B%89%E6%99%AE%E6%8B%89%E6%96%AF%E5%B9%B3%E6%BB%91%E7%B3%BB%E6%95%B0"><span class="toc-number">1.1.4.</span> <span class="toc-text">【知道】拉普拉斯平滑系数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E3%80%90%E6%A1%88%E4%BE%8B%E3%80%91%E6%83%85%E6%84%9F%E5%88%86%E6%9E%90"><span class="toc-number">1.2.</span> <span class="toc-text">【案例】情感分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E7%9F%A5%E9%81%93%E3%80%91api%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.2.1.</span> <span class="toc-text">【知道】api介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E5%AE%9E%E8%B7%B5%E3%80%91%E5%95%86%E5%93%81%E8%AF%84%E8%AE%BA%E6%83%85%E6%84%9F%E5%88%86%E6%9E%90"><span class="toc-number">1.2.2.</span> <span class="toc-text">【实践】商品评论情感分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4%E5%88%86%E6%9E%90"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">步骤分析</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">代码实现</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%81%9A%E7%B1%BB"><span class="toc-number">2.</span> <span class="toc-text">聚类</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%81%9A%E7%B1%BB%E7%AE%97%E6%B3%95%E7%AE%80%E4%BB%8B"><span class="toc-number">2.1.</span> <span class="toc-text">聚类算法简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E7%9F%A5%E9%81%93%E3%80%91%E8%81%9A%E7%B1%BB%E7%AE%97%E6%B3%95%E4%BB%8B%E7%BB%8D"><span class="toc-number">2.1.1.</span> <span class="toc-text">【知道】聚类算法介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E4%BA%86%E8%A7%A3%E3%80%91%E8%81%9A%E7%B1%BB%E7%AE%97%E6%B3%95%E5%9C%A8%E7%8E%B0%E5%AE%9E%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8"><span class="toc-number">2.1.2.</span> <span class="toc-text">【了解】聚类算法在现实中的应用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E7%9F%A5%E9%81%93%E3%80%91%E5%88%86%E7%B1%BB"><span class="toc-number">2.1.3.</span> <span class="toc-text">【知道】分类</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%81%9A%E7%B1%BBAPI%E7%9A%84%E5%88%9D%E6%AD%A5%E4%BD%BF%E7%94%A8"><span class="toc-number">2.2.</span> <span class="toc-text">聚类API的初步使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E4%BA%86%E8%A7%A3%E3%80%91api%E4%BB%8B%E7%BB%8D"><span class="toc-number">2.2.1.</span> <span class="toc-text">【了解】api介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E5%AE%9E%E8%B7%B5%E3%80%91-%E6%A1%88%E4%BE%8B"><span class="toc-number">2.2.2.</span> <span class="toc-text">【实践】 案例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kmeans%E7%AE%97%E6%B3%95%E6%B5%81%E7%A8%8B"><span class="toc-number">2.3.</span> <span class="toc-text">Kmeans算法流程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E6%8E%8C%E6%8F%A1%E3%80%91k-means%E8%81%9A%E7%B1%BB%E6%B5%81%E7%A8%8B"><span class="toc-number">2.3.1.</span> <span class="toc-text">【掌握】k-means聚类流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E7%BB%83%E4%B9%A0%E3%80%91%E6%A1%88%E4%BE%8B%E7%BB%83%E4%B9%A0"><span class="toc-number">2.3.2.</span> <span class="toc-text">【练习】案例练习</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87"><span class="toc-number">2.4.</span> <span class="toc-text">评价指标</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E4%BA%86%E8%A7%A3%E3%80%91-SSE-%E8%AF%AF%E5%B7%AE%E5%B9%B3%E6%96%B9%E5%92%8C"><span class="toc-number">2.4.1.</span> <span class="toc-text">【了解】 SSE-误差平方和</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E4%BA%86%E8%A7%A3%E3%80%91SC-%E7%B3%BB%E6%95%B0"><span class="toc-number">2.4.2.</span> <span class="toc-text">【了解】SC 系数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E4%BA%86%E8%A7%A3%E3%80%91%E8%82%98%E9%83%A8%E6%B3%95"><span class="toc-number">2.4.3.</span> <span class="toc-text">【了解】肘部法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E4%BA%86%E8%A7%A3%E3%80%91CH-%E7%B3%BB%E6%95%B0"><span class="toc-number">2.4.4.</span> <span class="toc-text">【了解】CH 系数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E5%AE%9E%E8%B7%B5%E3%80%91%E8%81%9A%E7%B1%BB%E8%AF%84%E4%BC%B0%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-number">2.4.5.</span> <span class="toc-text">【实践】聚类评估的使用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E3%80%90%E5%AE%9E%E8%B7%B5%E3%80%91%E6%A1%88%E4%BE%8B"><span class="toc-number">2.5.</span> <span class="toc-text">【实践】案例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E4%BA%86%E8%A7%A3%E3%80%91%E6%A1%88%E4%BE%8B%E4%BB%8B%E7%BB%8D"><span class="toc-number">2.5.1.</span> <span class="toc-text">【了解】案例介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E3%80%90%E5%AE%9E%E8%B7%B5%E3%80%91%E6%A1%88%E4%BE%8B%E5%AE%9E%E7%8E%B0"><span class="toc-number">2.5.2.</span> <span class="toc-text">【实践】案例实现</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/05/03/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E4%B8%8E%E8%81%9A%E7%B1%BB/" title="朴素贝叶斯与聚类">朴素贝叶斯与聚类</a><time datetime="2026-05-03T01:51:43.000Z" title="发表于 2026-05-03 09:51:43">2026-05-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/28/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/" title="集成学习">集成学习</a><time datetime="2026-04-28T13:34:17.000Z" title="发表于 2026-04-28 21:34:17">2026-04-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/25/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%86%B3%E7%AD%96%E6%A0%91/" title="决策树">决策树</a><time datetime="2026-04-25T07:46:42.000Z" title="发表于 2026-04-25 15:46:42">2026-04-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/22/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/" title="逻辑回归">逻辑回归</a><time datetime="2026-04-22T13:42:49.000Z" title="发表于 2026-04-22 21:42:49">2026-04-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/18/Python/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/" title="线性回归">线性回归</a><time datetime="2026-04-18T14:07:18.000Z" title="发表于 2026-04-18 22:07:18">2026-04-18</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Yang</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.5-b1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.5-b1"></script><script src="/js/main.js?v=5.5.5-b1"></script><div class="js-pjax"></div><video id="bgvideo" autoplay muted loop playsinline> <source src="/video/bg.mp4" type="video/mp4"> </video><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
