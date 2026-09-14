@@ -1,0 +1,673 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>移动端与响应式 | Yang's Blog</title><meta name="author" content="Yang"><meta name="copyright" content="Yang"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="移动端适配与响应式开发同一个网页要在手机、平板、电脑上都显示得合理，需要解决两件事：  移动端适配：让页面在手机上按设计稿比例等比缩放，元素大小随屏幕宽度变化（用 rem、vw&#x2F;vh、vmin 等单位）。 响应式开发：让页面在不同宽度下”换一种布局”，大屏多列、小屏单列（用媒体查询 @media 或栅格系统）。  两者常常配合使用：适配负责”大小”，响应式负责”布局”。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="移动端与响应式">
+<meta property="og:url" content="http://example.com/2026/09/12/%E5%89%8D%E7%AB%AF/html/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E4%B8%8E%E5%93%8D%E5%BA%94%E5%BC%8F/index.html">
+<meta property="og:site_name" content="Yang&#39;s Blog">
+<meta property="og:description" content="移动端适配与响应式开发同一个网页要在手机、平板、电脑上都显示得合理，需要解决两件事：  移动端适配：让页面在手机上按设计稿比例等比缩放，元素大小随屏幕宽度变化（用 rem、vw&#x2F;vh、vmin 等单位）。 响应式开发：让页面在不同宽度下”换一种布局”，大屏多列、小屏单列（用媒体查询 @media 或栅格系统）。  两者常常配合使用：适配负责”大小”，响应式负责”布局”。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/avatar.png">
+<meta property="article:published_time" content="2026-09-12T06:00:00.000Z">
+<meta property="article:modified_time" content="2026-09-14T05:53:29.460Z">
+<meta property="article:author" content="Yang">
+<meta property="article:tag" content="移动端">
+<meta property="article:tag" content="响应式">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/avatar.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "移动端与响应式",
+  "url": "http://example.com/2026/09/12/%E5%89%8D%E7%AB%AF/html/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E4%B8%8E%E5%93%8D%E5%BA%94%E5%BC%8F/",
+  "image": "http://example.com/img/avatar.png",
+  "datePublished": "2026-09-12T06:00:00.000Z",
+  "dateModified": "2026-09-14T05:53:29.460Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Yang",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="http://example.com/2026/09/12/%E5%89%8D%E7%AB%AF/html/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E4%B8%8E%E5%93%8D%E5%BA%94%E5%BC%8F/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.5-b1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '移动端与响应式',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Yang's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">移动端与响应式</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">移动端与响应式</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-09-12T06:00:00.000Z" title="发表于 2026-09-12 14:00:00">2026-09-12</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-09-14T05:53:29.460Z" title="更新于 2026-09-14 13:53:29">2026-09-14</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%89%8D%E7%AB%AF/html/">html</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="移动端适配与响应式开发"><a href="#移动端适配与响应式开发" class="headerlink" title="移动端适配与响应式开发"></a>移动端适配与响应式开发</h1><p>同一个网页要在手机、平板、电脑上都显示得合理，需要解决两件事：</p>
+<ul>
+<li><strong>移动端适配</strong>：让页面在手机上按设计稿比例等比缩放，元素大小随屏幕宽度变化（用 <code>rem</code>、<code>vw/vh</code>、<code>vmin</code> 等单位）。</li>
+<li><strong>响应式开发</strong>：让页面在不同宽度下”换一种布局”，大屏多列、小屏单列（用媒体查询 <code>@media</code> 或栅格系统）。</li>
+</ul>
+<p>两者常常配合使用：适配负责”大小”，响应式负责”布局”。</p>
+<span id="more"></span>
+
+<blockquote>
+<p><strong>一句话记忆</strong>：适配是”同一套尺寸按比例缩放”，响应式是”不同宽度用不同布局”。</p>
+</blockquote>
+<h2 id="一、视口-viewport"><a href="#一、视口-viewport" class="headerlink" title="一、视口 viewport"></a>一、视口 viewport</h2><p>移动端浏览器默认会按”桌面宽度”渲染页面，导致页面在手机上被缩小、字看不清。需要用 <code>meta</code> 标签告诉浏览器按设备实际宽度渲染。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;viewport&quot;</span> <span class="attr">content</span>=<span class="string">&quot;width=device-width, initial-scale=1.0&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+<th>常用值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>width</code></td>
+<td>视口宽度</td>
+<td><code>device-width</code>（等于设备宽度）</td>
+</tr>
+<tr>
+<td><code>initial-scale</code></td>
+<td>初始缩放比例</td>
+<td><code>1.0</code>（不缩放）</td>
+</tr>
+<tr>
+<td><code>maximum-scale</code></td>
+<td>最大缩放</td>
+<td>一般可省略</td>
+</tr>
+<tr>
+<td><code>user-scalable</code></td>
+<td>是否允许用户缩放</td>
+<td>一般不写（保持可缩放更友好）</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>⚠️ <strong>易忘点</strong>：移动端页面<strong>必须写</strong>这个 meta 标签，否则媒体查询、vw&#x2F;vh、rem 都可能在手机上表现不对。BootStrap 的响应式也依赖它。</p>
+</blockquote>
+<h2 id="二、移动端适配单位"><a href="#二、移动端适配单位" class="headerlink" title="二、移动端适配单位"></a>二、移动端适配单位</h2><h3 id="1-vw-vh（视口宽高）"><a href="#1-vw-vh（视口宽高）" class="headerlink" title="1. vw &#x2F; vh（视口宽高）"></a>1. vw &#x2F; vh（视口宽高）</h3><ul>
+<li><code>1vw</code> &#x3D; 视口<strong>宽度</strong>的 1%，<code>100vw</code> &#x3D; 整个视口宽。</li>
+<li><code>1vh</code> &#x3D; 视口<strong>高度</strong>的 1%，<code>100vh</code> &#x3D; 整个视口高。</li>
+</ul>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.box</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100vw</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">50vh</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-rem（相对-html-字号）"><a href="#2-rem（相对-html-字号）" class="headerlink" title="2. rem（相对 html 字号）"></a>2. rem（相对 html 字号）</h3><ul>
+<li><code>rem</code> 相对于 **html 元素的 <code>font-size</code>**。</li>
+<li>浏览器默认 <code>html &#123; font-size: 16px &#125;</code>，所以默认 <code>1rem = 16px</code>。</li>
+</ul>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.box</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">10rem</span>; <span class="comment">/* 默认 = 160px */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-vmin-vmax"><a href="#3-vmin-vmax" class="headerlink" title="3. vmin &#x2F; vmax"></a>3. vmin &#x2F; vmax</h3><ul>
+<li><code>1vmin</code> &#x3D; 视口<strong>宽高中较小边</strong>的 1%。</li>
+<li><code>1vmax</code> &#x3D; 视口<strong>宽高中较大边</strong>的 1%。</li>
+</ul>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.box</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">50vmin</span>; <span class="comment">/* 竖屏手机下约等于 50vw */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>竖屏手机上宽度 &lt; 高度，所以 <code>vmin</code> 按宽度算，效果和 <code>vw</code> 一样；横屏时 <code>vmin</code> 会按高度算，更稳。</p>
+</blockquote>
+<h3 id="4-物理像素与-DPR"><a href="#4-物理像素与-DPR" class="headerlink" title="4. 物理像素与 DPR"></a>4. 物理像素与 DPR</h3><ul>
+<li><strong>CSS 像素</strong>：写代码时的 <code>px</code>。</li>
+<li><strong>物理像素</strong>：屏幕实际的发光点。</li>
+<li><strong>DPR（device pixel ratio，设备像素比）</strong> &#x3D; 物理像素 &#x2F; CSS 像素。</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">window</span>.<span class="property">devicePixelRatio</span>; <span class="comment">// 普通屏 1，Retina 屏 2 或 3</span></span><br></pre></td></tr></table></figure>
+
+<p>DPR 为 2 表示 1 个 CSS 像素用 2×2 个物理像素显示，所以高清屏下 1px 边框会显得细、图片会发虚。这也是”1px 边框”问题的来源。</p>
+<h2 id="三、rem-适配方案"><a href="#三、rem-适配方案" class="headerlink" title="三、rem 适配方案"></a>三、rem 适配方案</h2><p><strong>核心思路</strong>：让 <code>1rem</code> 随屏幕宽度等比变化，页面上所有用 <code>rem</code> 的尺寸就跟着等比缩放。</p>
+<h3 id="1-原理：动态设置-html-的-font-size"><a href="#1-原理：动态设置-html-的-font-size" class="headerlink" title="1. 原理：动态设置 html 的 font-size"></a>1. 原理：动态设置 html 的 font-size</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">setRemUnit</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="comment">// 把屏幕宽度分成 10 等份，1rem = 屏幕宽 / 10</span></span><br><span class="line">  <span class="keyword">var</span> rem = <span class="variable language_">document</span>.<span class="property">documentElement</span>.<span class="property">clientWidth</span> / <span class="number">10</span>;</span><br><span class="line">  <span class="variable language_">document</span>.<span class="property">documentElement</span>.<span class="property">style</span>.<span class="property">fontSize</span> = rem + <span class="string">&#x27;px&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_">setRemUnit</span>();</span><br><span class="line"><span class="comment">// 窗口大小变化时重新计算</span></span><br><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;resize&#x27;</span>, setRemUnit);</span><br></pre></td></tr></table></figure>
+
+<p>这套逻辑就是经典库 <strong>flexible.js</strong> 的做法（<code>html\06-移动网页开发\js\flexible.js</code>）：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">function</span> <span class="title function_">flexible</span>(<span class="params"><span class="variable language_">window</span>, <span class="variable language_">document</span></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> docEl = <span class="variable language_">document</span>.<span class="property">documentElement</span>;</span><br><span class="line">  <span class="keyword">var</span> dpr = <span class="variable language_">window</span>.<span class="property">devicePixelRatio</span> || <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 设置 1rem = 视口宽度 / 10</span></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">setRemUnit</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> rem = docEl.<span class="property">clientWidth</span> / <span class="number">10</span>;</span><br><span class="line">    docEl.<span class="property">style</span>.<span class="property">fontSize</span> = rem + <span class="string">&#x27;px&#x27;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">setRemUnit</span>();</span><br><span class="line">  <span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;resize&#x27;</span>, setRemUnit);</span><br><span class="line">  <span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;pageshow&#x27;</span>, <span class="keyword">function</span> (<span class="params">e</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (e.<span class="property">persisted</span>) <span class="title function_">setRemUnit</span>(); <span class="comment">// 页面从缓存恢复时也重新计算</span></span><br><span class="line">  &#125;);</span><br><span class="line">&#125;)(<span class="variable language_">window</span>, <span class="variable language_">document</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-设计稿-px-转-rem"><a href="#2-设计稿-px-转-rem" class="headerlink" title="2. 设计稿 px 转 rem"></a>2. 设计稿 px 转 rem</h3><p>以 <strong>375px 宽的设计稿</strong>为例：</p>
+<ul>
+<li><code>1rem = 375 / 10 = 37.5px</code></li>
+<li>换算公式：<code>rem = 设计稿 px ÷ 37.5</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>设计稿 px</th>
+<th>换算 rem</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>106px</td>
+<td>106 ÷ 37.5 &#x3D; <strong>2.8267rem</strong></td>
+</tr>
+<tr>
+<td>44px</td>
+<td>44 ÷ 37.5 &#x3D; <strong>1.1733rem</strong></td>
+</tr>
+<tr>
+<td>24px</td>
+<td>24 ÷ 37.5 &#x3D; <strong>0.64rem</strong></td>
+</tr>
+<tr>
+<td>15px</td>
+<td>15 ÷ 37.5 &#x3D; <strong>0.4rem</strong></td>
+</tr>
+</tbody></table>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.box</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">2.8267rem</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">2.8267rem</span>;</span><br><span class="line">  <span class="attribute">margin-top</span>: .<span class="number">5333rem</span>; <span class="comment">/* 20px */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通用公式（设计稿宽度记为 W）：<code>1rem = W ÷ 10</code>，<code>rem 值 = 设计稿 px ÷ (W ÷ 10)</code>。</p>
+<blockquote>
+<p>⚠️ <strong>易错点</strong>：设计稿不同（375 &#x2F; 750 &#x2F; 640），<code>1rem</code> 对应的 px 就不同，换算前先确认设计稿宽度。现在主流是 375px 设计稿。</p>
+</blockquote>
+<h2 id="四、vw-适配方案"><a href="#四、vw-适配方案" class="headerlink" title="四、vw 适配方案"></a>四、vw 适配方案</h2><p><code>vw</code> 本身就相对视口，<strong>不需要 JS</strong>，是最简单直接的适配方式。</p>
+<h3 id="设计稿-px-转-vw"><a href="#设计稿-px-转-vw" class="headerlink" title="设计稿 px 转 vw"></a>设计稿 px 转 vw</h3><p>公式：<code>vw = 设计稿 px ÷ 设计稿宽度 × 100</code></p>
+<p>以 375px 设计稿为例：</p>
+<table>
+<thead>
+<tr>
+<th>设计稿 px</th>
+<th>换算 vw</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>106px</td>
+<td>106 ÷ 375 × 100 &#x3D; <strong>28.2667vw</strong></td>
+</tr>
+<tr>
+<td>16px</td>
+<td>16 ÷ 375 × 100 &#x3D; 4.2667vw</td>
+</tr>
+</tbody></table>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.box</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">28.2667vw</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">28.2667vw</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>项目里 <code>index.css</code> 就是 vw 方案（字体、间距、圆角全部用 vw）：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.home-header</span> &#123;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">34.6667vw</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">8vw</span> <span class="number">4vw</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.search</span> &#123;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">3.4667vw</span>;</span><br><span class="line">  <span class="attribute">border-radius</span>: <span class="number">5.8667vw</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="三种方案对比"><a href="#三种方案对比" class="headerlink" title="三种方案对比"></a>三种方案对比</h3><table>
+<thead>
+<tr>
+<th>方案</th>
+<th>是否需要 JS</th>
+<th>相对谁</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>rem</code> + flexible.js</td>
+<td>需要</td>
+<td>html 字号（由 JS 算）</td>
+<td>传统主流，需引脚本</td>
+</tr>
+<tr>
+<td><code>vw</code></td>
+<td>不需要</td>
+<td>视口宽度</td>
+<td>纯 CSS，最省事</td>
+</tr>
+<tr>
+<td><code>vmin</code></td>
+<td>不需要</td>
+<td>视口较小边</td>
+<td>横竖屏都稳，适合图形</td>
+</tr>
+</tbody></table>
+<p><code>index-vmin.css</code> 就是把 <code>index.css</code> 里的 <code>vw</code> 全部替换成 <code>vmin</code>（数值不变），效果一致但更稳健。</p>
+<h2 id="五、移动端基础样式重置"><a href="#五、移动端基础样式重置" class="headerlink" title="五、移动端基础样式重置"></a>五、移动端基础样式重置</h2><p>移动端有自己的默认样式问题，<code>base.css</code> 一般做这些重置：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">body</span> * &#123;</span><br><span class="line">  <span class="attribute">box-sizing</span>: border-box; <span class="comment">/* 宽高含边框，尺寸好算 */</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">a</span> &#123;</span><br><span class="line">  <span class="attribute">text-decoration</span>: none;</span><br><span class="line">  -webkit-tap-highlight-<span class="attribute">color</span>: <span class="built_in">rgba</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>); <span class="comment">/* 移除移动端点击高亮 */</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">input</span>, <span class="selector-tag">button</span>, <span class="selector-tag">textarea</span> &#123;</span><br><span class="line">  <span class="attribute">color</span>: inherit;</span><br><span class="line">  <span class="attribute">font</span>: inherit; <span class="comment">/* 表单元素默认不继承字体，需手动继承 */</span></span><br><span class="line">  <span class="attribute">border</span>: none;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">a</span><span class="selector-pseudo">:focus</span>, <span class="selector-tag">input</span><span class="selector-pseudo">:focus</span>, <span class="selector-tag">button</span><span class="selector-pseudo">:focus</span>, <span class="selector-tag">textarea</span><span class="selector-pseudo">:focus</span> &#123;</span><br><span class="line">  <span class="attribute">outline</span>: none; <span class="comment">/* 去掉焦点外框 */</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">ul</span>, <span class="selector-tag">ol</span> &#123; <span class="attribute">list-style</span>: none; &#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>⚠️ <strong>易忘点</strong>：</p>
+<ul>
+<li>移动端点击 <code>a</code> 会出现灰色&#x2F;蓝色高亮背景，用 <code>-webkit-tap-highlight-color: transparent</code> 去掉。</li>
+<li><code>input</code>、<code>button</code> 默认<strong>不继承</strong>字体，要 <code>font: inherit</code> 才能统一字号。</li>
+<li>去掉 <code>outline</code> 会影响键盘无障碍，实际项目建议换成可见的 focus 样式。</li>
+</ul>
+</blockquote>
+<h3 id="移动端常用布局细节"><a href="#移动端常用布局细节" class="headerlink" title="移动端常用布局细节"></a>移动端常用布局细节</h3><ul>
+<li><strong>底部固定 tab 栏</strong>：<code>position: fixed; bottom: 0;</code>，并给 body 加 <code>padding-bottom</code> 防止内容被遮挡。</li>
+</ul>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.footer</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: fixed;</span><br><span class="line">  <span class="attribute">bottom</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-tag">body</span> &#123; <span class="attribute">padding-bottom</span>: <span class="number">22.6667vw</span>; &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>吸顶 tab 栏</strong>：<code>position: sticky; top: 0;</code></li>
+<li><strong>多行省略号</strong>：</li>
+</ul>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.info</span> &#123;</span><br><span class="line">  <span class="attribute">overflow</span>: hidden;</span><br><span class="line">  <span class="attribute">text-overflow</span>: ellipsis;</span><br><span class="line">  <span class="attribute">display</span>: -webkit-box;</span><br><span class="line">  -webkit-<span class="selector-tag">line</span>-clamp: <span class="number">2</span>;        <span class="comment">/* 最多显示 2 行 */</span></span><br><span class="line">  -webkit-box-orient: vertical;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="六、媒体查询-media"><a href="#六、媒体查询-media" class="headerlink" title="六、媒体查询 @media"></a>六、媒体查询 @media</h2><p>媒体查询是响应式的核心，让不同宽度套用不同样式。</p>
+<h3 id="1-基本语法"><a href="#1-基本语法" class="headerlink" title="1. 基本语法"></a>1. 基本语法</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@media</span> 媒体类型 <span class="keyword">and</span> (媒体特征) &#123;</span><br><span class="line">  <span class="comment">/* 满足条件时生效的样式 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 屏幕宽度 &gt;= 1200px */</span></span><br><span class="line"><span class="keyword">@media</span> screen <span class="keyword">and</span> (<span class="attribute">min-width</span>: <span class="number">1200px</span>) &#123;</span><br><span class="line">  <span class="selector-tag">body</span> &#123; <span class="attribute">background-color</span>: green; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 768px ~ 1200px 之间 */</span></span><br><span class="line"><span class="keyword">@media</span> screen <span class="keyword">and</span> (<span class="attribute">min-width</span>: <span class="number">768px</span>) <span class="keyword">and</span> (<span class="attribute">max-width</span>: <span class="number">1200px</span>) &#123;</span><br><span class="line">  <span class="selector-tag">body</span> &#123; <span class="attribute">background-color</span>: orange; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 屏幕宽度 &lt;= 768px */</span></span><br><span class="line"><span class="keyword">@media</span> screen <span class="keyword">and</span> (<span class="attribute">max-width</span>: <span class="number">768px</span>) &#123;</span><br><span class="line">  <span class="selector-tag">body</span> &#123; <span class="attribute">background-color</span>: red; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>媒体类型常用 <code>screen</code>（屏幕）、<code>print</code>（打印）。</li>
+<li><code>min-width</code>：大于等于；<code>max-width</code>：小于等于。</li>
+<li>多个条件用 <code>and</code> 连接；用<strong>逗号</strong>表示”或”。</li>
+</ul>
+<h3 id="2-两种书写风格"><a href="#2-两种书写风格" class="headerlink" title="2. 两种书写风格"></a>2. 两种书写风格</h3><ul>
+<li><strong>min-width（移动优先）</strong>：从小屏写到大屏，逐级增强。</li>
+<li><strong>max-width（桌面优先）</strong>：从大屏写到小屏，逐级降级。</li>
+</ul>
+<p>两者二选一，混用容易乱。本项目多用 <code>max-width</code>。</p>
+<h3 id="3-常见断点"><a href="#3-常见断点" class="headerlink" title="3. 常见断点"></a>3. 常见断点</h3><table>
+<thead>
+<tr>
+<th>断点</th>
+<th>设备</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>576px</td>
+<td>大屏手机</td>
+</tr>
+<tr>
+<td>768px</td>
+<td>平板</td>
+</tr>
+<tr>
+<td>992px</td>
+<td>小笔记本</td>
+</tr>
+<tr>
+<td>1200px</td>
+<td>桌面</td>
+</tr>
+<tr>
+<td>1400px</td>
+<td>大桌面</td>
+</tr>
+</tbody></table>
+<h2 id="七、响应式布局技巧"><a href="#七、响应式布局技巧" class="headerlink" title="七、响应式布局技巧"></a>七、响应式布局技巧</h2><h3 id="1-flex-弹性换行"><a href="#1-flex-弹性换行" class="headerlink" title="1. flex 弹性换行"></a>1. flex 弹性换行</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.box</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: flex;</span><br><span class="line">  <span class="attribute">flex-wrap</span>: wrap; <span class="comment">/* 允许换行 */</span></span><br><span class="line">  <span class="attribute">min-width</span>: <span class="number">1215px</span>;</span><br><span class="line">  <span class="attribute">max-width</span>: <span class="number">1780px</span>;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">0</span> auto;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-用媒体查询控制每行列数（仿京东）"><a href="#2-用媒体查询控制每行列数（仿京东）" class="headerlink" title="2. 用媒体查询控制每行列数（仿京东）"></a>2. 用媒体查询控制每行列数（仿京东）</h3><p>同一个 <code>.item</code>，在不同宽度下改变它占的百分比，实现”一行 6 个 &#x2F; 5 个 &#x2F; 4 个”：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.box</span> <span class="selector-class">.item</span> &#123;</span><br><span class="line">  <span class="attribute">flex</span>: <span class="number">1</span>;</span><br><span class="line">  <span class="attribute">min-width</span>: <span class="built_in">calc</span>(<span class="number">16.6666667%</span> - <span class="number">16px</span>); <span class="comment">/* 一行 6 个：100/6 */</span></span><br><span class="line">  <span class="attribute">max-width</span>: <span class="built_in">calc</span>(<span class="number">16.6666667%</span> - <span class="number">16px</span>);</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">0</span> <span class="number">8px</span> <span class="number">16px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@media</span> screen <span class="keyword">and</span> (<span class="attribute">min-width</span>: <span class="number">1316px</span>) <span class="keyword">and</span> (<span class="attribute">max-width</span>: <span class="number">1536px</span>) &#123;</span><br><span class="line">  <span class="selector-class">.box</span> <span class="selector-class">.item</span> &#123;</span><br><span class="line">    <span class="attribute">min-width</span>: <span class="built_in">calc</span>(<span class="number">20%</span> - <span class="number">16px</span>); <span class="comment">/* 一行 5 个 */</span></span><br><span class="line">    <span class="attribute">max-width</span>: <span class="built_in">calc</span>(<span class="number">20%</span> - <span class="number">16px</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@media</span> screen <span class="keyword">and</span> (<span class="attribute">max-width</span>: <span class="number">1316px</span>) &#123;</span><br><span class="line">  <span class="selector-class">.box</span> <span class="selector-class">.item</span> &#123;</span><br><span class="line">    <span class="attribute">min-width</span>: <span class="built_in">calc</span>(<span class="number">25%</span> - <span class="number">16px</span>); <span class="comment">/* 一行 4 个 */</span></span><br><span class="line">    <span class="attribute">max-width</span>: <span class="built_in">calc</span>(<span class="number">25%</span> - <span class="number">16px</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-Grid-自动填充-auto-fit-minmax"><a href="#3-Grid-自动填充-auto-fit-minmax" class="headerlink" title="3. Grid 自动填充 auto-fit + minmax"></a>3. Grid 自动填充 auto-fit + minmax</h3><p>让卡片自动计算每行放几个，无需写一堆媒体查询：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.course-card</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: grid;</span><br><span class="line">  <span class="attribute">grid-template-columns</span>: <span class="built_in">repeat</span>(auto-fit, <span class="built_in">minmax</span>(<span class="number">240px</span>, <span class="number">1</span>fr));</span><br><span class="line">  <span class="attribute">gap</span>: <span class="number">40px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>minmax(240px, 1fr)</code> 表示每列至少 240px，放不下就自动换行。</p>
+<h3 id="4-响应式导航栏（桌面↔移动切换）"><a href="#4-响应式导航栏（桌面↔移动切换）" class="headerlink" title="4. 响应式导航栏（桌面↔移动切换）"></a>4. 响应式导航栏（桌面↔移动切换）</h3><p>桌面显示完整导航，小屏隐藏导航、显示汉堡按钮：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.mobile-nav</span> &#123; <span class="attribute">display</span>: none; &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 中等宽度：逐步减少导航项 */</span></span><br><span class="line"><span class="keyword">@media</span> (<span class="attribute">max-width</span>: <span class="number">1024px</span>) &#123;</span><br><span class="line">  <span class="selector-class">.nav</span> &#123; <span class="attribute">grid-template-columns</span>: <span class="built_in">repeat</span>(<span class="number">6</span>, auto); &#125;</span><br><span class="line">  <span class="selector-class">.nav</span> <span class="selector-tag">a</span><span class="selector-pseudo">:nth-child</span>(<span class="number">4</span>) &#123; <span class="attribute">display</span>: none; &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@media</span> (<span class="attribute">max-width</span>: <span class="number">768px</span>) &#123;</span><br><span class="line">  <span class="selector-class">.nav</span> &#123; <span class="attribute">grid-template-columns</span>: <span class="built_in">repeat</span>(<span class="number">4</span>, auto); &#125;</span><br><span class="line">  <span class="selector-class">.nav</span> <span class="selector-tag">a</span><span class="selector-pseudo">:nth-child</span>(<span class="number">2</span>) &#123; <span class="attribute">display</span>: none; &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 小屏：整条导航隐藏，显示汉堡按钮 */</span></span><br><span class="line"><span class="keyword">@media</span> (<span class="attribute">max-width</span>: <span class="number">550px</span>) &#123;</span><br><span class="line">  <span class="selector-class">.nav</span> &#123; <span class="attribute">display</span>: none; &#125;</span><br><span class="line">  <span class="selector-class">.mobile-nav</span> &#123; <span class="attribute">display</span>: flex; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-响应式图片"><a href="#5-响应式图片" class="headerlink" title="5. 响应式图片"></a>5. 响应式图片</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">img</span> &#123;</span><br><span class="line">  <span class="attribute">max-width</span>: <span class="number">100%</span>; <span class="comment">/* 图片最大不超过父容器，随容器缩放 */</span></span><br><span class="line">  <span class="attribute">height</span>: auto;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>配合 <code>object-fit</code> 让图片不变形地填充：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">img</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">200px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">150px</span>;</span><br><span class="line">  <span class="attribute">object-fit</span>: cover; <span class="comment">/* 裁剪填充，类似背景图 cover */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="八、Bootstrap-栅格系统（快速响应式）"><a href="#八、Bootstrap-栅格系统（快速响应式）" class="headerlink" title="八、Bootstrap 栅格系统（快速响应式）"></a>八、Bootstrap 栅格系统（快速响应式）</h2><p>Bootstrap 是流行的响应式框架，核心是 <strong>12 列栅格系统</strong>。</p>
+<h3 id="1-引入"><a href="#1-引入" class="headerlink" title="1. 引入"></a>1. 引入</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">&quot;./bootstrap/bootstrap.min.css&quot;</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- Bootstrap 图标 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span> <span class="attr">href</span>=<span class="string">&quot;https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css&quot;</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 页面底部引入 JS（导航折叠、轮播等组件需要） --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;./bootstrap/bootstrap.min.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-栅格三步：container-row-col"><a href="#2-栅格三步：container-row-col" class="headerlink" title="2. 栅格三步：container &gt; row &gt; col"></a>2. 栅格三步：container &gt; row &gt; col</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;container&quot;</span>&gt;</span>        <span class="comment">&lt;!-- 1. 容器，水平居中 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;row&quot;</span>&gt;</span>            <span class="comment">&lt;!-- 2. 行 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;col&quot;</span>&gt;</span>内容<span class="tag">&lt;/<span class="name">div</span>&gt;</span> <span class="comment">&lt;!-- 3. 列，12 等分 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>.container</code>：固定宽度的响应式容器（每个断点有对应宽度，自动居中）。</li>
+<li><code>.container-fluid</code>：100% 宽度容器。</li>
+<li>一行 <code>.row</code> 总共 <strong>12 列</strong>，用 <code>col-数字</code> 分配宽度。</li>
+</ul>
+<h3 id="3-断点前缀"><a href="#3-断点前缀" class="headerlink" title="3. 断点前缀"></a>3. 断点前缀</h3><table>
+<thead>
+<tr>
+<th>前缀</th>
+<th>生效宽度</th>
+<th>示例含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>无前缀 <code>col-*</code></td>
+<td>所有宽度</td>
+<td><code>col-6</code> 始终占一半</td>
+</tr>
+<tr>
+<td><code>col-sm-*</code></td>
+<td>≥576px</td>
+<td>小屏及以上</td>
+</tr>
+<tr>
+<td><code>col-md-*</code></td>
+<td>≥768px</td>
+<td>平板及以上</td>
+</tr>
+<tr>
+<td><code>col-lg-*</code></td>
+<td>≥992px</td>
+<td>笔记本及以上</td>
+</tr>
+<tr>
+<td><code>col-xl-*</code></td>
+<td>≥1200px</td>
+<td>桌面及以上</td>
+</tr>
+<tr>
+<td><code>col-xxl-*</code></td>
+<td>≥1400px</td>
+<td>大屏</td>
+</tr>
+</tbody></table>
+<p>一个元素可同时写多个断点类，在不同宽度下占不同列数：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 一行：≥1200 放6个，≥992 放4个，≥768 放3个，≥576 放2个，更小放1个 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;col-xl-2 col-lg-3 col-md-4 col-sm-6&quot;</span>&gt;</span>1<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>对应关系：<code>12 ÷ 列数 = 每行几个</code>。</p>
+<table>
+<thead>
+<tr>
+<th>类</th>
+<th>12 等分里占几份</th>
+<th>每行个数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>col-xl-2</code></td>
+<td>2</td>
+<td>6 个</td>
+</tr>
+<tr>
+<td><code>col-lg-3</code></td>
+<td>3</td>
+<td>4 个</td>
+</tr>
+<tr>
+<td><code>col-md-4</code></td>
+<td>4</td>
+<td>3 个</td>
+</tr>
+<tr>
+<td><code>col-sm-6</code></td>
+<td>6</td>
+<td>2 个</td>
+</tr>
+</tbody></table>
+<h3 id="4-列对齐"><a href="#4-列对齐" class="headerlink" title="4. 列对齐"></a>4. 列对齐</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;row align-items-center justify-content-between&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;col-xl-2&quot;</span>&gt;</span>1<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;col-xl-2&quot;</span>&gt;</span>2<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>垂直：<code>align-items-start / center / end</code>（还可加 <code>align-self-*</code> 到单个列）。</li>
+<li>水平：<code>justify-content-start / center / end / between / around</code>。</li>
+</ul>
+<h3 id="5-常用组件"><a href="#5-常用组件" class="headerlink" title="5. 常用组件"></a>5. 常用组件</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 导航栏（navbar-expand-lg：≥992 展开，否则折叠成汉堡） --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">nav</span> <span class="attr">class</span>=<span class="string">&quot;navbar navbar-expand-lg bg-body-tertiary fixed-top&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;container&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;navbar-brand&quot;</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span>&gt;</span>vivo<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">&quot;navbar-toggler&quot;</span> <span class="attr">data-bs-toggle</span>=<span class="string">&quot;collapse&quot;</span> <span class="attr">data-bs-target</span>=<span class="string">&quot;#navMenu&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;navbar-toggler-icon&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;collapse navbar-collapse&quot;</span> <span class="attr">id</span>=<span class="string">&quot;navMenu&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">ul</span> <span class="attr">class</span>=<span class="string">&quot;navbar-nav&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">&quot;nav-item&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;nav-link&quot;</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span>&gt;</span>首页<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">nav</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>类名</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>按钮</td>
+<td><code>btn btn-primary / btn-danger / btn-success</code></td>
+<td>各种颜色按钮</td>
+</tr>
+<tr>
+<td>卡片</td>
+<td><code>card</code> + <code>card-body</code> + <code>card-title</code> + <code>card-img-top</code></td>
+<td>卡片</td>
+</tr>
+<tr>
+<td>轮播</td>
+<td><code>carousel slide</code> + <code>carousel-inner</code> + <code>carousel-item</code></td>
+<td>轮播图</td>
+</tr>
+<tr>
+<td>手风琴</td>
+<td><code>accordion</code> + <code>accordion-item</code> + <code>accordion-button</code></td>
+<td>折叠面板</td>
+</tr>
+<tr>
+<td>表格</td>
+<td><code>table table-striped table-hover</code></td>
+<td>表格</td>
+</tr>
+<tr>
+<td>表单</td>
+<td><code>form-control</code> + <code>input-group</code></td>
+<td>输入框、输入组</td>
+</tr>
+<tr>
+<td>加载</td>
+<td><code>spinner-border</code></td>
+<td>转圈加载</td>
+</tr>
+<tr>
+<td>工具类</td>
+<td><code>text-center</code>、<code>d-none d-md-block</code>、<code>py-5</code>、<code>mt-3</code></td>
+<td>排版&#x2F;显示&#x2F;间距</td>
+</tr>
+</tbody></table>
+<h3 id="6-Bootstrap-字体图标"><a href="#6-Bootstrap-字体图标" class="headerlink" title="6. Bootstrap 字体图标"></a>6. Bootstrap 字体图标</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">&quot;bi bi-wifi&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">&quot;bi bi-search&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>通过 CSS 控制大小颜色：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.icon</span> &#123; <span class="attribute">font-size</span>: <span class="number">30px</span>; <span class="attribute">color</span>: red; &#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>记忆点：Bootstrap 图标类名是 <code>bi bi-图标名</code>，本质是字体图标，用 <code>font-size</code>&#x2F;<code>color</code> 调整。</p>
+</blockquote>
+<h2 id="九、其他响应式-适配技巧"><a href="#九、其他响应式-适配技巧" class="headerlink" title="九、其他响应式&#x2F;适配技巧"></a>九、其他响应式&#x2F;适配技巧</h2><h3 id="1-CSS-变量统一主题"><a href="#1-CSS-变量统一主题" class="headerlink" title="1. CSS 变量统一主题"></a>1. CSS 变量统一主题</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-pseudo">:root</span> &#123;</span><br><span class="line">  <span class="attr">--vivo-blue</span>: <span class="number">#1976d2</span>;</span><br><span class="line">  <span class="attr">--vivo-cyan</span>: <span class="number">#00e5ff</span>;</span><br><span class="line">  <span class="attr">--neon-glow</span>: <span class="number">0</span> <span class="number">0</span> <span class="number">10px</span> <span class="built_in">rgba</span>(<span class="number">0</span>, <span class="number">229</span>, <span class="number">255</span>, <span class="number">0.7</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.card</span><span class="selector-pseudo">:hover</span> &#123; <span class="attribute">box-shadow</span>: <span class="built_in">var</span>(--neon-glow); &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-图片遮罩-mask-image"><a href="#2-图片遮罩-mask-image" class="headerlink" title="2. 图片遮罩 mask-image"></a>2. 图片遮罩 mask-image</h3><p>让图片边缘渐隐，常用于轮播图底部：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.banner</span> &#123;</span><br><span class="line">  -webkit-<span class="attribute">mask-image</span>: <span class="built_in">linear-gradient</span>(<span class="built_in">rgb</span>(<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>) <span class="number">80%</span>, <span class="built_in">rgba</span>(<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>) <span class="number">100%</span>);</span><br><span class="line">  <span class="attribute">mask-image</span>: <span class="built_in">linear-gradient</span>(<span class="built_in">rgb</span>(<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>) <span class="number">80%</span>, <span class="built_in">rgba</span>(<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>) <span class="number">100%</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-背景固定-background-attachment-fixed"><a href="#3-背景固定-background-attachment-fixed" class="headerlink" title="3. 背景固定 background-attachment: fixed"></a>3. 背景固定 background-attachment: fixed</h3><p>背景图固定不动，内容滚动时形成视差效果：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.future-tech</span> &#123;</span><br><span class="line">  <span class="attribute">background</span>: <span class="built_in">url</span>(<span class="string">../img/bg1.avif</span>) no-repeat center/cover;</span><br><span class="line">  <span class="attribute">background-attachment</span>: fixed;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意：移动端浏览器对 <code>background-attachment: fixed</code> 支持不稳定，需谨慎。</p>
+</blockquote>
+<h3 id="4-自定义滚动条"><a href="#4-自定义滚动条" class="headerlink" title="4. 自定义滚动条"></a>4. 自定义滚动条</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">::-webkit-scrollbar &#123; <span class="attribute">width</span>: <span class="number">10px</span>; &#125;           <span class="comment">/* 宽度 */</span></span><br><span class="line">::-webkit-scrollbar-track &#123; <span class="attribute">background</span>: <span class="number">#121212</span>; &#125; <span class="comment">/* 轨道 */</span></span><br><span class="line">::-webkit-scrollbar-thumb &#123;                     <span class="comment">/* 滑块 */</span></span><br><span class="line">  <span class="attribute">background</span>: <span class="built_in">linear-gradient</span>(<span class="number">#1976d2</span>, <span class="number">#00e5ff</span>);</span><br><span class="line">  <span class="attribute">border-radius</span>: <span class="number">10px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-防止横向滚动"><a href="#5-防止横向滚动" class="headerlink" title="5. 防止横向滚动"></a>5. 防止横向滚动</h3><p>响应式页面常见”出现横向滚动条”问题，可加：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">body</span> &#123; <span class="attribute">overflow-x</span>: hidden; &#125;</span><br></pre></td></tr></table></figure>
+
+<p>（更推荐找到并修复超宽元素，而不是一味隐藏。）</p>
+<h2 id="十、速查表"><a href="#十、速查表" class="headerlink" title="十、速查表"></a>十、速查表</h2><table>
+<thead>
+<tr>
+<th>需求</th>
+<th>写法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>移动端视口</td>
+<td><code>&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;</code></td>
+</tr>
+<tr>
+<td>视口宽度单位</td>
+<td><code>28.2667vw</code>（&#x3D; 106px @375 设计稿）</td>
+</tr>
+<tr>
+<td>相对 html 字号</td>
+<td><code>2.8267rem</code>（&#x3D; 106px @375，1rem&#x3D;37.5px）</td>
+</tr>
+<tr>
+<td>视口较小边</td>
+<td><code>50vmin</code></td>
+</tr>
+<tr>
+<td>动态设置 rem</td>
+<td><code>docEl.style.fontSize = clientWidth / 10 + &#39;px&#39;</code></td>
+</tr>
+<tr>
+<td>移除点击高亮</td>
+<td><code>-webkit-tap-highlight-color: transparent</code></td>
+</tr>
+<tr>
+<td>多行省略号</td>
+<td><code>-webkit-line-clamp: 2</code> + <code>-webkit-box</code> + <code>overflow: hidden</code></td>
+</tr>
+<tr>
+<td>媒体查询</td>
+<td><code>@media screen and (max-width: 768px) &#123;&#125;</code></td>
+</tr>
+<tr>
+<td>自动换行网格</td>
+<td><code>grid-template-columns: repeat(auto-fit, minmax(240px, 1fr))</code></td>
+</tr>
+<tr>
+<td>响应式图片</td>
+<td><code>img &#123; max-width: 100%; &#125;</code></td>
+</tr>
+<tr>
+<td>图片裁剪填充</td>
+<td><code>object-fit: cover</code></td>
+</tr>
+<tr>
+<td>栅格容器</td>
+<td><code>container</code> &#x2F; <code>container-fluid</code></td>
+</tr>
+<tr>
+<td>栅格行&#x2F;列</td>
+<td><code>row</code> &#x2F; <code>col-md-4</code></td>
+</tr>
+<tr>
+<td>列垂直对齐</td>
+<td><code>align-items-center</code></td>
+</tr>
+<tr>
+<td>列水平对齐</td>
+<td><code>justify-content-between</code></td>
+</tr>
+<tr>
+<td>Bootstrap 图标</td>
+<td><code>&lt;i class=&quot;bi bi-search&quot;&gt;&lt;/i&gt;</code></td>
+</tr>
+<tr>
+<td>图片边缘渐隐</td>
+<td><code>mask-image: linear-gradient(...)</code></td>
+</tr>
+<tr>
+<td>背景固定视差</td>
+<td><code>background-attachment: fixed</code></td>
+</tr>
+<tr>
+<td>自定义滚动条</td>
+<td><code>::-webkit-scrollbar-thumb</code></td>
+</tr>
+</tbody></table>
+<h2 id="十一、复习要点小结"><a href="#十一、复习要点小结" class="headerlink" title="十一、复习要点小结"></a>十一、复习要点小结</h2><ol>
+<li><strong>移动端必写 viewport</strong> meta 标签，否则一切适配失效。</li>
+<li><strong>rem 方案</strong>：JS 把屏幕宽分 10 份设 <code>html</code> 字号，<code>1rem = 屏幕宽/10</code>；设计稿 px ÷ 37.5（375 设计稿）。</li>
+<li><strong>vw 方案</strong>：无需 JS，设计稿 px ÷ 375 × 100 &#x3D; vw 值。</li>
+<li><strong>vmin</strong> 按宽高较小边算，横竖屏更稳。</li>
+<li><strong>DPR</strong> 是物理像素与 CSS 像素之比，影响 1px 边框和图片清晰度。</li>
+<li><strong>媒体查询</strong> <code>@media (min-width/max-width)</code> 是响应式核心，注意断点和 min&#x2F;max 的取舍。</li>
+<li><strong>响应式布局</strong>三件套：flex 换行、grid <code>auto-fit minmax</code>、媒体查询改列数。</li>
+<li><strong>响应式导航</strong>：小屏隐藏整条导航、显示汉堡按钮；Bootstrap 用 <code>navbar-expand-lg</code> + <code>navbar-toggler</code>。</li>
+<li><strong>Bootstrap 栅格</strong>：<code>container &gt; row &gt; col</code>，12 列，<code>col-md-4</code> 等断点前缀控制每行个数。</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Yang</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2026/09/12/%E5%89%8D%E7%AB%AF/html/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E4%B8%8E%E5%93%8D%E5%BA%94%E5%BC%8F/">http://example.com/2026/09/12/%E5%89%8D%E7%AB%AF/html/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E4%B8%8E%E5%93%8D%E5%BA%94%E5%BC%8F/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">Yang's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%A7%BB%E5%8A%A8%E7%AB%AF/">移动端</a><a class="post-meta__tags" href="/tags/%E5%93%8D%E5%BA%94%E5%BC%8F/">响应式</a></div><div class="post-share"><div class="social-share" data-image="/img/avatar.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/09/08/%E5%89%8D%E7%AB%AF/html/%E4%BA%A4%E4%BA%92%E5%8A%A8%E6%95%88%E8%AE%BE%E8%AE%A1/" title="交互动效设计"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">交互动效设计</div></div><div class="info-2"><div class="info-item-1">交互动效设计网页动效的核心是：让页面元素”动起来”，从而引导视线、反馈操作、增强体验。 动效本质上是改变元素的某个 CSS 属性，并控制它变化的节奏。实现手段主要有两条路线：  过渡 transition：由状态变化（如 :hover、:focus、类名切换）触发，平滑地从一个值过渡到另一个值。 动画 animation：定义好关键帧后自动播放，可以无限循环、延迟、反向等。  配合 transform 变换、filter 滤镜、clip-path 裁剪、SVG 描边动画、滚动驱动动画等，就能做出各类炫酷效果。 这篇笔记覆盖 2D&#x2F;3D 变换、过渡、动画、逐帧动画、流光边框、3D 相册与导航、SVG 描边动画、裁剪、滤镜、CSS 变量与 calc、滚动时间线等动效相关知识点，适合快速复习。    一句话记忆：transition 是”从 A 过渡到 B”（需要触发），animation 是”自己会动”（自动播放）。  一、过渡 transition1. 基本语法12345.box &#123;  transition: 属性名 时长 速度曲线 延迟时间;  /* 常用简写...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Yang</div><div class="author-info-description">萌新打怪升级中......</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">95</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">211</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">20</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8%E7%AB%AF%E9%80%82%E9%85%8D%E4%B8%8E%E5%93%8D%E5%BA%94%E5%BC%8F%E5%BC%80%E5%8F%91"><span class="toc-number">1.</span> <span class="toc-text">移动端适配与响应式开发</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%A7%86%E5%8F%A3-viewport"><span class="toc-number">1.1.</span> <span class="toc-text">一、视口 viewport</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E7%A7%BB%E5%8A%A8%E7%AB%AF%E9%80%82%E9%85%8D%E5%8D%95%E4%BD%8D"><span class="toc-number">1.2.</span> <span class="toc-text">二、移动端适配单位</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-vw-vh%EF%BC%88%E8%A7%86%E5%8F%A3%E5%AE%BD%E9%AB%98%EF%BC%89"><span class="toc-number">1.2.1.</span> <span class="toc-text">1. vw &#x2F; vh（视口宽高）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-rem%EF%BC%88%E7%9B%B8%E5%AF%B9-html-%E5%AD%97%E5%8F%B7%EF%BC%89"><span class="toc-number">1.2.2.</span> <span class="toc-text">2. rem（相对 html 字号）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-vmin-vmax"><span class="toc-number">1.2.3.</span> <span class="toc-text">3. vmin &#x2F; vmax</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E7%89%A9%E7%90%86%E5%83%8F%E7%B4%A0%E4%B8%8E-DPR"><span class="toc-number">1.2.4.</span> <span class="toc-text">4. 物理像素与 DPR</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81rem-%E9%80%82%E9%85%8D%E6%96%B9%E6%A1%88"><span class="toc-number">1.3.</span> <span class="toc-text">三、rem 适配方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%8E%9F%E7%90%86%EF%BC%9A%E5%8A%A8%E6%80%81%E8%AE%BE%E7%BD%AE-html-%E7%9A%84-font-size"><span class="toc-number">1.3.1.</span> <span class="toc-text">1. 原理：动态设置 html 的 font-size</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%AE%BE%E8%AE%A1%E7%A8%BF-px-%E8%BD%AC-rem"><span class="toc-number">1.3.2.</span> <span class="toc-text">2. 设计稿 px 转 rem</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81vw-%E9%80%82%E9%85%8D%E6%96%B9%E6%A1%88"><span class="toc-number">1.4.</span> <span class="toc-text">四、vw 适配方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E8%AE%A1%E7%A8%BF-px-%E8%BD%AC-vw"><span class="toc-number">1.4.1.</span> <span class="toc-text">设计稿 px 转 vw</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E7%A7%8D%E6%96%B9%E6%A1%88%E5%AF%B9%E6%AF%94"><span class="toc-number">1.4.2.</span> <span class="toc-text">三种方案对比</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E7%A7%BB%E5%8A%A8%E7%AB%AF%E5%9F%BA%E7%A1%80%E6%A0%B7%E5%BC%8F%E9%87%8D%E7%BD%AE"><span class="toc-number">1.5.</span> <span class="toc-text">五、移动端基础样式重置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8%E7%AB%AF%E5%B8%B8%E7%94%A8%E5%B8%83%E5%B1%80%E7%BB%86%E8%8A%82"><span class="toc-number">1.5.1.</span> <span class="toc-text">移动端常用布局细节</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E5%AA%92%E4%BD%93%E6%9F%A5%E8%AF%A2-media"><span class="toc-number">1.6.</span> <span class="toc-text">六、媒体查询 @media</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95"><span class="toc-number">1.6.1.</span> <span class="toc-text">1. 基本语法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%B8%A4%E7%A7%8D%E4%B9%A6%E5%86%99%E9%A3%8E%E6%A0%BC"><span class="toc-number">1.6.2.</span> <span class="toc-text">2. 两种书写风格</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%B8%B8%E8%A7%81%E6%96%AD%E7%82%B9"><span class="toc-number">1.6.3.</span> <span class="toc-text">3. 常见断点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E5%93%8D%E5%BA%94%E5%BC%8F%E5%B8%83%E5%B1%80%E6%8A%80%E5%B7%A7"><span class="toc-number">1.7.</span> <span class="toc-text">七、响应式布局技巧</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-flex-%E5%BC%B9%E6%80%A7%E6%8D%A2%E8%A1%8C"><span class="toc-number">1.7.1.</span> <span class="toc-text">1. flex 弹性换行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E7%94%A8%E5%AA%92%E4%BD%93%E6%9F%A5%E8%AF%A2%E6%8E%A7%E5%88%B6%E6%AF%8F%E8%A1%8C%E5%88%97%E6%95%B0%EF%BC%88%E4%BB%BF%E4%BA%AC%E4%B8%9C%EF%BC%89"><span class="toc-number">1.7.2.</span> <span class="toc-text">2. 用媒体查询控制每行列数（仿京东）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-Grid-%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%85%85-auto-fit-minmax"><span class="toc-number">1.7.3.</span> <span class="toc-text">3. Grid 自动填充 auto-fit + minmax</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%93%8D%E5%BA%94%E5%BC%8F%E5%AF%BC%E8%88%AA%E6%A0%8F%EF%BC%88%E6%A1%8C%E9%9D%A2%E2%86%94%E7%A7%BB%E5%8A%A8%E5%88%87%E6%8D%A2%EF%BC%89"><span class="toc-number">1.7.4.</span> <span class="toc-text">4. 响应式导航栏（桌面↔移动切换）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%93%8D%E5%BA%94%E5%BC%8F%E5%9B%BE%E7%89%87"><span class="toc-number">1.7.5.</span> <span class="toc-text">5. 响应式图片</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AB%E3%80%81Bootstrap-%E6%A0%85%E6%A0%BC%E7%B3%BB%E7%BB%9F%EF%BC%88%E5%BF%AB%E9%80%9F%E5%93%8D%E5%BA%94%E5%BC%8F%EF%BC%89"><span class="toc-number">1.8.</span> <span class="toc-text">八、Bootstrap 栅格系统（快速响应式）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%BC%95%E5%85%A5"><span class="toc-number">1.8.1.</span> <span class="toc-text">1. 引入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%A0%85%E6%A0%BC%E4%B8%89%E6%AD%A5%EF%BC%9Acontainer-row-col"><span class="toc-number">1.8.2.</span> <span class="toc-text">2. 栅格三步：container &gt; row &gt; col</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%96%AD%E7%82%B9%E5%89%8D%E7%BC%80"><span class="toc-number">1.8.3.</span> <span class="toc-text">3. 断点前缀</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%88%97%E5%AF%B9%E9%BD%90"><span class="toc-number">1.8.4.</span> <span class="toc-text">4. 列对齐</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6"><span class="toc-number">1.8.5.</span> <span class="toc-text">5. 常用组件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-Bootstrap-%E5%AD%97%E4%BD%93%E5%9B%BE%E6%A0%87"><span class="toc-number">1.8.6.</span> <span class="toc-text">6. Bootstrap 字体图标</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B9%9D%E3%80%81%E5%85%B6%E4%BB%96%E5%93%8D%E5%BA%94%E5%BC%8F-%E9%80%82%E9%85%8D%E6%8A%80%E5%B7%A7"><span class="toc-number">1.9.</span> <span class="toc-text">九、其他响应式&#x2F;适配技巧</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-CSS-%E5%8F%98%E9%87%8F%E7%BB%9F%E4%B8%80%E4%B8%BB%E9%A2%98"><span class="toc-number">1.9.1.</span> <span class="toc-text">1. CSS 变量统一主题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%9B%BE%E7%89%87%E9%81%AE%E7%BD%A9-mask-image"><span class="toc-number">1.9.2.</span> <span class="toc-text">2. 图片遮罩 mask-image</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E8%83%8C%E6%99%AF%E5%9B%BA%E5%AE%9A-background-attachment-fixed"><span class="toc-number">1.9.3.</span> <span class="toc-text">3. 背景固定 background-attachment: fixed</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E8%87%AA%E5%AE%9A%E4%B9%89%E6%BB%9A%E5%8A%A8%E6%9D%A1"><span class="toc-number">1.9.4.</span> <span class="toc-text">4. 自定义滚动条</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E9%98%B2%E6%AD%A2%E6%A8%AA%E5%90%91%E6%BB%9A%E5%8A%A8"><span class="toc-number">1.9.5.</span> <span class="toc-text">5. 防止横向滚动</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%81%E3%80%81%E9%80%9F%E6%9F%A5%E8%A1%A8"><span class="toc-number">1.10.</span> <span class="toc-text">十、速查表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E5%A4%8D%E4%B9%A0%E8%A6%81%E7%82%B9%E5%B0%8F%E7%BB%93"><span class="toc-number">1.11.</span> <span class="toc-text">十一、复习要点小结</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/12/%E5%89%8D%E7%AB%AF/html/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E4%B8%8E%E5%93%8D%E5%BA%94%E5%BC%8F/" title="移动端与响应式">移动端与响应式</a><time datetime="2026-09-12T06:00:00.000Z" title="发表于 2026-09-12 14:00:00">2026-09-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/08/%E5%89%8D%E7%AB%AF/html/%E4%BA%A4%E4%BA%92%E5%8A%A8%E6%95%88%E8%AE%BE%E8%AE%A1/" title="交互动效设计">交互动效设计</a><time datetime="2026-09-08T05:12:00.000Z" title="发表于 2026-09-08 13:12:00">2026-09-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/03/%E5%89%8D%E7%AB%AF/html/%E7%8E%B0%E4%BB%A3%E7%BD%91%E9%A1%B5%E5%B8%83%E5%B1%80/" title="现代网页布局">现代网页布局</a><time datetime="2026-09-03T13:00:00.000Z" title="发表于 2026-09-03 21:00:00">2026-09-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/08/29/%E5%89%8D%E7%AB%AF/html/CSS/" title="CSS">CSS</a><time datetime="2026-08-29T13:20:00.000Z" title="发表于 2026-08-29 21:20:00">2026-08-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/08/25/%E5%89%8D%E7%AB%AF/html/HTML/" title="HTML">HTML</a><time datetime="2026-08-25T13:02:55.000Z" title="发表于 2026-08-25 21:02:55">2026-08-25</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Yang</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.5-b1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.5-b1"></script><script src="/js/main.js?v=5.5.5-b1"></script><div class="js-pjax"></div><video id="bgvideo" autoplay muted loop playsinline> <source src="/video/bg.mp4" type="video/mp4"> </video><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
