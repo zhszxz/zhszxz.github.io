@@ -1,0 +1,574 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>变量、数据类型与运算符 | Yang's Blog</title><meta name="author" content="Yang"><meta name="copyright" content="Yang"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="变量、数据类型与运算符这一篇把 JS 基础语法中的字面量与变量、数据类型、类型转换、运算符一口气讲完。JavaScript 是动态类型 + 弱类型语言：变量无类型前缀、类型运行期确定、运算时会自动隐式转换——这正是它与 Java 差异最集中的地方，也是坑最多的地方。  阅读方式：与 Java 相通的部分只做对照不展开，重点看「差异」和「⚠️ 坑点」。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="变量、数据类型与运算符">
+<meta property="og:url" content="http://example.com/2026/09/12/%E5%89%8D%E7%AB%AF/JavaScript/%E5%8F%98%E9%87%8F%E3%80%81%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E4%B8%8E%E8%BF%90%E7%AE%97%E7%AC%A6/index.html">
+<meta property="og:site_name" content="Yang&#39;s Blog">
+<meta property="og:description" content="变量、数据类型与运算符这一篇把 JS 基础语法中的字面量与变量、数据类型、类型转换、运算符一口气讲完。JavaScript 是动态类型 + 弱类型语言：变量无类型前缀、类型运行期确定、运算时会自动隐式转换——这正是它与 Java 差异最集中的地方，也是坑最多的地方。  阅读方式：与 Java 相通的部分只做对照不展开，重点看「差异」和「⚠️ 坑点」。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/avatar.png">
+<meta property="article:published_time" content="2026-09-12T07:00:00.000Z">
+<meta property="article:modified_time" content="2026-09-22T11:03:21.141Z">
+<meta property="article:author" content="Yang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/avatar.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "变量、数据类型与运算符",
+  "url": "http://example.com/2026/09/12/%E5%89%8D%E7%AB%AF/JavaScript/%E5%8F%98%E9%87%8F%E3%80%81%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E4%B8%8E%E8%BF%90%E7%AE%97%E7%AC%A6/",
+  "image": "http://example.com/img/avatar.png",
+  "datePublished": "2026-09-12T07:00:00.000Z",
+  "dateModified": "2026-09-22T11:03:21.141Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Yang",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="http://example.com/2026/09/12/%E5%89%8D%E7%AB%AF/JavaScript/%E5%8F%98%E9%87%8F%E3%80%81%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E4%B8%8E%E8%BF%90%E7%AE%97%E7%AC%A6/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.5-b1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '变量、数据类型与运算符',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Yang's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">变量、数据类型与运算符</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">变量、数据类型与运算符</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-09-12T07:00:00.000Z" title="发表于 2026-09-12 15:00:00">2026-09-12</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-09-22T11:03:21.141Z" title="更新于 2026-09-22 19:03:21">2026-09-22</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%89%8D%E7%AB%AF/JavaScript/">JavaScript</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="变量、数据类型与运算符"><a href="#变量、数据类型与运算符" class="headerlink" title="变量、数据类型与运算符"></a>变量、数据类型与运算符</h1><p>这一篇把 JS 基础语法中的<strong>字面量与变量、数据类型、类型转换、运算符</strong>一口气讲完。JavaScript 是<strong>动态类型 + 弱类型</strong>语言：变量无类型前缀、类型运行期确定、运算时会自动隐式转换——这正是它与 Java 差异最集中的地方，也是坑最多的地方。</p>
+<blockquote>
+<p>阅读方式：与 Java 相通的部分只做对照不展开，重点看「差异」和「⚠️ 坑点」。</p>
+</blockquote>
+<span id="more"></span>
+
+<h2 id="一、差异总览"><a href="#一、差异总览" class="headerlink" title="一、差异总览"></a>一、差异总览</h2><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>Java</th>
+<th>JavaScript</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>类型系统</td>
+<td>静态类型，编译期确定</td>
+<td>动态类型，运行期确定</td>
+</tr>
+<tr>
+<td>变量声明</td>
+<td><code>int x = 1;</code></td>
+<td><code>let x = 1;</code>（无类型前缀）</td>
+</tr>
+<tr>
+<td>基本类型</td>
+<td>8 种基本类型</td>
+<td>7 种原始类型</td>
+</tr>
+<tr>
+<td>空值</td>
+<td>只有 <code>null</code></td>
+<td><code>null</code> 和 <code>undefined</code></td>
+</tr>
+<tr>
+<td>相等比较</td>
+<td><code>==</code>（基本类型比值，引用比地址）</td>
+<td><code>==</code> 和 <code>===</code> 两种</td>
+</tr>
+<tr>
+<td>隐式转换</td>
+<td>基本没有</td>
+<td>到处都有</td>
+</tr>
+<tr>
+<td>逻辑运算</td>
+<td><code>&amp;&amp;</code>&#x2F;&#96;</td>
+<td></td>
+</tr>
+</tbody></table>
+<h2 id="二、字面量与变量"><a href="#二、字面量与变量" class="headerlink" title="二、字面量与变量"></a>二、字面量与变量</h2><h3 id="1-字面量（literal）"><a href="#1-字面量（literal）" class="headerlink" title="1. 字面量（literal）"></a>1. 字面量（literal）</h3><p>字面量就是<strong>直接写在代码里的值</strong>，Java 和 JS 概念相同，只是写法略有差异。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">42</span>            <span class="comment">// 数字字面量</span></span><br><span class="line"><span class="number">3.14</span>          <span class="comment">// 小数</span></span><br><span class="line"><span class="number">1e3</span>           <span class="comment">// 指数 = 1000</span></span><br><span class="line"><span class="number">0b101</span>         <span class="comment">// 二进制 = 5</span></span><br><span class="line"><span class="number">0xFF</span>          <span class="comment">// 十六进制 = 255</span></span><br><span class="line"><span class="number">10n</span>           <span class="comment">// bigint 大整数（后缀 n）</span></span><br><span class="line"></span><br><span class="line"><span class="string">&#x27;hello&#x27;</span>       <span class="comment">// 字符串：单引号</span></span><br><span class="line"><span class="string">&quot;hello&quot;</span>       <span class="comment">// 字符串：双引号</span></span><br><span class="line"><span class="string">`hello`</span>       <span class="comment">// 字符串：反引号（模板字符串）</span></span><br><span class="line"></span><br><span class="line"><span class="literal">true</span> / <span class="literal">false</span>  <span class="comment">// 布尔字面量</span></span><br><span class="line"><span class="literal">null</span>          <span class="comment">// 空值字面量</span></span><br><span class="line"></span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]           <span class="comment">// 数组字面量</span></span><br><span class="line">&#123; <span class="attr">name</span>: <span class="string">&quot;Tom&quot;</span> &#125;     <span class="comment">// 对象字面量</span></span><br></pre></td></tr></table></figure>
+
+<p>与 Java 的差异点：</p>
+<ul>
+<li>字符串可用<strong>三种引号</strong>（Java 只有双引号）。</li>
+<li>对象、数组可直接用字面量创建（Java 要 <code>new</code>）。</li>
+</ul>
+<h3 id="2-变量声明-var-let-const"><a href="#2-变量声明-var-let-const" class="headerlink" title="2. 变量声明 var &#x2F; let &#x2F; const"></a>2. 变量声明 var &#x2F; let &#x2F; const</h3><p>JS 用 <code>关键字 名字 = 值</code>，没有类型前缀。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> age = <span class="number">18</span>;        <span class="comment">// 对应 Java 的 int age = 18;</span></span><br><span class="line"><span class="keyword">const</span> name = <span class="string">&quot;Tom&quot;</span>;  <span class="comment">// 对应 Java 的 final String name = &quot;Tom&quot;;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="var（旧语法，有坑）"><a href="#var（旧语法，有坑）" class="headerlink" title="var（旧语法，有坑）"></a>var（旧语法，有坑）</h4><ul>
+<li><strong>函数作用域</strong>，不是块级作用域，会泄漏到 <code>&#123;&#125;</code> 外：</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> x = <span class="number">10</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(x); <span class="comment">// 10（Java 会编译报错）</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>变量提升（hoisting）</strong>：声明被提升，赋值不动，先使用后声明得到 <code>undefined</code>：</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a); <span class="comment">// undefined（不报错）</span></span><br><span class="line"><span class="keyword">var</span> a = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>可重复声明</strong>同名变量。</li>
+</ul>
+<h4 id="let（推荐）"><a href="#let（推荐）" class="headerlink" title="let（推荐）"></a>let（推荐）</h4><ul>
+<li><strong>块级作用域</strong>，与 Java 局部变量一致。</li>
+<li>有<strong>暂时性死区（TDZ）</strong>：声明前访问直接报错：</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a); <span class="comment">// ReferenceError</span></span><br><span class="line"><span class="keyword">let</span> a = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>不可重复声明。</li>
+</ul>
+<h4 id="const（常量）"><a href="#const（常量）" class="headerlink" title="const（常量）"></a>const（常量）</h4><ul>
+<li>声明必须初始化，<strong>不能重新赋值</strong>。</li>
+<li>但只锁定<strong>引用</strong>，对象&#x2F;数组内容仍可改：</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj = &#123; <span class="attr">name</span>: <span class="string">&quot;Tom&quot;</span> &#125;;</span><br><span class="line">obj.<span class="property">name</span> = <span class="string">&quot;Jerry&quot;</span>; <span class="comment">// ✅ 改属性可以</span></span><br><span class="line">obj = &#123;&#125;;           <span class="comment">// ❌ 改引用报 TypeError</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="三者对比"><a href="#三者对比" class="headerlink" title="三者对比"></a>三者对比</h4><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>var</th>
+<th>let</th>
+<th>const</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>作用域</td>
+<td>函数</td>
+<td>块</td>
+<td>块</td>
+</tr>
+<tr>
+<td>变量提升</td>
+<td>是（值为 undefined）</td>
+<td>有 TDZ</td>
+<td>有 TDZ</td>
+</tr>
+<tr>
+<td>重复声明</td>
+<td>允许</td>
+<td>禁止</td>
+<td>禁止</td>
+</tr>
+<tr>
+<td>重新赋值</td>
+<td>允许</td>
+<td>允许</td>
+<td>禁止</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>⚠️ <strong>Java 程序员习惯</strong>：默认用 <code>const</code>，确定要改用 <code>let</code>，**不要再用 <code>var</code>**。命名规则（驼峰、大小写敏感）与 Java 一致。</p>
+</blockquote>
+<h2 id="三、数据类型"><a href="#三、数据类型" class="headerlink" title="三、数据类型"></a>三、数据类型</h2><p>JS 的值分为<strong>原始类型（primitive）</strong>和<strong>引用类型（object）</strong>。原始类型共 7 种：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>说明</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>number</code></td>
+<td>数字，整数小数统一</td>
+<td><code>1</code>、<code>3.14</code>、<code>NaN</code>、<code>Infinity</code></td>
+</tr>
+<tr>
+<td><code>string</code></td>
+<td>字符串</td>
+<td><code>&quot;abc&quot;</code>、<code>&#39;abc&#39;</code>、<code>`abc`</code></td>
+</tr>
+<tr>
+<td><code>boolean</code></td>
+<td>布尔</td>
+<td><code>true</code>、<code>false</code></td>
+</tr>
+<tr>
+<td><code>null</code></td>
+<td>空值</td>
+<td><code>null</code></td>
+</tr>
+<tr>
+<td><code>undefined</code></td>
+<td>未定义</td>
+<td><code>undefined</code></td>
+</tr>
+<tr>
+<td><code>symbol</code></td>
+<td>唯一标识（ES6）</td>
+<td><code>Symbol()</code></td>
+</tr>
+<tr>
+<td><code>bigint</code></td>
+<td>大整数</td>
+<td><code>10n</code></td>
+</tr>
+</tbody></table>
+<p>除这 7 种外，**一切都是 <code>object</code>**（数组、函数、Date、普通对象等）。</p>
+<h3 id="1-number（无-int-double-之分）"><a href="#1-number（无-int-double-之分）" class="headerlink" title="1. number（无 int&#x2F;double 之分）"></a>1. number（无 int&#x2F;double 之分）</h3><p>所有数字统一为 <code>number</code>，内部是 64 位双精度浮点，没有 <code>int</code>&#x2F;<code>double</code>&#x2F;<code>float</code> 区分。三个特殊值：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> / <span class="number">0</span>;        <span class="comment">// Infinity（Java 会抛异常）</span></span><br><span class="line">-<span class="number">1</span> / <span class="number">0</span>;       <span class="comment">// -Infinity</span></span><br><span class="line"><span class="string">&quot;abc&quot;</span> * <span class="number">1</span>;    <span class="comment">// NaN（Not a Number，非法运算结果）</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>⚠️ <strong>坑点</strong>：</p>
+<ul>
+<li><code>NaN === NaN</code> 是 <code>false</code>，判断要用 <code>Number.isNaN(x)</code>。</li>
+<li><code>0.1 + 0.2</code> 结果不是 <code>0.3</code>，而是 <code>0.30000000000000004</code>（IEEE 754 浮点精度，Java 的 double 同样存在）。</li>
+</ul>
+</blockquote>
+<h3 id="2-string（三种引号-模板字符串）"><a href="#2-string（三种引号-模板字符串）" class="headerlink" title="2. string（三种引号 + 模板字符串）"></a>2. string（三种引号 + 模板字符串）</h3><ul>
+<li>单引号、双引号等价；<strong>反引号</strong>是模板字符串，用 <code>$&#123;&#125;</code> 插值、支持多行：</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> name = <span class="string">&quot;Tom&quot;</span>;</span><br><span class="line"><span class="keyword">let</span> s = <span class="string">`Hello, <span class="subst">$&#123;name&#125;</span>!`</span>;   <span class="comment">// &quot;Hello, Tom!&quot;（对应 Java 的字符串拼接）</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-boolean"><a href="#3-boolean" class="headerlink" title="3. boolean"></a>3. boolean</h3><p><code>true</code> &#x2F; <code>false</code>。注意 <code>&quot;true&quot;</code> 是字符串不是布尔，<code>Boolean(&quot;false&quot;)</code> 是 <code>true</code>（非空字符串）。</p>
+<h3 id="4-null-与-undefined（重点，Java-没有）"><a href="#4-null-与-undefined（重点，Java-没有）" class="headerlink" title="4. null 与 undefined（重点，Java 没有）"></a>4. null 与 undefined（重点，Java 没有）</h3><p>Java 里”空”只有 <code>null</code>；JS 有两种：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><code>null</code></th>
+<th><code>undefined</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>含义</td>
+<td>人为赋的空值</td>
+<td>系统默认的”未定义”</td>
+</tr>
+<tr>
+<td>何时出现</td>
+<td>手动 <code>x = null</code></td>
+<td>声明未赋值、访问不存在的属性、函数无 <code>return</code></td>
+</tr>
+<tr>
+<td><code>typeof</code></td>
+<td><code>&quot;object&quot;</code></td>
+<td><code>&quot;undefined&quot;</code></td>
+</tr>
+</tbody></table>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a;          <span class="comment">// undefined</span></span><br><span class="line"><span class="keyword">let</span> obj = &#123;&#125;;</span><br><span class="line">obj.<span class="property">name</span>;       <span class="comment">// undefined（属性不存在）</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">f</span>(<span class="params"></span>) &#123;&#125; <span class="comment">// 无 return</span></span><br><span class="line"><span class="title function_">f</span>();            <span class="comment">// undefined</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> b = <span class="literal">null</span>;   <span class="comment">// 人为表示&quot;无值&quot;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>⚠️ <strong>记忆点</strong>：<code>undefined</code> 是”机器给的默认空”，<code>null</code> 是”人给的空”。</p>
+</blockquote>
+<h3 id="5-symbol-与-bigint（了解即可）"><a href="#5-symbol-与-bigint（了解即可）" class="headerlink" title="5. symbol 与 bigint（了解即可）"></a>5. symbol 与 bigint（了解即可）</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> s = <span class="title class_">Symbol</span>();   <span class="comment">// 每次调用得到唯一值，用作对象属性名</span></span><br><span class="line"><span class="keyword">const</span> big = <span class="number">10n</span>;      <span class="comment">// 超出 number 精度的大整数</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="6-typeof-运算符"><a href="#6-typeof-运算符" class="headerlink" title="6. typeof 运算符"></a>6. typeof 运算符</h3><p><code>typeof</code> 返回一个<strong>字符串</strong>表示类型（Java 无对应语法）：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typeof</span> <span class="number">123</span>          <span class="comment">// &quot;number&quot;</span></span><br><span class="line"><span class="keyword">typeof</span> <span class="string">&quot;abc&quot;</span>        <span class="comment">// &quot;string&quot;</span></span><br><span class="line"><span class="keyword">typeof</span> <span class="literal">true</span>         <span class="comment">// &quot;boolean&quot;</span></span><br><span class="line"><span class="keyword">typeof</span> <span class="literal">undefined</span>    <span class="comment">// &quot;undefined&quot;</span></span><br><span class="line"><span class="keyword">typeof</span> <span class="title class_">Symbol</span>()     <span class="comment">// &quot;symbol&quot;</span></span><br><span class="line"><span class="keyword">typeof</span> <span class="number">10n</span>          <span class="comment">// &quot;bigint&quot;</span></span><br><span class="line"><span class="keyword">typeof</span> &#123;&#125;           <span class="comment">// &quot;object&quot;</span></span><br><span class="line"><span class="keyword">typeof</span> <span class="keyword">function</span>(<span class="params"></span>)&#123;&#125; <span class="comment">// &quot;function&quot;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>⚠️ <strong>两个坑</strong>：</p>
+<ul>
+<li><code>typeof null</code> 是 <code>&quot;object&quot;</code>（历史遗留 bug，实际 null 是原始类型）。</li>
+<li><code>typeof []</code> 是 <code>&quot;object&quot;</code>，判断数组用 <code>Array.isArray(arr)</code>。</li>
+</ul>
+</blockquote>
+<h2 id="四、类型转换"><a href="#四、类型转换" class="headerlink" title="四、类型转换"></a>四、类型转换</h2><p>JS 没有 Java 的 <code>(int)</code> 强转，类型转换分<strong>显式</strong>（用函数）和<strong>隐式</strong>（运算时自动）两种，后者是 JS 独有的坑。</p>
+<h3 id="1-显式转换：Number-String-Boolean"><a href="#1-显式转换：Number-String-Boolean" class="headerlink" title="1. 显式转换：Number() &#x2F; String() &#x2F; Boolean()"></a>1. 显式转换：Number() &#x2F; String() &#x2F; Boolean()</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Number</span>(<span class="string">&quot;123&quot;</span>)      <span class="comment">// 123</span></span><br><span class="line"><span class="title class_">Number</span>(<span class="string">&quot;&quot;</span>)         <span class="comment">// 0（空字符串转 0）</span></span><br><span class="line"><span class="title class_">Number</span>(<span class="string">&quot;abc&quot;</span>)      <span class="comment">// NaN</span></span><br><span class="line"><span class="title class_">Number</span>(<span class="literal">true</span>)       <span class="comment">// 1</span></span><br><span class="line"><span class="title class_">Number</span>(<span class="literal">null</span>)       <span class="comment">// 0</span></span><br><span class="line"><span class="title class_">Number</span>(<span class="literal">undefined</span>)  <span class="comment">// NaN</span></span><br><span class="line"></span><br><span class="line"><span class="title class_">String</span>(<span class="number">123</span>)        <span class="comment">// &quot;123&quot;</span></span><br><span class="line"><span class="title class_">String</span>(<span class="literal">true</span>)       <span class="comment">// &quot;true&quot;</span></span><br><span class="line"><span class="title class_">String</span>(<span class="literal">null</span>)       <span class="comment">// &quot;null&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="title class_">Boolean</span>(<span class="string">&quot;0&quot;</span>)       <span class="comment">// true（非空字符串都是 true）</span></span><br><span class="line"><span class="title class_">Boolean</span>(<span class="number">0</span>)         <span class="comment">// false</span></span><br><span class="line"><span class="title class_">Boolean</span>(<span class="string">&quot;&quot;</span>)        <span class="comment">// false</span></span><br><span class="line"><span class="title class_">Boolean</span>([])        <span class="comment">// true（空数组也是 true）</span></span><br></pre></td></tr></table></figure>
+
+<p>另有 <code>parseInt(&quot;12px&quot;)</code>（转整数，直到非数字停止）、<code>parseFloat(&quot;3.14&quot;)</code>。</p>
+<h4 id="falsy-值（转布尔为-false-的只有-8-个）"><a href="#falsy-值（转布尔为-false-的只有-8-个）" class="headerlink" title="falsy 值（转布尔为 false 的只有 8 个）"></a>falsy 值（转布尔为 false 的只有 8 个）</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="literal">false</span>、<span class="number">0</span>、-<span class="number">0</span>、<span class="number">0n</span>、<span class="string">&quot;&quot;</span>（空字符串）、<span class="literal">null</span>、<span class="literal">undefined</span>、<span class="title class_">NaN</span></span><br></pre></td></tr></table></figure>
+
+<p>其余**一律是 <code>true</code>**（包括空数组 <code>[]</code>、空对象 <code>&#123;&#125;</code>、字符串 <code>&quot;0&quot;</code>、<code>&quot;false&quot;</code>）。</p>
+<blockquote>
+<p>⚠️ <strong>Java 程序员易踩坑</strong>：Java 的 <code>if</code> 只能接 boolean；JS 的 <code>if</code> 会用 truthy&#x2F;falsy 自动判断，<code>0</code>、<code>&quot;&quot;</code>、<code>null</code>、<code>undefined</code>、<code>NaN</code> 都会走 <code>false</code> 分支。</p>
+</blockquote>
+<h3 id="2-隐式转换（Java-基本没有，JS-到处都有）"><a href="#2-隐式转换（Java-基本没有，JS-到处都有）" class="headerlink" title="2. 隐式转换（Java 基本没有，JS 到处都有）"></a>2. 隐式转换（Java 基本没有，JS 到处都有）</h3><p>运算时 JS 会自动把操作数转成”合适的类型”。</p>
+<p><strong>字符串拼接</strong>：<code>+</code> 只要一边是字符串，就做拼接：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;5&quot;</span> + <span class="number">1</span>      <span class="comment">// &quot;51&quot;</span></span><br><span class="line"><span class="number">5</span> + <span class="string">&quot;1&quot;</span>      <span class="comment">// &quot;51&quot;</span></span><br><span class="line"><span class="string">&quot;5&quot;</span> + <span class="literal">true</span>   <span class="comment">// &quot;5true&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>算术运算</strong>：<code>- * / %</code> 会把字符串转数字：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;5&quot;</span> - <span class="number">1</span>      <span class="comment">// 4</span></span><br><span class="line"><span class="string">&quot;5&quot;</span> * <span class="string">&quot;2&quot;</span>    <span class="comment">// 10</span></span><br><span class="line"><span class="string">&quot;abc&quot;</span> - <span class="number">1</span>    <span class="comment">// NaN</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>比较运算</strong>：<code>&gt;</code> <code>&lt;</code> 会转数字比较：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;10&quot;</span> &gt; <span class="number">9</span>     <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>⚠️ <strong>经典坑</strong>：<code>&quot;5&quot; + 1</code> 是 <code>&quot;51&quot;</code>（拼接），<code>&quot;5&quot; - 1</code> 是 <code>4</code>（算术）。同样是 <code>&quot;5&quot;</code>，遇 <code>+</code> 变字符串、遇 <code>-</code> 变数字。</p>
+</blockquote>
+<h2 id="五、运算符"><a href="#五、运算符" class="headerlink" title="五、运算符"></a>五、运算符</h2><h3 id="1-算术运算符"><a href="#1-算术运算符" class="headerlink" title="1. 算术运算符"></a>1. 算术运算符</h3><table>
+<thead>
+<tr>
+<th>运算符</th>
+<th>含义</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>+</code></td>
+<td>加 &#x2F; 字符串拼接</td>
+<td>一边是字符串就拼接</td>
+</tr>
+<tr>
+<td><code>-</code> <code>*</code> <code>/</code> <code>%</code></td>
+<td>减乘除取余</td>
+<td>与 Java 相同</td>
+</tr>
+<tr>
+<td><code>**</code></td>
+<td>幂运算</td>
+<td>Java 用 <code>Math.pow</code>，JS 无对应运算符</td>
+</tr>
+<tr>
+<td><code>++</code> <code>--</code></td>
+<td>自增自减</td>
+<td>与 Java 相同</td>
+</tr>
+</tbody></table>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2</span> ** <span class="number">10</span>      <span class="comment">// 1024（2 的 10 次方）</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-赋值运算符"><a href="#2-赋值运算符" class="headerlink" title="2. 赋值运算符"></a>2. 赋值运算符</h3><p><code>= += -= *= /= %=</code> 与 Java 完全一致，不展开。</p>
+<h3 id="3-比较运算符（重点-vs-）"><a href="#3-比较运算符（重点-vs-）" class="headerlink" title="3. 比较运算符（重点 &#x3D;&#x3D; vs &#x3D;&#x3D;&#x3D;）"></a>3. 比较运算符（重点 &#x3D;&#x3D; vs &#x3D;&#x3D;&#x3D;）</h3><ul>
+<li><strong><code>===</code> 严格相等</strong>：类型和值都相等才为 true（推荐始终用它）。</li>
+<li><strong><code>==</code> 宽松相等</strong>：先做<strong>隐式类型转换</strong>再比较（坑多）。</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> === <span class="string">&quot;1&quot;</span>      <span class="comment">// false（类型不同）</span></span><br><span class="line"><span class="number">1</span> == <span class="string">&quot;1&quot;</span>       <span class="comment">// true（字符串转数字）</span></span><br><span class="line"><span class="literal">true</span> == <span class="number">1</span>      <span class="comment">// true（布尔转数字）</span></span><br><span class="line"><span class="literal">null</span> == <span class="literal">undefined</span>  <span class="comment">// true（唯一特例：两者互等）</span></span><br><span class="line"><span class="string">&quot;&quot;</span> == <span class="number">0</span>        <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p><code>==</code> 的转换规则（了解即可，实际都用 <code>===</code>）：</p>
+<ol>
+<li><code>null == undefined</code> 为 <code>true</code>（特例）。</li>
+<li>数字 vs 字符串：字符串转数字。</li>
+<li>布尔 vs 其他：布尔转数字（<code>true</code>→1，<code>false</code>→0）。</li>
+<li>对象 vs 原始：对象转原始值。</li>
+</ol>
+<p>对应的不等：<code>!==</code>（严格不等）、<code>!=</code>（宽松不等），同样**推荐用 <code>!==</code>**。</p>
+<p><strong>大小比较</strong> <code>&gt;</code> <code>&lt;</code> <code>&gt;=</code> <code>&lt;=</code>：字符串按 Unicode 码点（字典序）比较，数字按数值比较：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;apple&quot;</span> &lt; <span class="string">&quot;banana&quot;</span>   <span class="comment">// true</span></span><br><span class="line"><span class="string">&quot;10&quot;</span> &gt; <span class="number">9</span>             <span class="comment">// true（隐式转数字）</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>⚠️ <strong>Java 程序员注意</strong>：Java 的 <code>==</code> 对引用类型比较的是地址；JS 的 <code>==</code> 和 <code>===</code> 对对象&#x2F;数组比较的也是<strong>引用</strong>（不是内容）。判断内容相等要用 <code>JSON.stringify</code> 或深比较。</p>
+</blockquote>
+<h3 id="4-逻辑运算符（返回操作数本身）"><a href="#4-逻辑运算符（返回操作数本身）" class="headerlink" title="4. 逻辑运算符（返回操作数本身）"></a>4. 逻辑运算符（返回操作数本身）</h3><p>JS 的 <code>&amp;&amp;</code> <code>||</code> <strong>返回的是操作数本身，不是 boolean</strong>（Java 一定返回 boolean）：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0</span> || <span class="string">&quot;default&quot;</span>     <span class="comment">// &quot;default&quot;（0 是 falsy，取右边的值）</span></span><br><span class="line"><span class="number">1</span> &amp;&amp; <span class="string">&quot;hello&quot;</span>       <span class="comment">// &quot;hello&quot;（1 是 truthy，取右边的值）</span></span><br><span class="line"><span class="string">&quot;&quot;</span> || <span class="string">&quot;fallback&quot;</span>   <span class="comment">// &quot;fallback&quot;</span></span><br><span class="line"><span class="string">&quot;name&quot;</span> &amp;&amp; <span class="literal">null</span>     <span class="comment">// null</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>||</code>：左边 truthy 就返回左边，否则返回右边（常用来设默认值）。</li>
+<li><code>&amp;&amp;</code>：左边 falsy 就返回左边，否则返回右边。</li>
+<li>两者都有<strong>短路</strong>：结果确定后右边的表达式不再执行。</li>
+<li><code>!</code> 返回 boolean；<code>!!x</code> 是转布尔的惯用写法。</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> name = userInput || <span class="string">&quot;匿名&quot;</span>;   <span class="comment">// 提供默认值</span></span><br><span class="line">!!<span class="number">0</span>          <span class="comment">// false</span></span><br><span class="line">!!<span class="string">&quot;abc&quot;</span>      <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>⚠️ <strong>坑点</strong>：<code>0 || &quot;默认&quot;</code> 会返回 <code>&quot;默认&quot;</code>，因为 <code>0</code> 是 falsy。如果 <code>0</code> 是合法值，要用 <code>??</code>（见下）。</p>
+</blockquote>
+<h3 id="5-Java-没有的运算符"><a href="#5-Java-没有的运算符" class="headerlink" title="5. Java 没有的运算符"></a>5. Java 没有的运算符</h3><p>**空值合并 <code>??</code>**：只在左边是 <code>null</code> 或 <code>undefined</code> 时取右边（<code>0</code>、<code>&quot;&quot;</code>、<code>false</code> 都算有值）：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a = <span class="literal">null</span> ?? <span class="string">&quot;默认&quot;</span>;   <span class="comment">// &quot;默认&quot;</span></span><br><span class="line"><span class="keyword">let</span> b = <span class="number">0</span> ?? <span class="string">&quot;默认&quot;</span>;      <span class="comment">// 0（0 不是 null/undefined）</span></span><br><span class="line"><span class="keyword">let</span> c = <span class="string">&quot;&quot;</span> ?? <span class="string">&quot;默认&quot;</span>;     <span class="comment">// &quot;&quot;（空字符串也算有值）</span></span><br></pre></td></tr></table></figure>
+
+<p><code>??</code> 与 <code>||</code> 的区别：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> x = <span class="number">0</span> || <span class="string">&quot;默认&quot;</span>;   <span class="comment">// &quot;默认&quot;（0 是 falsy）</span></span><br><span class="line"><span class="keyword">let</span> y = <span class="number">0</span> ?? <span class="string">&quot;默认&quot;</span>;   <span class="comment">// 0（0 不是空值）</span></span><br></pre></td></tr></table></figure>
+
+<p>**可选链 <code>?.</code>**：链式访问时，任一环节是 <code>null/undefined</code> 就返回 <code>undefined</code> 而不报错（对应 Java 冗长的 null 判断）：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> city = user?.<span class="property">address</span>?.<span class="property">city</span>;   <span class="comment">// user 或 address 为空时得到 undefined，不抛错</span></span><br></pre></td></tr></table></figure>
+
+<p>**展开运算符 <code>...</code>**：展开数组&#x2F;对象：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> arr = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];</span><br><span class="line"><span class="keyword">let</span> arr2 = [...arr, <span class="number">4</span>];            <span class="comment">// [1, 2, 3, 4]</span></span><br><span class="line"><span class="keyword">let</span> merged = &#123; ...obj1, ...obj2 &#125;; <span class="comment">// 合并对象</span></span><br></pre></td></tr></table></figure>
+
+<p>**三元 <code>?:</code>**：与 Java 相同：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> x = age &gt;= <span class="number">18</span> ? <span class="string">&quot;成年&quot;</span> : <span class="string">&quot;未成年&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>其他</strong>：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typeof</span> x                    <span class="comment">// 判断类型</span></span><br><span class="line">obj <span class="keyword">instanceof</span> <span class="title class_">Constructor</span>  <span class="comment">// 判断是否某构造函数的实例（同 Java instanceof）</span></span><br><span class="line"><span class="string">&quot;key&quot;</span> <span class="keyword">in</span> obj                <span class="comment">// 判断对象是否有某属性</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="六、速查表"><a href="#六、速查表" class="headerlink" title="六、速查表"></a>六、速查表</h2><table>
+<thead>
+<tr>
+<th>需求</th>
+<th>写法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>声明变量</td>
+<td><code>let x = 1;</code></td>
+</tr>
+<tr>
+<td>声明常量</td>
+<td><code>const PI = 3.14;</code></td>
+</tr>
+<tr>
+<td>模板字符串</td>
+<td><code>`你好，$&#123;name&#125;`</code></td>
+</tr>
+<tr>
+<td>判断类型</td>
+<td><code>typeof x</code></td>
+</tr>
+<tr>
+<td>判断数组</td>
+<td><code>Array.isArray(arr)</code></td>
+</tr>
+<tr>
+<td>转数字</td>
+<td><code>Number(&quot;123&quot;)</code> &#x2F; <code>parseInt(&quot;12px&quot;)</code></td>
+</tr>
+<tr>
+<td>转字符串</td>
+<td><code>String(123)</code> &#x2F; <code>123 + &quot;&quot;</code></td>
+</tr>
+<tr>
+<td>转布尔</td>
+<td><code>Boolean(x)</code> &#x2F; <code>!!x</code></td>
+</tr>
+<tr>
+<td>严格相等</td>
+<td><code>a === b</code> &#x2F; <code>a !== b</code></td>
+</tr>
+<tr>
+<td>幂运算</td>
+<td><code>2 ** 10</code></td>
+</tr>
+<tr>
+<td>设默认值</td>
+<td>&#96;x</td>
+</tr>
+<tr>
+<td>空值设默认</td>
+<td><code>x ?? &quot;默认&quot;</code></td>
+</tr>
+<tr>
+<td>安全链式访问</td>
+<td><code>user?.address?.city</code></td>
+</tr>
+<tr>
+<td>展开数组</td>
+<td><code>[...arr, 4]</code></td>
+</tr>
+</tbody></table>
+<h2 id="七、复习要点"><a href="#七、复习要点" class="headerlink" title="七、复习要点"></a>七、复习要点</h2><ol>
+<li><strong>动态类型 + 弱类型</strong>是 JS 与 Java 的根本差异：变量无类型前缀，运算时自动隐式转换。</li>
+<li>声明用 <code>let</code>&#x2F;<code>const</code>，**不要用 <code>var</code>**（函数作用域、提升、可重复声明三个坑）。</li>
+<li>7 种原始类型 + object；<code>number</code> 统一整数小数，特殊值 <code>NaN</code>、<code>Infinity</code>，<code>NaN !== NaN</code>。</li>
+<li><code>null</code> 是人赋的空、<code>undefined</code> 是系统默认的空；<code>typeof null === &quot;object&quot;</code>。</li>
+<li>显式转换 <code>Number/String/Boolean</code>；8 个 falsy 值转布尔为 <code>false</code>。</li>
+<li>隐式转换：<code>+</code> 遇字符串是拼接，<code>- * /</code> 遇字符串是算术。</li>
+<li>**始终用 <code>===</code>&#x2F;<code>!==</code>**，别用 <code>==</code>&#x2F;<code>!=</code>（会隐式转换）。</li>
+<li>逻辑 <code>&amp;&amp;</code>&#x2F;<code>||</code> 返回操作数本身；<code>??</code> 只在 null&#x2F;undefined 时兜底，<code>?.</code> 安全访问。</li>
+<li><code>0.1 + 0.2 !== 0.3</code> 是浮点精度问题，与 Java double 相同。</li>
+<li>忘了某条，回本文对应小节看示例即可。</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Yang</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2026/09/12/%E5%89%8D%E7%AB%AF/JavaScript/%E5%8F%98%E9%87%8F%E3%80%81%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E4%B8%8E%E8%BF%90%E7%AE%97%E7%AC%A6/">http://example.com/2026/09/12/%E5%89%8D%E7%AB%AF/JavaScript/%E5%8F%98%E9%87%8F%E3%80%81%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E4%B8%8E%E8%BF%90%E7%AE%97%E7%AC%A6/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">Yang's Blog</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/avatar.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2026/09/12/%E5%89%8D%E7%AB%AF/JavaScript/%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6%E3%80%81%E6%95%B0%E7%BB%84%E4%B8%8E%E9%9B%86%E5%90%88/" title="流程控制、数组与集合"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">流程控制、数组与集合</div></div><div class="info-2"><div class="info-item-1">流程控制、数组与集合这一篇讲 JS 的流程控制（if &#x2F; switch &#x2F; 异常）、循环（for &#x2F; while &#x2F; for…in &#x2F; for…of）、数组、Set 与 Map，以及各类遍历方式。 其中 for...in、for...of、数组的高阶方法（map&#x2F;filter&#x2F;reduce）是 JS 与 Java 差异最大的部分；if、for、switch 等基础语法与 Java 几乎一致，只做对照。  阅读方式：与 Java 相同的语法简单带过，重点看「差异」和「⚠️ 坑点」。    一、流程控制1. if &#x2F; else if &#x2F; else（与 Java 相同）1234567if (a &gt; 0) &#123;  // ...&#125; else if (a === 0) &#123;  // ...&#125; else &#123;  // ...&#125;  唯一差异：条件表达式不强制是 boolean，JS 会用 truthy&#x2F;falsy 自动判断（0、&quot...</div></div></div></a><a class="pagination-related" href="/2026/09/12/%E5%89%8D%E7%AB%AF/html/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E4%B8%8E%E5%93%8D%E5%BA%94%E5%BC%8F/" title="移动端与响应式"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">移动端与响应式</div></div><div class="info-2"><div class="info-item-1">移动端适配与响应式开发同一个网页要在手机、平板、电脑上都显示得合理，需要解决两件事：  移动端适配：让页面在手机上按设计稿比例等比缩放，元素大小随屏幕宽度变化（用 rem、vw/vh、vmin 等单位）。 响应式开发：让页面在不同宽度下”换一种布局”，大屏多列、小屏单列（用媒体查询 @media 或栅格系统）。  两者常常配合使用：适配负责”大小”，响应式负责”布局”。    一句话记忆：适配是”同一套尺寸按比例缩放”，响应式是”不同宽度用不同布局”。  一、视口 viewport移动端浏览器默认会按”桌面宽度”渲染页面，导致页面在手机上被缩小、字看不清。需要用 meta 标签告诉浏览器按设备实际宽度渲染。 1&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;     参数 作用 常用值    width 视口宽度 device-width（等于设备宽度）   initial-scale 初始缩放比例 1.0（不缩放）   maximum-...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Yang</div><div class="author-info-description">萌新打怪升级中......</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">99</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">221</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">21</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%98%E9%87%8F%E3%80%81%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E4%B8%8E%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">1.</span> <span class="toc-text">变量、数据类型与运算符</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%B7%AE%E5%BC%82%E6%80%BB%E8%A7%88"><span class="toc-number">1.1.</span> <span class="toc-text">一、差异总览</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%AD%97%E9%9D%A2%E9%87%8F%E4%B8%8E%E5%8F%98%E9%87%8F"><span class="toc-number">1.2.</span> <span class="toc-text">二、字面量与变量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%AD%97%E9%9D%A2%E9%87%8F%EF%BC%88literal%EF%BC%89"><span class="toc-number">1.2.1.</span> <span class="toc-text">1. 字面量（literal）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%8F%98%E9%87%8F%E5%A3%B0%E6%98%8E-var-let-const"><span class="toc-number">1.2.2.</span> <span class="toc-text">2. 变量声明 var &#x2F; let &#x2F; const</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#var%EF%BC%88%E6%97%A7%E8%AF%AD%E6%B3%95%EF%BC%8C%E6%9C%89%E5%9D%91%EF%BC%89"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">var（旧语法，有坑）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#let%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">let（推荐）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#const%EF%BC%88%E5%B8%B8%E9%87%8F%EF%BC%89"><span class="toc-number">1.2.2.3.</span> <span class="toc-text">const（常量）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%89%E8%80%85%E5%AF%B9%E6%AF%94"><span class="toc-number">1.2.2.4.</span> <span class="toc-text">三者对比</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.3.</span> <span class="toc-text">三、数据类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-number%EF%BC%88%E6%97%A0-int-double-%E4%B9%8B%E5%88%86%EF%BC%89"><span class="toc-number">1.3.1.</span> <span class="toc-text">1. number（无 int&#x2F;double 之分）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-string%EF%BC%88%E4%B8%89%E7%A7%8D%E5%BC%95%E5%8F%B7-%E6%A8%A1%E6%9D%BF%E5%AD%97%E7%AC%A6%E4%B8%B2%EF%BC%89"><span class="toc-number">1.3.2.</span> <span class="toc-text">2. string（三种引号 + 模板字符串）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-boolean"><span class="toc-number">1.3.3.</span> <span class="toc-text">3. boolean</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-null-%E4%B8%8E-undefined%EF%BC%88%E9%87%8D%E7%82%B9%EF%BC%8CJava-%E6%B2%A1%E6%9C%89%EF%BC%89"><span class="toc-number">1.3.4.</span> <span class="toc-text">4. null 与 undefined（重点，Java 没有）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-symbol-%E4%B8%8E-bigint%EF%BC%88%E4%BA%86%E8%A7%A3%E5%8D%B3%E5%8F%AF%EF%BC%89"><span class="toc-number">1.3.5.</span> <span class="toc-text">5. symbol 与 bigint（了解即可）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-typeof-%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">1.3.6.</span> <span class="toc-text">6. typeof 运算符</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2"><span class="toc-number">1.4.</span> <span class="toc-text">四、类型转换</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%98%BE%E5%BC%8F%E8%BD%AC%E6%8D%A2%EF%BC%9ANumber-String-Boolean"><span class="toc-number">1.4.1.</span> <span class="toc-text">1. 显式转换：Number() &#x2F; String() &#x2F; Boolean()</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#falsy-%E5%80%BC%EF%BC%88%E8%BD%AC%E5%B8%83%E5%B0%94%E4%B8%BA-false-%E7%9A%84%E5%8F%AA%E6%9C%89-8-%E4%B8%AA%EF%BC%89"><span class="toc-number">1.4.1.1.</span> <span class="toc-text">falsy 值（转布尔为 false 的只有 8 个）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E9%9A%90%E5%BC%8F%E8%BD%AC%E6%8D%A2%EF%BC%88Java-%E5%9F%BA%E6%9C%AC%E6%B2%A1%E6%9C%89%EF%BC%8CJS-%E5%88%B0%E5%A4%84%E9%83%BD%E6%9C%89%EF%BC%89"><span class="toc-number">1.4.2.</span> <span class="toc-text">2. 隐式转换（Java 基本没有，JS 到处都有）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">1.5.</span> <span class="toc-text">五、运算符</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E7%AE%97%E6%9C%AF%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">1.5.1.</span> <span class="toc-text">1. 算术运算符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">1.5.2.</span> <span class="toc-text">2. 赋值运算符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%AF%94%E8%BE%83%E8%BF%90%E7%AE%97%E7%AC%A6%EF%BC%88%E9%87%8D%E7%82%B9-vs-%EF%BC%89"><span class="toc-number">1.5.3.</span> <span class="toc-text">3. 比较运算符（重点 &#x3D;&#x3D; vs &#x3D;&#x3D;&#x3D;）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97%E7%AC%A6%EF%BC%88%E8%BF%94%E5%9B%9E%E6%93%8D%E4%BD%9C%E6%95%B0%E6%9C%AC%E8%BA%AB%EF%BC%89"><span class="toc-number">1.5.4.</span> <span class="toc-text">4. 逻辑运算符（返回操作数本身）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-Java-%E6%B2%A1%E6%9C%89%E7%9A%84%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">1.5.5.</span> <span class="toc-text">5. Java 没有的运算符</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E9%80%9F%E6%9F%A5%E8%A1%A8"><span class="toc-number">1.6.</span> <span class="toc-text">六、速查表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E5%A4%8D%E4%B9%A0%E8%A6%81%E7%82%B9"><span class="toc-number">1.7.</span> <span class="toc-text">七、复习要点</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/12/%E5%89%8D%E7%AB%AF/JavaScript/%E5%AF%B9%E8%B1%A1%E4%B8%8E%E5%B8%B8%E7%94%A8%E5%86%85%E7%BD%AE%20API/" title="对象与常用内置 API">对象与常用内置 API</a><time datetime="2026-09-12T10:00:00.000Z" title="发表于 2026-09-12 18:00:00">2026-09-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/12/%E5%89%8D%E7%AB%AF/JavaScript/%E5%87%BD%E6%95%B0/" title="函数">函数</a><time datetime="2026-09-12T09:00:00.000Z" title="发表于 2026-09-12 17:00:00">2026-09-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/12/%E5%89%8D%E7%AB%AF/JavaScript/%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6%E3%80%81%E6%95%B0%E7%BB%84%E4%B8%8E%E9%9B%86%E5%90%88/" title="流程控制、数组与集合">流程控制、数组与集合</a><time datetime="2026-09-12T08:00:00.000Z" title="发表于 2026-09-12 16:00:00">2026-09-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/12/%E5%89%8D%E7%AB%AF/JavaScript/%E5%8F%98%E9%87%8F%E3%80%81%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E4%B8%8E%E8%BF%90%E7%AE%97%E7%AC%A6/" title="变量、数据类型与运算符">变量、数据类型与运算符</a><time datetime="2026-09-12T07:00:00.000Z" title="发表于 2026-09-12 15:00:00">2026-09-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/12/%E5%89%8D%E7%AB%AF/html/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E4%B8%8E%E5%93%8D%E5%BA%94%E5%BC%8F/" title="移动端与响应式">移动端与响应式</a><time datetime="2026-09-12T06:00:00.000Z" title="发表于 2026-09-12 14:00:00">2026-09-12</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Yang</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.5-b1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.5-b1"></script><script src="/js/main.js?v=5.5.5-b1"></script><div class="js-pjax"></div><video id="bgvideo" autoplay muted loop playsinline> <source src="/video/bg.mp4" type="video/mp4"> </video><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
