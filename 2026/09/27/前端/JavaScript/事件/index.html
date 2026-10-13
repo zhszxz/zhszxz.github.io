@@ -1,0 +1,393 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>事件 | Yang's Blog</title><meta name="author" content="Yang"><meta name="copyright" content="Yang"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="事件事件是用户与页面交互的桥梁：点击、输入、滚动、按键都会触发事件，JS 通过监听事件来响应用户操作。 这一篇讲事件的注册与解绑、事件类型、事件对象、事件流（冒泡&#x2F;捕获）、事件委托。其中事件流和事件委托是重点，也是 JS 与 Java GUI（如 Swing 的监听器）最大的差异。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="事件">
+<meta property="og:url" content="http://example.com/2026/09/27/%E5%89%8D%E7%AB%AF/JavaScript/%E4%BA%8B%E4%BB%B6/index.html">
+<meta property="og:site_name" content="Yang&#39;s Blog">
+<meta property="og:description" content="事件事件是用户与页面交互的桥梁：点击、输入、滚动、按键都会触发事件，JS 通过监听事件来响应用户操作。 这一篇讲事件的注册与解绑、事件类型、事件对象、事件流（冒泡&#x2F;捕获）、事件委托。其中事件流和事件委托是重点，也是 JS 与 Java GUI（如 Swing 的监听器）最大的差异。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/avatar.png">
+<meta property="article:published_time" content="2026-09-27T12:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-04T05:53:49.613Z">
+<meta property="article:author" content="Yang">
+<meta property="article:tag" content="DOM">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="事件">
+<meta property="article:tag" content="事件委托">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/avatar.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "事件",
+  "url": "http://example.com/2026/09/27/%E5%89%8D%E7%AB%AF/JavaScript/%E4%BA%8B%E4%BB%B6/",
+  "image": "http://example.com/img/avatar.png",
+  "datePublished": "2026-09-27T12:00:00.000Z",
+  "dateModified": "2026-10-04T05:53:49.613Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Yang",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="http://example.com/2026/09/27/%E5%89%8D%E7%AB%AF/JavaScript/%E4%BA%8B%E4%BB%B6/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.5-b1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '事件',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Yang's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">事件</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">事件</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-09-27T12:00:00.000Z" title="发表于 2026-09-27 20:00:00">2026-09-27</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-10-04T05:53:49.613Z" title="更新于 2026-10-04 13:53:49">2026-10-04</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%89%8D%E7%AB%AF/JavaScript/">JavaScript</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="事件"><a href="#事件" class="headerlink" title="事件"></a>事件</h1><p>事件是用户与页面交互的桥梁：点击、输入、滚动、按键都会触发事件，JS 通过监听事件来响应用户操作。</p>
+<p>这一篇讲事件的<strong>注册与解绑、事件类型、事件对象、事件流（冒泡&#x2F;捕获）、事件委托</strong>。其中<strong>事件流和事件委托</strong>是重点，也是 JS 与 Java GUI（如 Swing 的监听器）最大的差异。</p>
+<span id="more"></span>
+
+<h2 id="一、注册与解绑事件"><a href="#一、注册与解绑事件" class="headerlink" title="一、注册与解绑事件"></a>一、注册与解绑事件</h2><h3 id="1-三种注册方式"><a href="#1-三种注册方式" class="headerlink" title="1. 三种注册方式"></a>1. 三种注册方式</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 方式一：HTML 属性（不推荐，结构和逻辑混在一起） --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">onclick</span>=<span class="string">&quot;alert(&#x27;hi&#x27;)&quot;</span>&gt;</span>按钮<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 方式二：DOM 属性（同一事件只能绑一个，后写覆盖前写）</span></span><br><span class="line">btn.<span class="property">onclick</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123; <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;点击&quot;</span>); &#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 方式三：addEventListener（推荐，可绑多个，按顺序执行）</span></span><br><span class="line">btn.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;点击 1&quot;</span>);</span><br><span class="line">&#125;);</span><br><span class="line">btn.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;点击 2&quot;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>⚠️ <code>onclick</code> 方式后写会<strong>覆盖</strong>前一个；<code>addEventListener</code> 可同时绑定多个，是标准做法。</p>
+</blockquote>
+<h3 id="2-解绑-removeEventListener"><a href="#2-解绑-removeEventListener" class="headerlink" title="2. 解绑 removeEventListener"></a>2. 解绑 removeEventListener</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">handler</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;click&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line">btn.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, handler);</span><br><span class="line">btn.<span class="title function_">removeEventListener</span>(<span class="string">&quot;click&quot;</span>, handler);   <span class="comment">// 解绑成功</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>⚠️ <strong>关键坑</strong>：解绑必须传<strong>同一个函数引用</strong>。匿名函数无法解绑（<code>addEventListener</code> 里写 <code>() =&gt; &#123;&#125;</code> 就再也解不掉了）。需要解绑时，务必用命名函数。</p>
+</blockquote>
+<h2 id="二、事件类型"><a href="#二、事件类型" class="headerlink" title="二、事件类型"></a>二、事件类型</h2><h3 id="1-鼠标事件"><a href="#1-鼠标事件" class="headerlink" title="1. 鼠标事件"></a>1. 鼠标事件</h3><table>
+<thead>
+<tr>
+<th>事件</th>
+<th>触发时机</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>click</code></td>
+<td>单击</td>
+<td>最常用</td>
+</tr>
+<tr>
+<td><code>dblclick</code></td>
+<td>双击</td>
+<td></td>
+</tr>
+<tr>
+<td><code>mouseenter</code> &#x2F; <code>mouseleave</code></td>
+<td>移入 &#x2F; 移出</td>
+<td><strong>不冒泡</strong>，推荐</td>
+</tr>
+<tr>
+<td><code>mouseover</code> &#x2F; <code>mouseout</code></td>
+<td>移入 &#x2F; 移出</td>
+<td><strong>冒泡</strong>，会受子元素影响</td>
+</tr>
+<tr>
+<td><code>mousemove</code></td>
+<td>移动</td>
+<td>配合坐标做拖拽</td>
+</tr>
+<tr>
+<td><code>mousedown</code> &#x2F; <code>mouseup</code></td>
+<td>按下 &#x2F; 松开</td>
+<td></td>
+</tr>
+<tr>
+<td><code>contextmenu</code></td>
+<td>右键</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="2-键盘事件"><a href="#2-键盘事件" class="headerlink" title="2. 键盘事件"></a>2. 键盘事件</h3><table>
+<thead>
+<tr>
+<th>事件</th>
+<th>触发时机</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>keydown</code></td>
+<td>按下（推荐）</td>
+</tr>
+<tr>
+<td><code>keyup</code></td>
+<td>松开</td>
+</tr>
+<tr>
+<td><code>keypress</code></td>
+<td>字符键按下（已废弃，少用）</td>
+</tr>
+</tbody></table>
+<h3 id="3-表单事件"><a href="#3-表单事件" class="headerlink" title="3. 表单事件"></a>3. 表单事件</h3><table>
+<thead>
+<tr>
+<th>事件</th>
+<th>触发时机</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>input</code></td>
+<td>每次输入（实时）</td>
+</tr>
+<tr>
+<td><code>change</code></td>
+<td>值改变且<strong>失焦</strong>后</td>
+</tr>
+<tr>
+<td><code>submit</code></td>
+<td>表单提交</td>
+</tr>
+<tr>
+<td><code>focus</code> &#x2F; <code>blur</code></td>
+<td>获得 &#x2F; 失去焦点</td>
+</tr>
+</tbody></table>
+<h3 id="4-页面事件"><a href="#4-页面事件" class="headerlink" title="4. 页面事件"></a>4. 页面事件</h3><table>
+<thead>
+<tr>
+<th>事件</th>
+<th>触发时机</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>load</code></td>
+<td>页面全部加载完（含图片等资源）</td>
+</tr>
+<tr>
+<td><code>DOMContentLoaded</code></td>
+<td>DOM 构建完（比 load 早）</td>
+</tr>
+<tr>
+<td><code>scroll</code></td>
+<td>滚动</td>
+</tr>
+<tr>
+<td><code>resize</code></td>
+<td>窗口大小改变</td>
+</tr>
+</tbody></table>
+<h2 id="三、事件对象-event"><a href="#三、事件对象-event" class="headerlink" title="三、事件对象 event"></a>三、事件对象 event</h2><p>事件回调的第一个参数就是事件对象 <code>event</code>（常简写 <code>e</code>）：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">btn.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="keyword">function</span> (<span class="params">e</span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(e.<span class="property">type</span>);            <span class="comment">// &quot;click&quot; 事件类型</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(e.<span class="property">target</span>);          <span class="comment">// 实际触发事件的元素</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(e.<span class="property">currentTarget</span>);   <span class="comment">// 绑定监听器的元素（等同 this）</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(e.<span class="property">clientX</span>, e.<span class="property">clientY</span>);  <span class="comment">// 鼠标坐标</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>键盘事件的键信息：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">input.<span class="title function_">addEventListener</span>(<span class="string">&quot;keydown&quot;</span>, <span class="keyword">function</span> (<span class="params">e</span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(e.<span class="property">key</span>);       <span class="comment">// &quot;a&quot;、&quot;Enter&quot;（推荐，直观）</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(e.<span class="property">keyCode</span>);   <span class="comment">// 65（数字，已废弃）</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>两个最重要的方法：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">e.<span class="title function_">preventDefault</span>();     <span class="comment">// 阻止默认行为（链接跳转、表单提交、右键菜单）</span></span><br><span class="line">e.<span class="title function_">stopPropagation</span>();    <span class="comment">// 阻止事件继续冒泡</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="四、事件流（捕获与冒泡）"><a href="#四、事件流（捕获与冒泡）" class="headerlink" title="四、事件流（捕获与冒泡）"></a>四、事件流（捕获与冒泡）</h2><p>一次完整的事件传播分三个阶段：<strong>捕获阶段 → 目标阶段 → 冒泡阶段</strong>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// addEventListener 第三个参数控制在哪一阶段触发</span></span><br><span class="line"><span class="comment">// false（默认）：冒泡阶段触发</span></span><br><span class="line"><span class="comment">// true：捕获阶段触发</span></span><br><span class="line">parent.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, handler, <span class="literal">false</span>);  <span class="comment">// 冒泡</span></span><br><span class="line">parent.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, handler, <span class="literal">true</span>);   <span class="comment">// 捕获</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;parent&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">&quot;child&quot;</span>&gt;</span>点我<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 点击 child 时，打印顺序：</span></span><br><span class="line"><span class="comment">// 父捕获 → 子（目标）→ 父冒泡</span></span><br><span class="line">parent.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;父-捕获&quot;</span>), <span class="literal">true</span>);</span><br><span class="line">child.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;子-目标&quot;</span>));</span><br><span class="line">parent.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;父-冒泡&quot;</span>), <span class="literal">false</span>);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>⚠️ <strong>记忆点</strong>：默认（<code>false</code>）是<strong>冒泡</strong>，事件从目标元素<strong>向上</strong>传到父元素，也是事件委托的基础。</p>
+</blockquote>
+<p><strong>阻止冒泡</strong>：<code>e.stopPropagation()</code> 让事件不再向上传播：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">child.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="keyword">function</span> (<span class="params">e</span>) &#123;</span><br><span class="line">  e.<span class="title function_">stopPropagation</span>();   <span class="comment">// 父元素的监听器不会触发了</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>区分：<code>stopPropagation</code> 阻止<strong>传播</strong>，<code>preventDefault</code> 阻止<strong>默认行为</strong>，两者互不影响。</p>
+</blockquote>
+<h2 id="五、事件委托（重点）"><a href="#五、事件委托（重点）" class="headerlink" title="五、事件委托（重点）"></a>五、事件委托（重点）</h2><p><strong>原理</strong>：利用事件冒泡，把监听器绑在<strong>父元素</strong>上，通过 <code>event.target</code> 判断实际点击的子元素。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">ul</span> <span class="attr">id</span>=<span class="string">&quot;list&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">li</span>&gt;</span>1<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">li</span>&gt;</span>2<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">li</span>&gt;</span>3<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 不用委托：给每个 li 都绑定（li 多时性能差，且新增 li 要重新绑）</span></span><br><span class="line"><span class="comment">// 用委托：只给父元素 ul 绑定一次</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;list&quot;</span>).<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="keyword">function</span> (<span class="params">e</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (e.<span class="property">target</span>.<span class="property">tagName</span> === <span class="string">&quot;LI&quot;</span>) &#123;       <span class="comment">// 判断点的是不是 li</span></span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(e.<span class="property">target</span>.<span class="property">textContent</span>);   <span class="comment">// 点哪个打印哪个</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>委托的两大好处：</p>
+<ol>
+<li><strong>性能</strong>：只绑一个监听器，替代绑 N 个。</li>
+<li><strong>动态元素友好</strong>：后加入的子元素自动生效，无需重新绑定。</li>
+</ol>
+<blockquote>
+<p>⚠️ <strong>target vs currentTarget</strong>（委托里最易混）：</p>
+<ul>
+<li><code>e.target</code>：<strong>实际点到的元素</strong>（点谁是谁）。</li>
+<li><code>e.currentTarget</code>：<strong>绑定监听器的元素</strong>（委托里是父元素 <code>ul</code>）。</li>
+</ul>
+<p>事件委托判断目标时一定要用 <code>e.target</code>。</p>
+</blockquote>
+<h2 id="六、速查表"><a href="#六、速查表" class="headerlink" title="六、速查表"></a>六、速查表</h2><table>
+<thead>
+<tr>
+<th>需求</th>
+<th>写法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>注册事件</td>
+<td><code>el.addEventListener(&quot;click&quot;, fn)</code></td>
+</tr>
+<tr>
+<td>解绑事件</td>
+<td><code>el.removeEventListener(&quot;click&quot;, fn)</code>（要同名函数）</td>
+</tr>
+<tr>
+<td>阻止默认</td>
+<td><code>e.preventDefault()</code></td>
+</tr>
+<tr>
+<td>阻止冒泡</td>
+<td><code>e.stopPropagation()</code></td>
+</tr>
+<tr>
+<td>触发目标</td>
+<td><code>e.target</code></td>
+</tr>
+<tr>
+<td>绑定元素</td>
+<td><code>e.currentTarget</code></td>
+</tr>
+<tr>
+<td>按键名</td>
+<td><code>e.key</code></td>
+</tr>
+<tr>
+<td>鼠标坐标</td>
+<td><code>e.clientX</code> &#x2F; <code>e.clientY</code></td>
+</tr>
+<tr>
+<td>捕获阶段</td>
+<td><code>addEventListener(&quot;click&quot;, fn, true)</code></td>
+</tr>
+<tr>
+<td>事件委托</td>
+<td>父元素监听 + <code>e.target</code> 判断</td>
+</tr>
+</tbody></table>
+<h2 id="七、复习要点"><a href="#七、复习要点" class="headerlink" title="七、复习要点"></a>七、复习要点</h2><ol>
+<li>注册事件用 <code>addEventListener</code>（可绑多个），解绑要<strong>同名函数引用</strong>（匿名函数解不掉）。</li>
+<li>常用事件：鼠标 <code>click/mouseenter/mousemove</code>、键盘 <code>keydown</code>、表单 <code>input/change/submit</code>、页面 <code>load/DOMContentLoaded/scroll</code>。</li>
+<li><code>e.target</code> 是实际触发元素，<code>e.currentTarget</code> 是绑定元素；<code>preventDefault</code> 阻止默认，<code>stopPropagation</code> 阻止冒泡。</li>
+<li><strong>事件流</strong>三阶段：捕获 → 目标 → 冒泡，默认在<strong>冒泡</strong>阶段触发。</li>
+<li><strong>事件委托</strong>：监听父元素 + <code>e.target</code> 判断，省性能、支持动态元素。</li>
+<li>忘了某个事件或属性，回本文对应小节查示例即可。</li>
+</ol>
+<p>下一篇预告：<strong>BOM 与本地存储</strong>——window、location、history、navigator、localStorage&#x2F;sessionStorage。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Yang</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2026/09/27/%E5%89%8D%E7%AB%AF/JavaScript/%E4%BA%8B%E4%BB%B6/">http://example.com/2026/09/27/%E5%89%8D%E7%AB%AF/JavaScript/%E4%BA%8B%E4%BB%B6/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">Yang's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/DOM/">DOM</a><a class="post-meta__tags" href="/tags/JavaScript/">JavaScript</a><a class="post-meta__tags" href="/tags/%E4%BA%8B%E4%BB%B6/">事件</a><a class="post-meta__tags" href="/tags/%E4%BA%8B%E4%BB%B6%E5%A7%94%E6%89%98/">事件委托</a></div><div class="post-share"><div class="social-share" data-image="/img/avatar.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2026/09/30/%E5%89%8D%E7%AB%AF/JavaScript/BOM%20%E4%B8%8E%E9%87%8D%E8%A6%81%E5%AF%B9%E8%B1%A1/" title="BOM"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">BOM</div></div><div class="info-2"><div class="info-item-1">BOMBOM（Browser Object Model，浏览器对象模型）是浏览器提供的、用来操作浏览器本身的对象集合，window 是它的顶层对象。 这一篇讲 BOM 的重要对象：window、location、history、navigator、screen，以及本地存储 localStorage / sessionStorage（重点）。   一、window 对象window 是全局对象，所有全局变量和全局函数都是 window 的属性和方法。 123var name = &quot;Tom&quot;;console.log(window.name);   // &quot;Tom&quot;（全局变量挂在 window 上）console.log(window === window.window);  // true  1. 常用方法1234567alert(&quot;提示框&quot;);          // 弹窗提示confirm(&quot;确定吗？&quot;);      // 确认框，返回 true / falseprompt(&quot;请输入&qu...</div></div></div></a><a class="pagination-related" href="/2026/09/24/%E5%89%8D%E7%AB%AF/JavaScript/DOM%20%E5%9F%BA%E7%A1%80%E4%B8%8E%E8%8A%82%E7%82%B9%E6%93%8D%E4%BD%9C/" title="DOM 基础与节点操作"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">DOM 基础与节点操作</div></div><div class="info-2"><div class="info-item-1">DOM 基础与节点操作DOM（Document Object Model，文档对象模型）是浏览器把 HTML 解析成的一棵节点树，JS 通过 document 对象操作这棵树，就能动态改变页面内容。 这一篇把 DOM 的基础操作合并讲完：获取元素、操作内容、操作属性与样式、节点关系、增删节点、表单操作。这是 DOM 的地基，后面所有交互都建立在它之上。   一、DOM 概念123456&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;body&gt;  &lt;div id=&quot;box&quot;&gt;hello&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;  浏览器会把它解析成一棵节点树：document → html → body → div，每个标签都是一个”节点（元素节点）”。 二、获取元素12345678910// 1. 按 id（返回单个元素，不存在返回 null）document.getElementById(&quot;box&quot;);// 2. 按标签名 / 类名（返回动态 HTMLColle...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/09/15/%E5%89%8D%E7%AB%AF/JavaScript/%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6%E3%80%81%E6%95%B0%E7%BB%84%E4%B8%8E%E9%9B%86%E5%90%88/" title="流程控制、数组与集合"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-15</div><div class="info-item-2">流程控制、数组与集合</div></div><div class="info-2"><div class="info-item-1">流程控制、数组与集合这一篇讲 JS 的流程控制（if &#x2F; switch &#x2F; 异常）、循环（for &#x2F; while &#x2F; for…in &#x2F; for…of）、数组、Set 与 Map，以及各类遍历方式。 其中 for...in、for...of、数组的高阶方法（map&#x2F;filter&#x2F;reduce）是 JS 与 Java 差异最大的部分；if、for、switch 等基础语法与 Java 几乎一致，只做对照。  阅读方式：与 Java 相同的语法简单带过，重点看「差异」和「⚠️ 坑点」。    一、流程控制1. if &#x2F; else if &#x2F; else（与 Java 相同）1234567if (a &gt; 0) &#123;  // ...&#125; else if (a === 0) &#123;  // ...&#125; else &#123;  // ...&#125;  唯一差异：条件表达式不强制是 boolean，JS 会用 truthy&#x2F;falsy 自动判断（0、&quot...</div></div></div></a><a class="pagination-related" href="/2026/09/19/%E5%89%8D%E7%AB%AF/JavaScript/%E5%87%BD%E6%95%B0/" title="函数"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-19</div><div class="info-item-2">函数</div></div><div class="info-2"><div class="info-item-1">函数函数是 JavaScript 最核心的概念，也是与 Java 差异最大的部分。最根本的一点：JS 的函数是一等公民——函数是”值”，可以赋给变量、当参数传、当返回值返回；并且 this 是运行时动态绑定的，与 Java 的 this 含义完全不同。 这一篇覆盖函数从基础到进阶的全部常用知识点：函数声明&#x2F;表达式、默认参数、rest 参数、箭头函数、IIFE、闭包、this、回调与高阶函数、call&#x2F;apply&#x2F;bind。   一、差异总览   维度 Java JavaScript    函数地位 方法，属于类 一等公民，是值   定义方式 返回值 方法名(参数) &#123;&#125; 声明式 &#x2F; 表达式 &#x2F; 箭头函数   返回类型 &#x2F; 参数类型 必须声明 无类型声明   重载 支持 不支持（后定义覆盖前面的）   参数个数 固定（可变参数除外） 随意，多传少传都行   this 指向当前实例 运行时动态绑定   默认参数 无（靠重载） 支持 (a = 1)   二、函数基础1. 定义与调用（与 Java 对照）12...</div></div></div></a><a class="pagination-related" href="/2026/09/24/%E5%89%8D%E7%AB%AF/JavaScript/DOM%20%E5%9F%BA%E7%A1%80%E4%B8%8E%E8%8A%82%E7%82%B9%E6%93%8D%E4%BD%9C/" title="DOM 基础与节点操作"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-24</div><div class="info-item-2">DOM 基础与节点操作</div></div><div class="info-2"><div class="info-item-1">DOM 基础与节点操作DOM（Document Object Model，文档对象模型）是浏览器把 HTML 解析成的一棵节点树，JS 通过 document 对象操作这棵树，就能动态改变页面内容。 这一篇把 DOM 的基础操作合并讲完：获取元素、操作内容、操作属性与样式、节点关系、增删节点、表单操作。这是 DOM 的地基，后面所有交互都建立在它之上。   一、DOM 概念123456&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;body&gt;  &lt;div id=&quot;box&quot;&gt;hello&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;  浏览器会把它解析成一棵节点树：document → html → body → div，每个标签都是一个”节点（元素节点）”。 二、获取元素12345678910// 1. 按 id（返回单个元素，不存在返回 null）document.getElementById(&quot;box&quot;);// 2. 按标签名 / 类名（返回动态 HTMLColle...</div></div></div></a><a class="pagination-related" href="/2026/09/22/%E5%89%8D%E7%AB%AF/JavaScript/%E5%AF%B9%E8%B1%A1%E4%B8%8E%E5%B8%B8%E7%94%A8%E5%86%85%E7%BD%AE%20API/" title="对象与常用内置 API"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-22</div><div class="info-item-2">对象与常用内置 API</div></div><div class="info-2"><div class="info-item-1">对象与常用内置 API这一篇分两块：对象（JS 的核心数据载体，与 Java 的”类”差异很大）和常用内置 API（String、Number&#x2F;Math、Date、JSON、定时器、console、正则等日常工具箱）。 其中原型与 class、Date 的月份从 0 开始、JSON 序列化的坑是重点差异；Array、Set/Map 的方法已在第 2 篇覆盖，本篇不再重复。   一、对象基础1. 对象字面量与属性访问123456789const user = &#123;  name: &quot;Tom&quot;,  age: 18,  &quot;full-name&quot;: &quot;Tom Hanks&quot;   // 含特殊字符的键要加引号&#125;;user.name;           // 点访问user[&quot;name&quot;];        // 方括号访问（键是变量时用这个）user[&quot;full-name&quot;];   // 特殊键必须用方括号  与 Java 的差异：Java 要 new 类，JS 直接用...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Yang</div><div class="author-info-description">萌新打怪升级中......</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">102</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">227</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">21</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6"><span class="toc-number">1.</span> <span class="toc-text">事件</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%B3%A8%E5%86%8C%E4%B8%8E%E8%A7%A3%E7%BB%91%E4%BA%8B%E4%BB%B6"><span class="toc-number">1.1.</span> <span class="toc-text">一、注册与解绑事件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%B8%89%E7%A7%8D%E6%B3%A8%E5%86%8C%E6%96%B9%E5%BC%8F"><span class="toc-number">1.1.1.</span> <span class="toc-text">1. 三种注册方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%A7%A3%E7%BB%91-removeEventListener"><span class="toc-number">1.1.2.</span> <span class="toc-text">2. 解绑 removeEventListener</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.2.</span> <span class="toc-text">二、事件类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E9%BC%A0%E6%A0%87%E4%BA%8B%E4%BB%B6"><span class="toc-number">1.2.1.</span> <span class="toc-text">1. 鼠标事件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E9%94%AE%E7%9B%98%E4%BA%8B%E4%BB%B6"><span class="toc-number">1.2.2.</span> <span class="toc-text">2. 键盘事件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E8%A1%A8%E5%8D%95%E4%BA%8B%E4%BB%B6"><span class="toc-number">1.2.3.</span> <span class="toc-text">3. 表单事件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E9%A1%B5%E9%9D%A2%E4%BA%8B%E4%BB%B6"><span class="toc-number">1.2.4.</span> <span class="toc-text">4. 页面事件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E4%BA%8B%E4%BB%B6%E5%AF%B9%E8%B1%A1-event"><span class="toc-number">1.3.</span> <span class="toc-text">三、事件对象 event</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E4%BA%8B%E4%BB%B6%E6%B5%81%EF%BC%88%E6%8D%95%E8%8E%B7%E4%B8%8E%E5%86%92%E6%B3%A1%EF%BC%89"><span class="toc-number">1.4.</span> <span class="toc-text">四、事件流（捕获与冒泡）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E4%BA%8B%E4%BB%B6%E5%A7%94%E6%89%98%EF%BC%88%E9%87%8D%E7%82%B9%EF%BC%89"><span class="toc-number">1.5.</span> <span class="toc-text">五、事件委托（重点）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E9%80%9F%E6%9F%A5%E8%A1%A8"><span class="toc-number">1.6.</span> <span class="toc-text">六、速查表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E5%A4%8D%E4%B9%A0%E8%A6%81%E7%82%B9"><span class="toc-number">1.7.</span> <span class="toc-text">七、复习要点</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/30/%E5%89%8D%E7%AB%AF/JavaScript/BOM%20%E4%B8%8E%E9%87%8D%E8%A6%81%E5%AF%B9%E8%B1%A1/" title="BOM">BOM</a><time datetime="2026-09-30T13:00:00.000Z" title="发表于 2026-09-30 21:00:00">2026-09-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/27/%E5%89%8D%E7%AB%AF/JavaScript/%E4%BA%8B%E4%BB%B6/" title="事件">事件</a><time datetime="2026-09-27T12:00:00.000Z" title="发表于 2026-09-27 20:00:00">2026-09-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/24/%E5%89%8D%E7%AB%AF/JavaScript/DOM%20%E5%9F%BA%E7%A1%80%E4%B8%8E%E8%8A%82%E7%82%B9%E6%93%8D%E4%BD%9C/" title="DOM 基础与节点操作">DOM 基础与节点操作</a><time datetime="2026-09-24T11:00:00.000Z" title="发表于 2026-09-24 19:00:00">2026-09-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/22/%E5%89%8D%E7%AB%AF/JavaScript/%E5%AF%B9%E8%B1%A1%E4%B8%8E%E5%B8%B8%E7%94%A8%E5%86%85%E7%BD%AE%20API/" title="对象与常用内置 API">对象与常用内置 API</a><time datetime="2026-09-22T10:00:00.000Z" title="发表于 2026-09-22 18:00:00">2026-09-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/19/%E5%89%8D%E7%AB%AF/JavaScript/%E5%87%BD%E6%95%B0/" title="函数">函数</a><time datetime="2026-09-19T09:00:00.000Z" title="发表于 2026-09-19 17:00:00">2026-09-19</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Yang</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.5-b1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.5-b1"></script><script src="/js/main.js?v=5.5.5-b1"></script><div class="js-pjax"></div><video id="bgvideo" autoplay muted loop playsinline> <source src="/video/bg.mp4" type="video/mp4"> </video><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
