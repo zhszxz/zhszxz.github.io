@@ -1,0 +1,413 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>AJAX | Yang's Blog</title><meta name="author" content="Yang"><meta name="copyright" content="Yang"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="AJAXAJAX（Asynchronous JavaScript And XML）的核心思想：浏览器用 JS 异步地发 HTTP 请求，拿到数据后局部更新页面，不刷新整页。 这一篇完整覆盖 AJAX 的整套知识：Promise（异步基础）→ XMLHttpRequest（经典实现）→ fetch（现代原生）→ async&#x2F;await（优雅写法）→ axios（最常用库）。  Java 对">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AJAX">
+<meta property="og:url" content="http://example.com/2026/10/14/%E5%89%8D%E7%AB%AF/Ajax/AJAX/index.html">
+<meta property="og:site_name" content="Yang&#39;s Blog">
+<meta property="og:description" content="AJAXAJAX（Asynchronous JavaScript And XML）的核心思想：浏览器用 JS 异步地发 HTTP 请求，拿到数据后局部更新页面，不刷新整页。 这一篇完整覆盖 AJAX 的整套知识：Promise（异步基础）→ XMLHttpRequest（经典实现）→ fetch（现代原生）→ async&#x2F;await（优雅写法）→ axios（最常用库）。  Java 对">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/avatar.png">
+<meta property="article:published_time" content="2026-10-14T01:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-22T12:54:32.736Z">
+<meta property="article:author" content="Yang">
+<meta property="article:tag" content="AJAX">
+<meta property="article:tag" content="axios">
+<meta property="article:tag" content="fetch">
+<meta property="article:tag" content="Promise">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/avatar.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "AJAX",
+  "url": "http://example.com/2026/10/14/%E5%89%8D%E7%AB%AF/Ajax/AJAX/",
+  "image": "http://example.com/img/avatar.png",
+  "datePublished": "2026-10-14T01:00:00.000Z",
+  "dateModified": "2026-10-22T12:54:32.736Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Yang",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="http://example.com/2026/10/14/%E5%89%8D%E7%AB%AF/Ajax/AJAX/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.5-b1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'AJAX',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Yang's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">AJAX</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">AJAX</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-10-14T01:00:00.000Z" title="发表于 2026-10-14 09:00:00">2026-10-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-10-22T12:54:32.736Z" title="更新于 2026-10-22 20:54:32">2026-10-22</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%89%8D%E7%AB%AF/JavaScript/">JavaScript</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="AJAX"><a href="#AJAX" class="headerlink" title="AJAX"></a>AJAX</h1><p>AJAX（Asynchronous JavaScript And XML）的核心思想：浏览器用 JS <strong>异步</strong>地发 HTTP 请求，拿到数据后<strong>局部更新页面，不刷新整页</strong>。</p>
+<p>这一篇完整覆盖 AJAX 的整套知识：<strong>Promise（异步基础）→ XMLHttpRequest（经典实现）→ fetch（现代原生）→ async&#x2F;await（优雅写法）→ axios（最常用库）</strong>。</p>
+<blockquote>
+<p>Java 对照：<code>axios</code> ≈ 后端的 <code>RestTemplate</code> &#x2F; <code>OkHttp</code> &#x2F; <code>HttpClient</code>；<code>Promise</code> ≈ <code>CompletableFuture</code>。</p>
+</blockquote>
+<span id="more"></span>
+
+<h2 id="一、AJAX-概述"><a href="#一、AJAX-概述" class="headerlink" title="一、AJAX 概述"></a>一、AJAX 概述</h2><h3 id="1-为什么需要异步"><a href="#1-为什么需要异步" class="headerlink" title="1. 为什么需要异步"></a>1. 为什么需要异步</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 同步（阻塞）：请求期间页面卡死</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;1&quot;</span>);</span><br><span class="line">同步请求();     <span class="comment">// 假设要等 3 秒</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;2&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 异步（不阻塞）</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;1&quot;</span>);</span><br><span class="line">异步请求(<span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;2&quot;</span>));  <span class="comment">// 完成后才执行</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;3&quot;</span>);</span><br><span class="line"><span class="comment">// 输出顺序：1 → 3 → 2</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-一次请求的流程"><a href="#2-一次请求的流程" class="headerlink" title="2. 一次请求的流程"></a>2. 一次请求的流程</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">客户端 JS 发请求 → 服务器处理 → 返回响应（JSON）→ 前端解析并更新页面</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>数据格式：现在统一用 <strong>JSON</strong>，不再用 XML（AJAX 里的 “X” 只是历史遗留的名字）。</p>
+</blockquote>
+<h2 id="二、Promise（异步基础）"><a href="#二、Promise（异步基础）" class="headerlink" title="二、Promise（异步基础）"></a>二、Promise（异步基础）</h2><p>fetch 和 axios 都返回 Promise，所以先理解它。</p>
+<h3 id="1-为什么需要-Promise：回调地狱"><a href="#1-为什么需要-Promise：回调地狱" class="headerlink" title="1. 为什么需要 Promise：回调地狱"></a>1. 为什么需要 Promise：回调地狱</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">getData</span>(<span class="keyword">function</span> (<span class="params">a</span>) &#123;</span><br><span class="line">  <span class="title function_">getData2</span>(a, <span class="keyword">function</span> (<span class="params">b</span>) &#123;</span><br><span class="line">    <span class="title function_">getData3</span>(b, <span class="keyword">function</span> (<span class="params">c</span>) &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(c);   <span class="comment">// 嵌套越来越深</span></span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-基本用法"><a href="#2-基本用法" class="headerlink" title="2. 基本用法"></a>2. 基本用法</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> p = <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">resolve</span>(<span class="string">&quot;成功&quot;</span>);   <span class="comment">// 成功时调用</span></span><br><span class="line">    <span class="comment">// reject(&quot;失败&quot;); // 失败时调用</span></span><br><span class="line">  &#125;, <span class="number">1000</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">p.<span class="title function_">then</span>(<span class="function"><span class="params">result</span> =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(result))   <span class="comment">// &quot;成功&quot;</span></span><br><span class="line"> .<span class="title function_">catch</span>(<span class="function"><span class="params">err</span> =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(err))        <span class="comment">// &quot;失败&quot;</span></span><br><span class="line"> .<span class="title function_">finally</span>(<span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;无论成败都执行&quot;</span>));</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-三种状态"><a href="#3-三种状态" class="headerlink" title="3. 三种状态"></a>3. 三种状态</h3><p><code>pending</code>（进行中）→ <code>fulfilled</code>（成功）&#x2F; <code>rejected</code>（失败），状态一旦改变<strong>不可逆</strong>。</p>
+<h3 id="4-链式调用与组合"><a href="#4-链式调用与组合" class="headerlink" title="4. 链式调用与组合"></a>4. 链式调用与组合</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">fetch</span>(<span class="string">&quot;/user&quot;</span>)</span><br><span class="line">  .<span class="title function_">then</span>(<span class="function"><span class="params">res</span> =&gt;</span> res.<span class="title function_">json</span>())            <span class="comment">// 返回新 Promise</span></span><br><span class="line">  .<span class="title function_">then</span>(<span class="function"><span class="params">user</span> =&gt;</span> <span class="title function_">fetch</span>(<span class="string">`/user/<span class="subst">$&#123;user.id&#125;</span>`</span>))</span><br><span class="line">  .<span class="title function_">then</span>(<span class="function"><span class="params">res</span> =&gt;</span> res.<span class="title function_">json</span>())</span><br><span class="line">  .<span class="title function_">then</span>(<span class="function"><span class="params">detail</span> =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(detail))</span><br><span class="line">  .<span class="title function_">catch</span>(<span class="function"><span class="params">err</span> =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(err));    <span class="comment">// 一个 catch 兜底整条链</span></span><br><span class="line"></span><br><span class="line"><span class="title class_">Promise</span>.<span class="title function_">all</span>([p1, p2]).<span class="title function_">then</span>(<span class="function"><span class="params">results</span> =&gt;</span> &#123; <span class="comment">/* 全部成功 */</span> &#125;);</span><br><span class="line"><span class="title class_">Promise</span>.<span class="title function_">race</span>([p1, p2]).<span class="title function_">then</span>(<span class="function"><span class="params">result</span> =&gt;</span> &#123; <span class="comment">/* 谁先完成用谁 */</span> &#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、XMLHttpRequest（XHR，经典实现）"><a href="#三、XMLHttpRequest（XHR，经典实现）" class="headerlink" title="三、XMLHttpRequest（XHR，经典实现）"></a>三、XMLHttpRequest（XHR，经典实现）</h2><p>XHR 是 AJAX 最基础的实现，回调风格。</p>
+<h3 id="1-GET-请求（四步）"><a href="#1-GET-请求（四步）" class="headerlink" title="1. GET 请求（四步）"></a>1. GET 请求（四步）</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. 创建对象</span></span><br><span class="line"><span class="keyword">const</span> xhr = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 配置请求（方法 + URL）</span></span><br><span class="line">xhr.<span class="title function_">open</span>(<span class="string">&quot;GET&quot;</span>, <span class="string">&quot;https://api.example.com/users&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3. 注册回调</span></span><br><span class="line">xhr.<span class="property">onload</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (xhr.<span class="property">status</span> === <span class="number">200</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">JSON</span>.<span class="title function_">parse</span>(xhr.<span class="property">responseText</span>));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line">xhr.<span class="property">onerror</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;请求失败&quot;</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 4. 发送</span></span><br><span class="line">xhr.<span class="title function_">send</span>();</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-POST-请求"><a href="#2-POST-请求" class="headerlink" title="2. POST 请求"></a>2. POST 请求</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> xhr = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span><br><span class="line">xhr.<span class="title function_">open</span>(<span class="string">&quot;POST&quot;</span>, <span class="string">&quot;https://api.example.com/users&quot;</span>);</span><br><span class="line">xhr.<span class="title function_">setRequestHeader</span>(<span class="string">&quot;Content-Type&quot;</span>, <span class="string">&quot;application/json&quot;</span>);   <span class="comment">// 设请求头</span></span><br><span class="line">xhr.<span class="property">onload</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (xhr.<span class="property">status</span> === <span class="number">200</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">JSON</span>.<span class="title function_">parse</span>(xhr.<span class="property">responseText</span>));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line">xhr.<span class="title function_">send</span>(<span class="title class_">JSON</span>.<span class="title function_">stringify</span>(&#123; <span class="attr">name</span>: <span class="string">&quot;Tom&quot;</span>, <span class="attr">age</span>: <span class="number">18</span> &#125;));          <span class="comment">// 请求体</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-关键属性"><a href="#3-关键属性" class="headerlink" title="3. 关键属性"></a>3. 关键属性</h3><table>
+<thead>
+<tr>
+<th>属性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>xhr.readyState</code></td>
+<td>状态 0~4，4 表示完成</td>
+</tr>
+<tr>
+<td><code>xhr.status</code></td>
+<td>HTTP 状态码（200 成功）</td>
+</tr>
+<tr>
+<td><code>xhr.responseText</code></td>
+<td>响应文本（需 JSON.parse）</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>XHR 是回调风格、写法繁琐，现已被 <code>fetch</code> 取代，但理解它有助于明白请求的本质。</p>
+</blockquote>
+<h2 id="四、fetch（现代原生-API）"><a href="#四、fetch（现代原生-API）" class="headerlink" title="四、fetch（现代原生 API）"></a>四、fetch（现代原生 API）</h2><p><code>fetch</code> 基于 Promise，是现代浏览器的标准请求方式。</p>
+<h3 id="1-GET-请求"><a href="#1-GET-请求" class="headerlink" title="1. GET 请求"></a>1. GET 请求</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">fetch</span>(<span class="string">&quot;https://api.example.com/users&quot;</span>)</span><br><span class="line">  .<span class="title function_">then</span>(<span class="function"><span class="params">res</span> =&gt;</span> res.<span class="title function_">json</span>())      <span class="comment">// 解析响应为 JSON</span></span><br><span class="line">  .<span class="title function_">then</span>(<span class="function"><span class="params">data</span> =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(data));</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-POST-请求-1"><a href="#2-POST-请求-1" class="headerlink" title="2. POST 请求"></a>2. POST 请求</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">fetch</span>(<span class="string">&quot;https://api.example.com/users&quot;</span>, &#123;</span><br><span class="line">  <span class="attr">method</span>: <span class="string">&quot;POST&quot;</span>,</span><br><span class="line">  <span class="attr">headers</span>: &#123; <span class="string">&quot;Content-Type&quot;</span>: <span class="string">&quot;application/json&quot;</span> &#125;,</span><br><span class="line">  <span class="attr">body</span>: <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(&#123; <span class="attr">name</span>: <span class="string">&quot;Tom&quot;</span>, <span class="attr">age</span>: <span class="number">18</span> &#125;)</span><br><span class="line">&#125;)</span><br><span class="line">  .<span class="title function_">then</span>(<span class="function"><span class="params">res</span> =&gt;</span> res.<span class="title function_">json</span>())</span><br><span class="line">  .<span class="title function_">then</span>(<span class="function"><span class="params">data</span> =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(data));</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-响应对象"><a href="#3-响应对象" class="headerlink" title="3. 响应对象"></a>3. 响应对象</h3><table>
+<thead>
+<tr>
+<th>属性&#x2F;方法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>res.json()</code></td>
+<td>解析为 JSON 对象</td>
+</tr>
+<tr>
+<td><code>res.text()</code></td>
+<td>解析为文本</td>
+</tr>
+<tr>
+<td><code>res.status</code></td>
+<td>状态码</td>
+</tr>
+<tr>
+<td><code>res.ok</code></td>
+<td>是否成功（200~299）</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>⚠️ <strong>fetch 最大的坑</strong>：HTTP 错误（404、500）<strong>不会自动 reject</strong>，<code>fetch</code> 只在网络故障时 reject，所以要手动检查 <code>res.ok</code>：</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">fetch</span>(url)</span><br><span class="line">  .<span class="title function_">then</span>(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (!res.<span class="property">ok</span>) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&quot;请求失败 &quot;</span> + res.<span class="property">status</span>);</span><br><span class="line">    <span class="keyword">return</span> res.<span class="title function_">json</span>();</span><br><span class="line">  &#125;)</span><br><span class="line">  .<span class="title function_">then</span>(<span class="function"><span class="params">data</span> =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(data))</span><br><span class="line">  .<span class="title function_">catch</span>(<span class="function"><span class="params">err</span> =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(err));</span><br></pre></td></tr></table></figure>
+
+<h2 id="五、async-await（fetch-的优雅写法）"><a href="#五、async-await（fetch-的优雅写法）" class="headerlink" title="五、async &#x2F; await（fetch 的优雅写法）"></a>五、async &#x2F; await（fetch 的优雅写法）</h2><p><code>async/await</code> 是 Promise 的语法糖，让异步代码像同步一样写。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">getUsers</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> res = <span class="keyword">await</span> <span class="title function_">fetch</span>(<span class="string">&quot;https://api.example.com/users&quot;</span>);</span><br><span class="line">  <span class="keyword">if</span> (!res.<span class="property">ok</span>) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&quot;请求失败&quot;</span>);</span><br><span class="line">  <span class="keyword">const</span> data = <span class="keyword">await</span> res.<span class="title function_">json</span>();</span><br><span class="line">  <span class="keyword">return</span> data;      <span class="comment">// async 函数返回的是 Promise</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">getUsers</span>().<span class="title function_">then</span>(<span class="function"><span class="params">data</span> =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(data));</span><br></pre></td></tr></table></figure>
+
+<p>错误处理用 <code>try/catch</code>：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">getUsers</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> res = <span class="keyword">await</span> <span class="title function_">fetch</span>(url);</span><br><span class="line">    <span class="keyword">const</span> data = <span class="keyword">await</span> res.<span class="title function_">json</span>();</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(data);</span><br><span class="line">  &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;出错&quot;</span>, err);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>⚠️ <strong>易错点</strong>：<code>async</code> 函数<strong>必须 <code>await</code> 才能拿到值</strong>；<code>await</code> 只能写在 <code>async</code> 函数内部。</p>
+</blockquote>
+<h2 id="六、axios（最常用的第三方库）"><a href="#六、axios（最常用的第三方库）" class="headerlink" title="六、axios（最常用的第三方库）"></a>六、axios（最常用的第三方库）</h2><p>axios 封装了 fetch&#x2F;XHR，功能更强、写法更简洁，是项目的首选。</p>
+<h3 id="1-引入"><a href="#1-引入" class="headerlink" title="1. 引入"></a>1. 引入</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- CDN --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 或 npm</span></span><br><span class="line">npm install axios</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">&quot;axios&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-GET-请求（自动-JSON-解析）"><a href="#2-GET-请求（自动-JSON-解析）" class="headerlink" title="2. GET 请求（自动 JSON 解析）"></a>2. GET 请求（自动 JSON 解析）</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">axios.<span class="title function_">get</span>(<span class="string">&quot;https://api.example.com/users&quot;</span>)</span><br><span class="line">  .<span class="title function_">then</span>(<span class="function"><span class="params">res</span> =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(res.<span class="property">data</span>))   <span class="comment">// 直接 .data，无需手动 parse</span></span><br><span class="line">  .<span class="title function_">catch</span>(<span class="function"><span class="params">err</span> =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(err));      <span class="comment">// HTTP 错误会自动 reject</span></span><br></pre></td></tr></table></figure>
+
+<p>带查询参数：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">axios.<span class="title function_">get</span>(<span class="string">&quot;https://api.example.com/users&quot;</span>, &#123;</span><br><span class="line">  <span class="attr">params</span>: &#123; <span class="attr">id</span>: <span class="number">1</span>, <span class="attr">page</span>: <span class="number">2</span> &#125;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// 实际请求 /users?id=1&amp;page=2</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-POST-请求（自动序列化对象）"><a href="#3-POST-请求（自动序列化对象）" class="headerlink" title="3. POST 请求（自动序列化对象）"></a>3. POST 请求（自动序列化对象）</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">axios.<span class="title function_">post</span>(<span class="string">&quot;https://api.example.com/users&quot;</span>, &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;Tom&quot;</span>,</span><br><span class="line">  <span class="attr">age</span>: <span class="number">18</span></span><br><span class="line">&#125;)  <span class="comment">// 对象自动转 JSON，无需手动 stringify</span></span><br><span class="line">  .<span class="title function_">then</span>(<span class="function"><span class="params">res</span> =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(res.<span class="property">data</span>));</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-全局配置与拦截器"><a href="#4-全局配置与拦截器" class="headerlink" title="4. 全局配置与拦截器"></a>4. 全局配置与拦截器</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 全局默认配置</span></span><br><span class="line">axios.<span class="property">defaults</span>.<span class="property">baseURL</span> = <span class="string">&quot;https://api.example.com&quot;</span>;</span><br><span class="line">axios.<span class="property">defaults</span>.<span class="property">timeout</span> = <span class="number">5000</span>;   <span class="comment">// 5 秒超时</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 请求拦截器（发请求前统一处理，如加 token）</span></span><br><span class="line">axios.<span class="property">interceptors</span>.<span class="property">request</span>.<span class="title function_">use</span>(<span class="function"><span class="params">config</span> =&gt;</span> &#123;</span><br><span class="line">  config.<span class="property">headers</span>.<span class="property">Authorization</span> = <span class="string">&quot;Bearer token&quot;</span>;</span><br><span class="line">  <span class="keyword">return</span> config;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 响应拦截器（统一处理响应/错误）</span></span><br><span class="line">axios.<span class="property">interceptors</span>.<span class="property">response</span>.<span class="title function_">use</span>(</span><br><span class="line">  <span class="function"><span class="params">res</span> =&gt;</span> res,</span><br><span class="line">  <span class="function"><span class="params">err</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;请求失败&quot;</span>, err);</span><br><span class="line">    <span class="keyword">return</span> <span class="title class_">Promise</span>.<span class="title function_">reject</span>(err);</span><br><span class="line">  &#125;</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-为什么用-axios（对比-fetch）"><a href="#5-为什么用-axios（对比-fetch）" class="headerlink" title="5. 为什么用 axios（对比 fetch）"></a>5. 为什么用 axios（对比 fetch）</h3><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>fetch</th>
+<th>axios</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>JSON 解析</td>
+<td>手动 <code>res.json()</code></td>
+<td>自动 <code>res.data</code></td>
+</tr>
+<tr>
+<td>对象序列化</td>
+<td>手动 <code>JSON.stringify</code></td>
+<td>自动</td>
+</tr>
+<tr>
+<td>HTTP 错误</td>
+<td>不自动 reject，手动查 <code>res.ok</code></td>
+<td>自动 reject</td>
+</tr>
+<tr>
+<td>拦截器</td>
+<td>无</td>
+<td>有（请求&#x2F;响应）</td>
+</tr>
+<tr>
+<td>超时&#x2F;取消&#x2F;进度</td>
+<td>部分支持</td>
+<td>内置支持</td>
+</tr>
+</tbody></table>
+<h2 id="七、XHR-fetch-axios-对比与选择"><a href="#七、XHR-fetch-axios-对比与选择" class="headerlink" title="七、XHR &#x2F; fetch &#x2F; axios 对比与选择"></a>七、XHR &#x2F; fetch &#x2F; axios 对比与选择</h2><table>
+<thead>
+<tr>
+<th></th>
+<th>XHR</th>
+<th>fetch</th>
+<th>axios</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>风格</td>
+<td>回调</td>
+<td>Promise</td>
+<td>Promise</td>
+</tr>
+<tr>
+<td>JSON 解析</td>
+<td>手动</td>
+<td>手动</td>
+<td>自动</td>
+</tr>
+<tr>
+<td>错误处理</td>
+<td>手动判断 status</td>
+<td>手动查 res.ok</td>
+<td>自动 reject</td>
+</tr>
+<tr>
+<td>拦截器</td>
+<td>无</td>
+<td>无</td>
+<td>有</td>
+</tr>
+<tr>
+<td>依赖</td>
+<td>原生</td>
+<td>原生</td>
+<td>第三方库</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>选择建议：<strong>学习理解用 fetch（原生），真实项目用 axios（省心）</strong>；XHR 了解即可。</p>
+</blockquote>
+<h2 id="八、速查表"><a href="#八、速查表" class="headerlink" title="八、速查表"></a>八、速查表</h2><table>
+<thead>
+<tr>
+<th>需求</th>
+<th>写法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>创建 Promise</td>
+<td><code>new Promise((resolve, reject) =&gt; &#123;&#125;)</code></td>
+</tr>
+<tr>
+<td>成功&#x2F;失败回调</td>
+<td><code>p.then(onOk).catch(onErr)</code></td>
+</tr>
+<tr>
+<td>XHR GET</td>
+<td><code>xhr.open(&quot;GET&quot;, url)</code> + <code>xhr.send()</code></td>
+</tr>
+<tr>
+<td>XHR POST</td>
+<td><code>xhr.setRequestHeader(...)</code> + <code>xhr.send(body)</code></td>
+</tr>
+<tr>
+<td>fetch GET</td>
+<td><code>fetch(url).then(res =&gt; res.json())</code></td>
+</tr>
+<tr>
+<td>fetch POST</td>
+<td><code>fetch(url, &#123; method:&quot;POST&quot;, body: JSON.stringify(obj) &#125;)</code></td>
+</tr>
+<tr>
+<td>检查请求成功</td>
+<td><code>if (!res.ok) throw new Error(...)</code></td>
+</tr>
+<tr>
+<td>async 请求</td>
+<td><code>const data = await (await fetch(url)).json()</code></td>
+</tr>
+<tr>
+<td>axios GET</td>
+<td><code>axios.get(url).then(res =&gt; res.data)</code></td>
+</tr>
+<tr>
+<td>axios POST</td>
+<td><code>axios.post(url, obj).then(res =&gt; res.data)</code></td>
+</tr>
+<tr>
+<td>axios 拦截器</td>
+<td><code>axios.interceptors.request.use(fn)</code></td>
+</tr>
+</tbody></table>
+<h2 id="九、复习要点"><a href="#九、复习要点" class="headerlink" title="九、复习要点"></a>九、复习要点</h2><ol>
+<li><strong>AJAX</strong> &#x3D; 异步请求 + 无刷新局部更新；数据用 JSON。</li>
+<li><strong>Promise</strong> 解决回调地狱：三状态不可逆，<code>then/catch/finally</code> 链式，<code>all/race</code> 组合。</li>
+<li><strong>XHR</strong> 四步（open → 回调 → send），回调式，已被 fetch 取代。</li>
+<li><strong>fetch</strong> 返回 Promise，用 <code>res.json()</code> 解析；⚠️ HTTP 错误不自动 reject，要查 <code>res.ok</code>。</li>
+<li><strong>async&#x2F;await</strong> 是 Promise 语法糖，<code>try/catch</code> 捕获错误，<code>await</code> 只能在 async 函数内。</li>
+<li><strong>axios</strong> 自动 JSON 解析&#x2F;序列化、自动 reject、有拦截器，是项目首选。</li>
+<li>学习用 fetch，项目用 axios，XHR 了解即可。</li>
+<li>忘了某段，回本文对应小节看示例即可。</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Yang</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2026/10/14/%E5%89%8D%E7%AB%AF/Ajax/AJAX/">http://example.com/2026/10/14/%E5%89%8D%E7%AB%AF/Ajax/AJAX/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">Yang's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/AJAX/">AJAX</a><a class="post-meta__tags" href="/tags/axios/">axios</a><a class="post-meta__tags" href="/tags/fetch/">fetch</a><a class="post-meta__tags" href="/tags/Promise/">Promise</a></div><div class="post-share"><div class="social-share" data-image="/img/avatar.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/10/10/%E5%89%8D%E7%AB%AF/JavaScript/%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%E7%82%B9%E8%A1%A5%E5%85%85/" title="进阶知识点补充"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">进阶知识点补充</div></div><div class="info-2"><div class="info-item-1">进阶知识点补充这一篇是收尾的进阶补充，把之前零散或没深入的知识点集中讲透：原型与原型链、深浅拷贝、防抖&#x2F;节流、Symbol、迭代器与生成器，以及严格模式、柯里化、类型判断、逻辑赋值运算符、Proxy 等。   一、原型与原型链（深入）1. 核心关系（基础回顾）123456789function Person(name) &#123;  this.name = name;&#125;Person.prototype.say = function () &#123;  console.log(this.name);&#125;;const p = new Person(&quot;Tom&quot;);p.say();   // &quot;Tom&quot;  三条关键等式（原型链的本质）： 123p.__proto__ === Person.prototype;                  // true（实例 → 原型对象）Person.prototype.__proto__ === Object.prototype;   // true（原型对象 → Obje...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Yang</div><div class="author-info-description">萌新打怪升级中......</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">104</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">236</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">21</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#AJAX"><span class="toc-number">1.</span> <span class="toc-text">AJAX</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81AJAX-%E6%A6%82%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">一、AJAX 概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E5%BC%82%E6%AD%A5"><span class="toc-number">1.1.1.</span> <span class="toc-text">1. 为什么需要异步</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%B8%80%E6%AC%A1%E8%AF%B7%E6%B1%82%E7%9A%84%E6%B5%81%E7%A8%8B"><span class="toc-number">1.1.2.</span> <span class="toc-text">2. 一次请求的流程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81Promise%EF%BC%88%E5%BC%82%E6%AD%A5%E5%9F%BA%E7%A1%80%EF%BC%89"><span class="toc-number">1.2.</span> <span class="toc-text">二、Promise（异步基础）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81-Promise%EF%BC%9A%E5%9B%9E%E8%B0%83%E5%9C%B0%E7%8B%B1"><span class="toc-number">1.2.1.</span> <span class="toc-text">1. 为什么需要 Promise：回调地狱</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95"><span class="toc-number">1.2.2.</span> <span class="toc-text">2. 基本用法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E4%B8%89%E7%A7%8D%E7%8A%B6%E6%80%81"><span class="toc-number">1.2.3.</span> <span class="toc-text">3. 三种状态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E9%93%BE%E5%BC%8F%E8%B0%83%E7%94%A8%E4%B8%8E%E7%BB%84%E5%90%88"><span class="toc-number">1.2.4.</span> <span class="toc-text">4. 链式调用与组合</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81XMLHttpRequest%EF%BC%88XHR%EF%BC%8C%E7%BB%8F%E5%85%B8%E5%AE%9E%E7%8E%B0%EF%BC%89"><span class="toc-number">1.3.</span> <span class="toc-text">三、XMLHttpRequest（XHR，经典实现）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-GET-%E8%AF%B7%E6%B1%82%EF%BC%88%E5%9B%9B%E6%AD%A5%EF%BC%89"><span class="toc-number">1.3.1.</span> <span class="toc-text">1. GET 请求（四步）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-POST-%E8%AF%B7%E6%B1%82"><span class="toc-number">1.3.2.</span> <span class="toc-text">2. POST 请求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%85%B3%E9%94%AE%E5%B1%9E%E6%80%A7"><span class="toc-number">1.3.3.</span> <span class="toc-text">3. 关键属性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81fetch%EF%BC%88%E7%8E%B0%E4%BB%A3%E5%8E%9F%E7%94%9F-API%EF%BC%89"><span class="toc-number">1.4.</span> <span class="toc-text">四、fetch（现代原生 API）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-GET-%E8%AF%B7%E6%B1%82"><span class="toc-number">1.4.1.</span> <span class="toc-text">1. GET 请求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-POST-%E8%AF%B7%E6%B1%82-1"><span class="toc-number">1.4.2.</span> <span class="toc-text">2. POST 请求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%93%8D%E5%BA%94%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.4.3.</span> <span class="toc-text">3. 响应对象</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81async-await%EF%BC%88fetch-%E7%9A%84%E4%BC%98%E9%9B%85%E5%86%99%E6%B3%95%EF%BC%89"><span class="toc-number">1.5.</span> <span class="toc-text">五、async &#x2F; await（fetch 的优雅写法）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81axios%EF%BC%88%E6%9C%80%E5%B8%B8%E7%94%A8%E7%9A%84%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93%EF%BC%89"><span class="toc-number">1.6.</span> <span class="toc-text">六、axios（最常用的第三方库）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%BC%95%E5%85%A5"><span class="toc-number">1.6.1.</span> <span class="toc-text">1. 引入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-GET-%E8%AF%B7%E6%B1%82%EF%BC%88%E8%87%AA%E5%8A%A8-JSON-%E8%A7%A3%E6%9E%90%EF%BC%89"><span class="toc-number">1.6.2.</span> <span class="toc-text">2. GET 请求（自动 JSON 解析）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-POST-%E8%AF%B7%E6%B1%82%EF%BC%88%E8%87%AA%E5%8A%A8%E5%BA%8F%E5%88%97%E5%8C%96%E5%AF%B9%E8%B1%A1%EF%BC%89"><span class="toc-number">1.6.3.</span> <span class="toc-text">3. POST 请求（自动序列化对象）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%85%A8%E5%B1%80%E9%85%8D%E7%BD%AE%E4%B8%8E%E6%8B%A6%E6%88%AA%E5%99%A8"><span class="toc-number">1.6.4.</span> <span class="toc-text">4. 全局配置与拦截器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E4%B8%BA%E4%BB%80%E4%B9%88%E7%94%A8-axios%EF%BC%88%E5%AF%B9%E6%AF%94-fetch%EF%BC%89"><span class="toc-number">1.6.5.</span> <span class="toc-text">5. 为什么用 axios（对比 fetch）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81XHR-fetch-axios-%E5%AF%B9%E6%AF%94%E4%B8%8E%E9%80%89%E6%8B%A9"><span class="toc-number">1.7.</span> <span class="toc-text">七、XHR &#x2F; fetch &#x2F; axios 对比与选择</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E9%80%9F%E6%9F%A5%E8%A1%A8"><span class="toc-number">1.8.</span> <span class="toc-text">八、速查表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B9%9D%E3%80%81%E5%A4%8D%E4%B9%A0%E8%A6%81%E7%82%B9"><span class="toc-number">1.9.</span> <span class="toc-text">九、复习要点</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/14/%E5%89%8D%E7%AB%AF/Ajax/AJAX/" title="AJAX">AJAX</a><time datetime="2026-10-14T01:00:00.000Z" title="发表于 2026-10-14 09:00:00">2026-10-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/10/%E5%89%8D%E7%AB%AF/JavaScript/%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%E7%82%B9%E8%A1%A5%E5%85%85/" title="进阶知识点补充">进阶知识点补充</a><time datetime="2026-10-10T15:00:00.000Z" title="发表于 2026-10-10 23:00:00">2026-10-10</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/30/%E5%89%8D%E7%AB%AF/JavaScript/BOM%20%E4%B8%8E%E9%87%8D%E8%A6%81%E5%AF%B9%E8%B1%A1/" title="BOM">BOM</a><time datetime="2026-09-30T13:00:00.000Z" title="发表于 2026-09-30 21:00:00">2026-09-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/27/%E5%89%8D%E7%AB%AF/JavaScript/%E4%BA%8B%E4%BB%B6/" title="事件">事件</a><time datetime="2026-09-27T12:00:00.000Z" title="发表于 2026-09-27 20:00:00">2026-09-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/24/%E5%89%8D%E7%AB%AF/JavaScript/DOM%20%E5%9F%BA%E7%A1%80%E4%B8%8E%E8%8A%82%E7%82%B9%E6%93%8D%E4%BD%9C/" title="DOM 基础与节点操作">DOM 基础与节点操作</a><time datetime="2026-09-24T11:00:00.000Z" title="发表于 2026-09-24 19:00:00">2026-09-24</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Yang</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.5-b1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.5-b1"></script><script src="/js/main.js?v=5.5.5-b1"></script><div class="js-pjax"></div><video id="bgvideo" autoplay muted loop playsinline> <source src="/video/bg.mp4" type="video/mp4"> </video><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
