@@ -1,0 +1,314 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Vuex 状态管理与项目实战 | Yang's Blog</title><meta name="author" content="Yang"><meta name="copyright" content="Yang"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Vuex 状态管理与项目实战Vuex 是 Vue 的状态管理库，集中管理多个组件共享的数据，解决”跨组件传值太麻烦”的问题。 这一篇讲 Vuex 的五个核心概念、模块化、辅助函数，以及项目实战中的 axios 封装、api 模块化、移动端 vant、mixins 等工程化要点。  Java 对照：Vuex ≈ 一个”全局共享的内存数据容器”，类似后端的单例 Service + 缓存；mutatio">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vuex 状态管理与项目实战">
+<meta property="og:url" content="http://example.com/2026/09/13/%E5%89%8D%E7%AB%AF/Vue/Vuex%20%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86%E4%B8%8E%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/index.html">
+<meta property="og:site_name" content="Yang&#39;s Blog">
+<meta property="og:description" content="Vuex 状态管理与项目实战Vuex 是 Vue 的状态管理库，集中管理多个组件共享的数据，解决”跨组件传值太麻烦”的问题。 这一篇讲 Vuex 的五个核心概念、模块化、辅助函数，以及项目实战中的 axios 封装、api 模块化、移动端 vant、mixins 等工程化要点。  Java 对照：Vuex ≈ 一个”全局共享的内存数据容器”，类似后端的单例 Service + 缓存；mutatio">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/avatar.png">
+<meta property="article:published_time" content="2026-09-13T06:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-12T12:35:31.325Z">
+<meta property="article:author" content="Yang">
+<meta property="article:tag" content="Vue">
+<meta property="article:tag" content="axios">
+<meta property="article:tag" content="Vue2">
+<meta property="article:tag" content="Vuex">
+<meta property="article:tag" content="状态管理">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/avatar.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Vuex 状态管理与项目实战",
+  "url": "http://example.com/2026/09/13/%E5%89%8D%E7%AB%AF/Vue/Vuex%20%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86%E4%B8%8E%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/",
+  "image": "http://example.com/img/avatar.png",
+  "datePublished": "2026-09-13T06:00:00.000Z",
+  "dateModified": "2026-11-12T12:35:31.325Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Yang",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="http://example.com/2026/09/13/%E5%89%8D%E7%AB%AF/Vue/Vuex%20%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86%E4%B8%8E%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.5-b1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Vuex 状态管理与项目实战',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Yang's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">Vuex 状态管理与项目实战</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">Vuex 状态管理与项目实战</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-09-13T06:00:00.000Z" title="发表于 2026-09-13 14:00:00">2026-09-13</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-11-12T12:35:31.325Z" title="更新于 2026-11-12 20:35:31">2026-11-12</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%89%8D%E7%AB%AF/Vue/">Vue</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="Vuex-状态管理与项目实战"><a href="#Vuex-状态管理与项目实战" class="headerlink" title="Vuex 状态管理与项目实战"></a>Vuex 状态管理与项目实战</h1><p>Vuex 是 Vue 的<strong>状态管理库</strong>，集中管理多个组件共享的数据，解决”跨组件传值太麻烦”的问题。</p>
+<p>这一篇讲 Vuex 的五个核心概念、模块化、辅助函数，以及项目实战中的 <strong>axios 封装、api 模块化、移动端 vant、mixins</strong> 等工程化要点。</p>
+<blockquote>
+<p>Java 对照：Vuex ≈ 一个”全局共享的内存数据容器”，类似后端的单例 Service + 缓存；<code>mutations</code> 像”同步 setter”，<code>actions</code> 像”异步业务方法”。</p>
+</blockquote>
+<span id="more"></span>
+
+<h2 id="一、为什么需要-Vuex"><a href="#一、为什么需要-Vuex" class="headerlink" title="一、为什么需要 Vuex"></a>一、为什么需要 Vuex</h2><ul>
+<li>多组件共享同一份状态（如登录用户、购物车），用 props&#x2F;$emit 层层传递太繁琐。</li>
+<li>Vuex 把共享状态<strong>集中到一个 store</strong>，任何组件都能访问和修改。</li>
+</ul>
+<h2 id="二、Vuex-五个核心概念"><a href="#二、Vuex-五个核心概念" class="headerlink" title="二、Vuex 五个核心概念"></a>二、Vuex 五个核心概念</h2><table>
+<thead>
+<tr>
+<th>概念</th>
+<th>作用</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>state</code></td>
+<td>数据源（共享数据）</td>
+<td>只读</td>
+</tr>
+<tr>
+<td><code>getters</code></td>
+<td>派生数据（类似 computed）</td>
+<td>有缓存</td>
+</tr>
+<tr>
+<td><code>mutations</code></td>
+<td>修改 state 的唯一途径</td>
+<td><strong>必须同步</strong></td>
+</tr>
+<tr>
+<td><code>actions</code></td>
+<td>处理异步，再提交 mutation</td>
+<td>可异步</td>
+</tr>
+<tr>
+<td><code>modules</code></td>
+<td>模块化拆分 store</td>
+<td>大型项目用</td>
+</tr>
+</tbody></table>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// store/index.js</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Vue</span> <span class="keyword">from</span> <span class="string">&quot;vue&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Vuex</span> <span class="keyword">from</span> <span class="string">&quot;vuex&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Vue</span>.<span class="title function_">use</span>(<span class="title class_">Vuex</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">new</span> <span class="title class_">Vuex</span>.<span class="title class_">Store</span>(&#123;</span><br><span class="line">  <span class="attr">state</span>: &#123;</span><br><span class="line">    <span class="attr">count</span>: <span class="number">0</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">getters</span>: &#123;</span><br><span class="line">    <span class="title function_">doubleCount</span>(<span class="params">state</span>) &#123;          <span class="comment">// 派生值</span></span><br><span class="line">      <span class="keyword">return</span> state.<span class="property">count</span> * <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">mutations</span>: &#123;</span><br><span class="line">    <span class="title function_">add</span>(<span class="params">state, payload</span>) &#123;         <span class="comment">// 同步改 state</span></span><br><span class="line">      state.<span class="property">count</span> += payload;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">actions</span>: &#123;</span><br><span class="line">    <span class="title function_">asyncAdd</span>(<span class="params">context, payload</span>) &#123;  <span class="comment">// 异步，再 commit</span></span><br><span class="line">      <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">        context.<span class="title function_">commit</span>(<span class="string">&quot;add&quot;</span>, payload);</span><br><span class="line">      &#125;, <span class="number">1000</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="组件里使用"><a href="#组件里使用" class="headerlink" title="组件里使用"></a>组件里使用</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">this</span>.<span class="property">$store</span>.<span class="property">state</span>.<span class="property">count</span>;             <span class="comment">// 读 state</span></span><br><span class="line"><span class="variable language_">this</span>.<span class="property">$store</span>.<span class="property">getters</span>.<span class="property">doubleCount</span>;     <span class="comment">// 读 getter</span></span><br><span class="line"><span class="variable language_">this</span>.<span class="property">$store</span>.<span class="title function_">commit</span>(<span class="string">&quot;add&quot;</span>, <span class="number">1</span>);        <span class="comment">// 提交 mutation</span></span><br><span class="line"><span class="variable language_">this</span>.<span class="property">$store</span>.<span class="title function_">dispatch</span>(<span class="string">&quot;asyncAdd&quot;</span>, <span class="number">1</span>); <span class="comment">// 派发 action</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="数据流（核心，必记）"><a href="#数据流（核心，必记）" class="headerlink" title="数据流（核心，必记）"></a>数据流（核心，必记）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">组件 dispatch → actions（异步）→ commit → mutations（同步改 state）→ 视图自动更新</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>⚠️ <strong>核心原则</strong>：<strong>改 state 只能通过 mutation，且 mutation 必须同步</strong>。异步操作放 action，action 里再 commit mutation。</p>
+</blockquote>
+<h2 id="三、模块化-modules"><a href="#三、模块化-modules" class="headerlink" title="三、模块化 modules"></a>三、模块化 modules</h2><p>大型项目按功能拆分成多个模块：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// store/modules/cart.js</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  <span class="attr">namespaced</span>: <span class="literal">true</span>,        <span class="comment">// 开启命名空间</span></span><br><span class="line">  <span class="attr">state</span>: &#123; <span class="attr">list</span>: [] &#125;,</span><br><span class="line">  <span class="attr">getters</span>: &#123;&#125;,</span><br><span class="line">  <span class="attr">mutations</span>: &#123;&#125;,</span><br><span class="line">  <span class="attr">actions</span>: &#123;&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// store/index.js</span></span><br><span class="line"><span class="keyword">import</span> cart <span class="keyword">from</span> <span class="string">&quot;./modules/cart.js&quot;</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">new</span> <span class="title class_">Vuex</span>.<span class="title class_">Store</span>(&#123;</span><br><span class="line">  <span class="attr">modules</span>: &#123; cart &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>命名空间下访问：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">this</span>.<span class="property">$store</span>.<span class="property">state</span>.<span class="property">cart</span>.<span class="property">list</span>;</span><br><span class="line"><span class="variable language_">this</span>.<span class="property">$store</span>.<span class="title function_">commit</span>(<span class="string">&quot;cart/add&quot;</span>, data);   <span class="comment">// 前面加模块名</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="四、辅助函数（简化写法）"><a href="#四、辅助函数（简化写法）" class="headerlink" title="四、辅助函数（简化写法）"></a>四、辅助函数（简化写法）</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; mapState, mapGetters, mapMutations, mapActions &#125; <span class="keyword">from</span> <span class="string">&quot;vuex&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  <span class="attr">computed</span>: &#123;</span><br><span class="line">    ...<span class="title function_">mapState</span>([<span class="string">&quot;count&quot;</span>]),</span><br><span class="line">    ...<span class="title function_">mapGetters</span>([<span class="string">&quot;doubleCount&quot;</span>])</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">methods</span>: &#123;</span><br><span class="line">    ...<span class="title function_">mapMutations</span>([<span class="string">&quot;add&quot;</span>]),</span><br><span class="line">    ...<span class="title function_">mapActions</span>([<span class="string">&quot;asyncAdd&quot;</span>])</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 之后可以直接 this.count、this.add(1)</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="五、axios-封装与-api-模块化（项目实战）"><a href="#五、axios-封装与-api-模块化（项目实战）" class="headerlink" title="五、axios 封装与 api 模块化（项目实战）"></a>五、axios 封装与 api 模块化（项目实战）</h2><h3 id="1-封装-request-js（统一-baseURL、拦截器）"><a href="#1-封装-request-js（统一-baseURL、拦截器）" class="headerlink" title="1. 封装 request.js（统一 baseURL、拦截器）"></a>1. 封装 request.js（统一 baseURL、拦截器）</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// utils/request.js</span></span><br><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">&quot;axios&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> request = axios.<span class="title function_">create</span>(&#123;</span><br><span class="line">  <span class="attr">baseURL</span>: <span class="string">&quot;http://localhost:8080&quot;</span>,   <span class="comment">// 统一后端地址</span></span><br><span class="line">  <span class="attr">timeout</span>: <span class="number">5000</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 请求拦截器：统一加 token</span></span><br><span class="line">request.<span class="property">interceptors</span>.<span class="property">request</span>.<span class="title function_">use</span>(<span class="function"><span class="params">config</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> token = <span class="variable language_">localStorage</span>.<span class="title function_">getItem</span>(<span class="string">&quot;token&quot;</span>);</span><br><span class="line">  <span class="keyword">if</span> (token) config.<span class="property">headers</span>.<span class="property">Authorization</span> = token;</span><br><span class="line">  <span class="keyword">return</span> config;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 响应拦截器：直接返回 data，统一处理错误</span></span><br><span class="line">request.<span class="property">interceptors</span>.<span class="property">response</span>.<span class="title function_">use</span>(</span><br><span class="line">  <span class="function"><span class="params">res</span> =&gt;</span> res.<span class="property">data</span>,</span><br><span class="line">  <span class="function"><span class="params">err</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;请求失败&quot;</span>, err);</span><br><span class="line">    <span class="keyword">return</span> <span class="title class_">Promise</span>.<span class="title function_">reject</span>(err);</span><br><span class="line">  &#125;</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> request;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-api-模块化（按业务拆分接口）"><a href="#2-api-模块化（按业务拆分接口）" class="headerlink" title="2. api 模块化（按业务拆分接口）"></a>2. api 模块化（按业务拆分接口）</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// api/user.js</span></span><br><span class="line"><span class="keyword">import</span> request <span class="keyword">from</span> <span class="string">&quot;../utils/request.js&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title function_">getUser</span> = (<span class="params">id</span>) =&gt; request.<span class="title function_">get</span>(<span class="string">`/user/<span class="subst">$&#123;id&#125;</span>`</span>);</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title function_">login</span> = (<span class="params">data</span>) =&gt; request.<span class="title function_">post</span>(<span class="string">&quot;/login&quot;</span>, data);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 组件里调用</span></span><br><span class="line"><span class="keyword">import</span> &#123; login &#125; <span class="keyword">from</span> <span class="string">&quot;../api/user.js&quot;</span>;</span><br><span class="line"><span class="title function_">login</span>(&#123; username, password &#125;).<span class="title function_">then</span>(<span class="function"><span class="params">res</span> =&gt;</span> &#123; <span class="comment">/* ... */</span> &#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="六、项目实战其他要点"><a href="#六、项目实战其他要点" class="headerlink" title="六、项目实战其他要点"></a>六、项目实战其他要点</h2><h3 id="1-mixins（复用组件逻辑）"><a href="#1-mixins（复用组件逻辑）" class="headerlink" title="1. mixins（复用组件逻辑）"></a>1. mixins（复用组件逻辑）</h3><p>多个组件共用的逻辑抽成 mixin：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// mixins/loginConfirm.js</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  <span class="attr">methods</span>: &#123;</span><br><span class="line">    <span class="title function_">checkLogin</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="keyword">if</span> (!<span class="variable language_">this</span>.<span class="property">$store</span>.<span class="property">state</span>.<span class="property">user</span>.<span class="property">token</span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">$router</span>.<span class="title function_">push</span>(<span class="string">&quot;/login&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 组件里引入</span></span><br><span class="line"><span class="keyword">import</span> loginConfirm <span class="keyword">from</span> <span class="string">&quot;../mixins/loginConfirm.js&quot;</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  <span class="attr">mixins</span>: [loginConfirm]</span><br><span class="line">  <span class="comment">// 组件里就能直接用 this.checkLogin()</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-移动端-UI-库-vant（简要）"><a href="#2-移动端-UI-库-vant（简要）" class="headerlink" title="2. 移动端 UI 库 vant（简要）"></a>2. 移动端 UI 库 vant（简要）</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 引入 vant</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Vant</span> <span class="keyword">from</span> <span class="string">&quot;vant&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;vant/lib/index.css&quot;</span>;</span><br><span class="line"><span class="title class_">Vue</span>.<span class="title function_">use</span>(<span class="title class_">Vant</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-utils-工具函数"><a href="#3-utils-工具函数" class="headerlink" title="3. utils 工具函数"></a>3. utils 工具函数</h3><p>把常用工具（本地存储、表单校验）抽到 <code>utils/</code>：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// utils/storage.js</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title function_">getToken</span> = (<span class="params"></span>) =&gt; <span class="variable language_">localStorage</span>.<span class="title function_">getItem</span>(<span class="string">&quot;token&quot;</span>);</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title function_">setToken</span> = (<span class="params">t</span>) =&gt; <span class="variable language_">localStorage</span>.<span class="title function_">setItem</span>(<span class="string">&quot;token&quot;</span>, t);</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-典型项目结构（整合路由-Vuex-axios）"><a href="#4-典型项目结构（整合路由-Vuex-axios）" class="headerlink" title="4. 典型项目结构（整合路由 + Vuex + axios）"></a>4. 典型项目结构（整合路由 + Vuex + axios）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">src/</span><br><span class="line">├── api/            # 接口封装（按模块）</span><br><span class="line">├── store/          # Vuex（按模块）</span><br><span class="line">├── router/         # 路由</span><br><span class="line">├── views/          # 页面组件</span><br><span class="line">├── components/     # 通用组件</span><br><span class="line">├── mixins/         # 复用逻辑</span><br><span class="line">└── utils/          # 工具（request、storage、validate）</span><br></pre></td></tr></table></figure>
+
+<h2 id="七、速查表"><a href="#七、速查表" class="headerlink" title="七、速查表"></a>七、速查表</h2><table>
+<thead>
+<tr>
+<th>需求</th>
+<th>写法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>创建 store</td>
+<td><code>new Vuex.Store(&#123; state, getters, mutations, actions, modules &#125;)</code></td>
+</tr>
+<tr>
+<td>读 state</td>
+<td><code>this.$store.state.count</code></td>
+</tr>
+<tr>
+<td>读 getter</td>
+<td><code>this.$store.getters.doubleCount</code></td>
+</tr>
+<tr>
+<td>同步改</td>
+<td><code>this.$store.commit(&quot;add&quot;, 1)</code></td>
+</tr>
+<tr>
+<td>异步改</td>
+<td><code>this.$store.dispatch(&quot;asyncAdd&quot;, 1)</code></td>
+</tr>
+<tr>
+<td>模块化</td>
+<td><code>modules: &#123; cart &#125;</code> + <code>namespaced: true</code></td>
+</tr>
+<tr>
+<td>辅助函数</td>
+<td><code>mapState</code> &#x2F; <code>mapMutations</code> &#x2F; <code>mapActions</code> &#x2F; <code>mapGetters</code></td>
+</tr>
+<tr>
+<td>axios 实例</td>
+<td><code>axios.create(&#123; baseURL, timeout &#125;)</code></td>
+</tr>
+<tr>
+<td>请求拦截</td>
+<td><code>request.interceptors.request.use(fn)</code></td>
+</tr>
+<tr>
+<td>响应拦截</td>
+<td><code>request.interceptors.response.use(fn)</code></td>
+</tr>
+<tr>
+<td>复用逻辑</td>
+<td><code>mixins: [loginConfirm]</code></td>
+</tr>
+</tbody></table>
+<h2 id="八、复习要点"><a href="#八、复习要点" class="headerlink" title="八、复习要点"></a>八、复习要点</h2><ol>
+<li>Vuex 集中管理<strong>多组件共享</strong>的状态；跨组件传值麻烦时用它。</li>
+<li>五概念：<code>state</code>（数据）、<code>getters</code>（派生）、<code>mutations</code>（同步改）、<code>actions</code>（异步）、<code>modules</code>（拆分）。</li>
+<li><strong>数据流</strong>：dispatch → action → commit → mutation → 改 state → 视图更新。</li>
+<li><strong>mutation 必须同步，改 state 只能走 mutation</strong>；异步放 action。</li>
+<li>模块化用 <code>namespaced: true</code>，访问要加模块名前缀。</li>
+<li>axios 封装：<code>axios.create</code> + 请求&#x2F;响应拦截器（统一 token、错误处理）。</li>
+<li>api 模块化：按业务拆接口，组件里按需引入。</li>
+<li>mixins 复用组件逻辑，utils 放工具函数。</li>
+<li>忘了某条，回本文对应小节看示例即可。</li>
+</ol>
+<blockquote>
+<p>至此，Vue2 四篇笔记全部完成：基础与核心 → 组件化开发 → 路由 → Vuex 与项目实战，覆盖了 Vue2 框架开发的全部常用知识点。</p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Yang</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2026/09/13/%E5%89%8D%E7%AB%AF/Vue/Vuex%20%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86%E4%B8%8E%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/">http://example.com/2026/09/13/%E5%89%8D%E7%AB%AF/Vue/Vuex%20%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86%E4%B8%8E%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">Yang's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Vue/">Vue</a><a class="post-meta__tags" href="/tags/axios/">axios</a><a class="post-meta__tags" href="/tags/Vue2/">Vue2</a><a class="post-meta__tags" href="/tags/Vuex/">Vuex</a><a class="post-meta__tags" href="/tags/%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86/">状态管理</a></div><div class="post-share"><div class="social-share" data-image="/img/avatar.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2026/09/15/%E5%89%8D%E7%AB%AF/JavaScript/%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6%E3%80%81%E6%95%B0%E7%BB%84%E4%B8%8E%E9%9B%86%E5%90%88/" title="流程控制、数组与集合"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">流程控制、数组与集合</div></div><div class="info-2"><div class="info-item-1">流程控制、数组与集合这一篇讲 JS 的流程控制（if &#x2F; switch &#x2F; 异常）、循环（for &#x2F; while &#x2F; for…in &#x2F; for…of）、数组、Set 与 Map，以及各类遍历方式。 其中 for...in、for...of、数组的高阶方法（map&#x2F;filter&#x2F;reduce）是 JS 与 Java 差异最大的部分；if、for、switch 等基础语法与 Java 几乎一致，只做对照。  阅读方式：与 Java 相同的语法简单带过，重点看「差异」和「⚠️ 坑点」。    一、流程控制1. if &#x2F; else if &#x2F; else（与 Java 相同）1234567if (a &gt; 0) &#123;  // ...&#125; else if (a === 0) &#123;  // ...&#125; else &#123;  // ...&#125;  唯一差异：条件表达式不强制是 boolean，JS 会用 truthy&#x2F;falsy 自动判断（0、&quot...</div></div></div></a><a class="pagination-related" href="/2026/09/13/%E5%89%8D%E7%AB%AF/Vue/vue-router%20%E8%B7%AF%E7%94%B1/" title="vue-router 路由"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">vue-router 路由</div></div><div class="info-2"><div class="info-item-1">vue-router 路由路由是 SPA（单页应用）的核心：根据 URL 的变化，切换显示不同的组件，页面不刷新。 这一篇讲 vue-router 的基本使用、路由高亮、导航传参、重定向与 404、路由模式、编程式导航。  Java 对照：路由 ≈ 后端 Controller 的 URL 映射（@RequestMapping），但作用在前端，切换的是组件而不是后端接口。    一、路由基本使用（5+2 步骤）安装：npm install vue-router@3（Vue2 用 3.x）。 1234567891011121314151617181920// main.jsimport Vue from &quot;vue&quot;;import VueRouter from &quot;vue-router&quot;;import App from &quot;./App.vue&quot;;import Find from &quot;./views/Find.vue&quot;;import My from &quot;./views/My.vue&quot;;Vue.us...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/09/13/%E5%89%8D%E7%AB%AF/Vue/vue-router%20%E8%B7%AF%E7%94%B1/" title="vue-router 路由"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-13</div><div class="info-item-2">vue-router 路由</div></div><div class="info-2"><div class="info-item-1">vue-router 路由路由是 SPA（单页应用）的核心：根据 URL 的变化，切换显示不同的组件，页面不刷新。 这一篇讲 vue-router 的基本使用、路由高亮、导航传参、重定向与 404、路由模式、编程式导航。  Java 对照：路由 ≈ 后端 Controller 的 URL 映射（@RequestMapping），但作用在前端，切换的是组件而不是后端接口。    一、路由基本使用（5+2 步骤）安装：npm install vue-router@3（Vue2 用 3.x）。 1234567891011121314151617181920// main.jsimport Vue from &quot;vue&quot;;import VueRouter from &quot;vue-router&quot;;import App from &quot;./App.vue&quot;;import Find from &quot;./views/Find.vue&quot;;import My from &quot;./views/My.vue&quot;;Vue.us...</div></div></div></a><a class="pagination-related" href="/2026/10/25/%E5%89%8D%E7%AB%AF/Vue/Vue%20%E5%9F%BA%E7%A1%80%E4%B8%8E%E6%A0%B8%E5%BF%83/" title="Vue 基础与核心"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-10-25</div><div class="info-item-2">Vue 基础与核心</div></div><div class="info-2"><div class="info-item-1">Vue 基础与核心Vue 是渐进式 JS 框架，核心思想是数据驱动视图（MVVM）：你只管改数据，视图自动更新，不用再手动操作 DOM。 这一篇讲 Vue 的基础与核心：实例、插值、响应式原理、指令、修饰符、class&#x2F;style 绑定、计算属性、侦听器、生命周期。  Java 对照：传统方式（含 jQuery）是”手动查 DOM、改 DOM”；Vue 是”改数据、框架帮你改 DOM”。这是理解 Vue 最重要的思维转变。    一、MVVM 思想1Model（数据 data） ⇄ ViewModel（Vue 实例） ⇄ View（模板 DOM）   Model：数据（data） View：页面模板（HTML） ViewModel：Vue 实例，负责双向绑定——数据变了自动更新视图，视图输入自动更新数据。  二、创建 Vue 实例与插值12345678910&lt;div id=&quot;app&quot;&gt;&#123;&#123; message &#125;&#125;&lt;/div&gt;&lt;script src=&quot;vue.js&quot;...</div></div></div></a><a class="pagination-related" href="/2026/09/13/%E5%89%8D%E7%AB%AF/Vue/%E7%BB%84%E4%BB%B6%E5%8C%96%E5%BC%80%E5%8F%91/" title="组件化开发"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-13</div><div class="info-item-2">组件化开发</div></div><div class="info-2"><div class="info-item-1">组件化开发组件是 Vue 最重要的概念——把页面拆成一块块**可复用的”积木”**，每个组件有自己的模板、数据、样式和逻辑。 这一篇讲组件的基础（注册、scoped、data 函数）和进阶（组件通信、v-model 原理、$refs、插槽、自定义指令）。其中组件通信是 Vue 的绝对重点。  Java 对照：组件 ≈ 一个”封装了 UI + 逻辑的类”，props 类似构造参数（只读传入），$emit 类似回调通知父组件。    一、组件基础1. 单文件组件 .vue 三段式123456789101112131415&lt;template&gt;  &lt;div class=&quot;box&quot;&gt;&#123;&#123; msg &#125;&#125;&lt;/div&gt;&lt;/template&gt;&lt;script&gt;export default &#123;  data() &#123;    return &#123; msg: &quot;hello&quot; &#125;;  &#125;&#125;;&lt;/script&gt...</div></div></div></a><a class="pagination-related" href="/2026/10/14/%E5%89%8D%E7%AB%AF/Ajax/AJAX/" title="AJAX"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-10-14</div><div class="info-item-2">AJAX</div></div><div class="info-2"><div class="info-item-1">AJAXAJAX（Asynchronous JavaScript And XML）的核心思想：浏览器用 JS 异步地发 HTTP 请求，拿到数据后局部更新页面，不刷新整页。 这一篇完整覆盖 AJAX 的整套知识：Promise（异步基础）→ XMLHttpRequest（经典实现）→ fetch（现代原生）→ async&#x2F;await（优雅写法）→ axios（最常用库）。  Java 对照：axios ≈ 后端的 RestTemplate &#x2F; OkHttp &#x2F; HttpClient；Promise ≈ CompletableFuture。    一、AJAX 概述1. 为什么需要异步12345678910// 同步（阻塞）：请求期间页面卡死console.log(&quot;1&quot;);同步请求();     // 假设要等 3 秒console.log(&quot;2&quot;);// 异步（不阻塞）console.log(&quot;1&quot;);异步请求(() =&gt; console.log(&quot;2&quot;));  ...</div></div></div></a><a class="pagination-related" href="/2026/06/10/Python/FastAPI/FastAPI-RBAC%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E5%AE%9E%E6%88%98/" title="FastAPI RBAC权限管理系统实战"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-06-10</div><div class="info-item-2">FastAPI RBAC权限管理系统实战</div></div><div class="info-2"><div class="info-item-1">FastAPI RBAC 权限管理系统实战本文记录一个基于 FastAPI 的 RBAC 用户权限管理系统从需求分析、架构设计、数据库建模、接口实现到前后端联调的完整开发过程。项目定位不是生产级后台模板，而是一个具备完整业务闭环的学习型工程：通过尽量小的系统边界覆盖 Web 后端开发中常见的核心主题，包括分层架构、ORM 关系建模、JWT 登录认证、接口级权限控制、统一响应、前端登录态管理和权限驱动的页面控制。 项目路径如下： 1D:\pycharm_workspace\python_code\FastAPI\fastapi-rbac-admin  技术栈如下：  后端：FastAPI、SQLAlchemy 2.x、Pydantic、JWT、SQLite 前端：Vue3、Vite、Element Plus、Pinia、Axios 权限模型：RBAC，即 User、Role、Permission 三层模型 文档：README、设计文档、Swagger 自动接口文档 初始化数据：admin、editor、viewer 三类演示账号  选择 RBAC 作为实战主题的原因在于，它比普通 ...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Yang</div><div class="author-info-description">萌新打怪升级中......</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">109</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">249</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">23</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Vuex-%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86%E4%B8%8E%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98"><span class="toc-number">1.</span> <span class="toc-text">Vuex 状态管理与项目实战</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81-Vuex"><span class="toc-number">1.1.</span> <span class="toc-text">一、为什么需要 Vuex</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81Vuex-%E4%BA%94%E4%B8%AA%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5"><span class="toc-number">1.2.</span> <span class="toc-text">二、Vuex 五个核心概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E4%BB%B6%E9%87%8C%E4%BD%BF%E7%94%A8"><span class="toc-number">1.2.1.</span> <span class="toc-text">组件里使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%B5%81%EF%BC%88%E6%A0%B8%E5%BF%83%EF%BC%8C%E5%BF%85%E8%AE%B0%EF%BC%89"><span class="toc-number">1.2.2.</span> <span class="toc-text">数据流（核心，必记）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%A8%A1%E5%9D%97%E5%8C%96-modules"><span class="toc-number">1.3.</span> <span class="toc-text">三、模块化 modules</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E8%BE%85%E5%8A%A9%E5%87%BD%E6%95%B0%EF%BC%88%E7%AE%80%E5%8C%96%E5%86%99%E6%B3%95%EF%BC%89"><span class="toc-number">1.4.</span> <span class="toc-text">四、辅助函数（简化写法）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81axios-%E5%B0%81%E8%A3%85%E4%B8%8E-api-%E6%A8%A1%E5%9D%97%E5%8C%96%EF%BC%88%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98%EF%BC%89"><span class="toc-number">1.5.</span> <span class="toc-text">五、axios 封装与 api 模块化（项目实战）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%B0%81%E8%A3%85-request-js%EF%BC%88%E7%BB%9F%E4%B8%80-baseURL%E3%80%81%E6%8B%A6%E6%88%AA%E5%99%A8%EF%BC%89"><span class="toc-number">1.5.1.</span> <span class="toc-text">1. 封装 request.js（统一 baseURL、拦截器）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-api-%E6%A8%A1%E5%9D%97%E5%8C%96%EF%BC%88%E6%8C%89%E4%B8%9A%E5%8A%A1%E6%8B%86%E5%88%86%E6%8E%A5%E5%8F%A3%EF%BC%89"><span class="toc-number">1.5.2.</span> <span class="toc-text">2. api 模块化（按业务拆分接口）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98%E5%85%B6%E4%BB%96%E8%A6%81%E7%82%B9"><span class="toc-number">1.6.</span> <span class="toc-text">六、项目实战其他要点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-mixins%EF%BC%88%E5%A4%8D%E7%94%A8%E7%BB%84%E4%BB%B6%E9%80%BB%E8%BE%91%EF%BC%89"><span class="toc-number">1.6.1.</span> <span class="toc-text">1. mixins（复用组件逻辑）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E7%A7%BB%E5%8A%A8%E7%AB%AF-UI-%E5%BA%93-vant%EF%BC%88%E7%AE%80%E8%A6%81%EF%BC%89"><span class="toc-number">1.6.2.</span> <span class="toc-text">2. 移动端 UI 库 vant（简要）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-utils-%E5%B7%A5%E5%85%B7%E5%87%BD%E6%95%B0"><span class="toc-number">1.6.3.</span> <span class="toc-text">3. utils 工具函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%85%B8%E5%9E%8B%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84%EF%BC%88%E6%95%B4%E5%90%88%E8%B7%AF%E7%94%B1-Vuex-axios%EF%BC%89"><span class="toc-number">1.6.4.</span> <span class="toc-text">4. 典型项目结构（整合路由 + Vuex + axios）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E9%80%9F%E6%9F%A5%E8%A1%A8"><span class="toc-number">1.7.</span> <span class="toc-text">七、速查表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E5%A4%8D%E4%B9%A0%E8%A6%81%E7%82%B9"><span class="toc-number">1.8.</span> <span class="toc-text">八、复习要点</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/25/%E5%89%8D%E7%AB%AF/Vue/Vue%20%E5%9F%BA%E7%A1%80%E4%B8%8E%E6%A0%B8%E5%BF%83/" title="Vue 基础与核心">Vue 基础与核心</a><time datetime="2026-10-25T03:00:00.000Z" title="发表于 2026-10-25 11:00:00">2026-10-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/18/%E5%89%8D%E7%AB%AF/Ajax/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/" title="前端工程化">前端工程化</a><time datetime="2026-10-18T02:00:00.000Z" title="发表于 2026-10-18 10:00:00">2026-10-18</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/14/%E5%89%8D%E7%AB%AF/Ajax/AJAX/" title="AJAX">AJAX</a><time datetime="2026-10-14T01:00:00.000Z" title="发表于 2026-10-14 09:00:00">2026-10-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/10/%E5%89%8D%E7%AB%AF/JavaScript/%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%E7%82%B9%E8%A1%A5%E5%85%85/" title="进阶知识点补充">进阶知识点补充</a><time datetime="2026-10-10T15:00:00.000Z" title="发表于 2026-10-10 23:00:00">2026-10-10</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/30/%E5%89%8D%E7%AB%AF/JavaScript/BOM%20%E4%B8%8E%E9%87%8D%E8%A6%81%E5%AF%B9%E8%B1%A1/" title="BOM">BOM</a><time datetime="2026-09-30T13:00:00.000Z" title="发表于 2026-09-30 21:00:00">2026-09-30</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Yang</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.5-b1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.5-b1"></script><script src="/js/main.js?v=5.5.5-b1"></script><div class="js-pjax"></div><video id="bgvideo" autoplay muted loop playsinline> <source src="/video/bg.mp4" type="video/mp4"> </video><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
