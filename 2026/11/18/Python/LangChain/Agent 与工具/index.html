@@ -1,0 +1,254 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Agent 与工具 | Yang's Blog</title><meta name="author" content="Yang"><meta name="copyright" content="Yang"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="一、Agent 是什么Agent（智能体）是 LangChain 的核心高阶抽象：它把 LLM 与一组工具 结合起来，让模型能「思考 → 决定调用工具 → 观察结果 → 继续思考」，循环直到完成任务。 LangChain 1.x 用 create_agent 一个函数就能创建 Agent，内部封装了工具调用循环（第 1 篇讲过的底层原理）。日常使用只需关心：用什么模型、提供哪些工具、如何调用。 1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Agent 与工具">
+<meta property="og:url" content="http://example.com/2026/11/18/Python/LangChain/Agent%20%E4%B8%8E%E5%B7%A5%E5%85%B7/index.html">
+<meta property="og:site_name" content="Yang&#39;s Blog">
+<meta property="og:description" content="一、Agent 是什么Agent（智能体）是 LangChain 的核心高阶抽象：它把 LLM 与一组工具 结合起来，让模型能「思考 → 决定调用工具 → 观察结果 → 继续思考」，循环直到完成任务。 LangChain 1.x 用 create_agent 一个函数就能创建 Agent，内部封装了工具调用循环（第 1 篇讲过的底层原理）。日常使用只需关心：用什么模型、提供哪些工具、如何调用。 1">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/avatar.png">
+<meta property="article:published_time" content="2026-11-18T12:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-28T13:01:57.631Z">
+<meta property="article:author" content="Yang">
+<meta property="article:tag" content="LangChain">
+<meta property="article:tag" content="Agent">
+<meta property="article:tag" content="工具调用">
+<meta property="article:tag" content="流式">
+<meta property="article:tag" content="系统提示词">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/avatar.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Agent 与工具",
+  "url": "http://example.com/2026/11/18/Python/LangChain/Agent%20%E4%B8%8E%E5%B7%A5%E5%85%B7/",
+  "image": "http://example.com/img/avatar.png",
+  "datePublished": "2026-11-18T12:00:00.000Z",
+  "dateModified": "2026-11-28T13:01:57.631Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Yang",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="http://example.com/2026/11/18/Python/LangChain/Agent%20%E4%B8%8E%E5%B7%A5%E5%85%B7/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.5-b1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Agent 与工具',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Yang's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">Agent 与工具</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">Agent 与工具</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-11-18T12:00:00.000Z" title="发表于 2026-11-18 20:00:00">2026-11-18</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-11-28T13:01:57.631Z" title="更新于 2026-11-28 21:01:57">2026-11-28</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Python/">Python</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Python/LangChain/">LangChain</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="一、Agent-是什么"><a href="#一、Agent-是什么" class="headerlink" title="一、Agent 是什么"></a>一、Agent 是什么</h1><p>Agent（智能体）是 LangChain 的核心高阶抽象：它把 <strong>LLM 与一组工具</strong> 结合起来，让模型能「思考 → 决定调用工具 → 观察结果 → 继续思考」，循环直到完成任务。</p>
+<p>LangChain 1.x 用 <strong><code>create_agent</code></strong> 一个函数就能创建 Agent，内部封装了工具调用循环（第 1 篇讲过的底层原理）。日常使用只需关心：<strong>用什么模型、提供哪些工具、如何调用</strong>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.agents <span class="keyword">import</span> create_agent</span><br><span class="line"></span><br><span class="line">agent = create_agent(</span><br><span class="line">    model=model,          <span class="comment"># 模型</span></span><br><span class="line">    tools=[...]           <span class="comment"># 工具列表</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="二、定义工具"><a href="#二、定义工具" class="headerlink" title="二、定义工具"></a>二、定义工具</h1><p>工具（Tool）本质上就是<strong>一个带描述的函数</strong>，模型通过描述理解工具的作用和参数，从而决定何时调用它。LangChain 用 <code>@tool</code> 装饰器把普通函数变成工具。</p>
+<h3 id="2-1-三种定义方式（摘自练习代码-day05-12-工具-工具的定义方式-ipynb）"><a href="#2-1-三种定义方式（摘自练习代码-day05-12-工具-工具的定义方式-ipynb）" class="headerlink" title="2.1 三种定义方式（摘自练习代码 day05/12.工具-工具的定义方式.ipynb）"></a>2.1 三种定义方式（摘自练习代码 <code>day05/12.工具-工具的定义方式.ipynb</code>）</h3><p><strong>方式一：<code>@tool(名称, description=...)</code> 显式描述</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.tools <span class="keyword">import</span> tool</span><br><span class="line"></span><br><span class="line"><span class="meta">@tool(<span class="params"><span class="string">&quot;square_root&quot;</span>, description=<span class="string">&quot;计算数字 x 的平方根&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">tool1</span>(<span class="params">x: <span class="built_in">float</span></span>) -&gt; <span class="built_in">float</span>:</span><br><span class="line">    <span class="keyword">return</span> x ** <span class="number">0.5</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>方式二：用 docstring 描述（最常用）</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@tool</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_weather</span>(<span class="params">location: <span class="built_in">str</span>, units: <span class="built_in">str</span> = <span class="string">&quot;celsius&quot;</span>, include_forecast: <span class="built_in">bool</span> = <span class="literal">False</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    获取当前天气和可选的天气预报。</span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        location: 城市名称或坐标</span></span><br><span class="line"><span class="string">        units: 温度单位，可选值[&#x27;celsius&#x27;, &#x27;fahrenheit&#x27;]</span></span><br><span class="line"><span class="string">        include_forecast: 是否包括天气预报</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    temp = <span class="number">22</span> <span class="keyword">if</span> units == <span class="string">&quot;celsius&quot;</span> <span class="keyword">else</span> <span class="number">72</span></span><br><span class="line">    result = <span class="string">f&quot;Current weather in <span class="subst">&#123;location&#125;</span>: <span class="subst">&#123;temp&#125;</span> degrees <span class="subst">&#123;units[<span class="number">0</span>].upper()&#125;</span>&quot;</span></span><br><span class="line">    <span class="keyword">if</span> include_forecast:</span><br><span class="line">        result += <span class="string">&quot;\nNext 5 days: Sunny&quot;</span></span><br><span class="line">    <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
+
+<p>模型会根据函数名、docstring、参数类型和注解，自动推断工具的用途和入参。</p>
+<p><strong>方式三：用 Pydantic 精确约束入参（<code>args_schema</code>）</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pydantic <span class="keyword">import</span> BaseModel, Field</span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">Literal</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">WeatherInput</span>(<span class="title class_ inherited__">BaseModel</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;查询天气的输入参数.&quot;&quot;&quot;</span></span><br><span class="line">    location: <span class="built_in">str</span> = Field(description=<span class="string">&quot;城市名称或坐标&quot;</span>)</span><br><span class="line">    units: <span class="type">Literal</span>[<span class="string">&quot;celsius&quot;</span>, <span class="string">&quot;fahrenheit&quot;</span>] = Field(</span><br><span class="line">        default=<span class="string">&quot;celsius&quot;</span>, description=<span class="string">&quot;温度单位偏好&quot;</span>)</span><br><span class="line">    include_forecast: <span class="built_in">bool</span> = Field(</span><br><span class="line">        default=<span class="literal">False</span>, description=<span class="string">&quot;是否包括5日预报&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">@tool(<span class="params">args_schema=WeatherInput</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_weather</span>(<span class="params">location: <span class="built_in">str</span>, units: <span class="built_in">str</span> = <span class="string">&quot;celsius&quot;</span>, include_forecast: <span class="built_in">bool</span> = <span class="literal">False</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Get current weather and optional forecast.&quot;&quot;&quot;</span></span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+
+<p><code>args_schema</code> 适合入参复杂、需要严格约束类型的场景（如枚举值、嵌套结构）。</p>
+<h3 id="2-2-工具描述的重要性"><a href="#2-2-工具描述的重要性" class="headerlink" title="2.2 工具描述的重要性"></a>2.2 工具描述的重要性</h3><p>工具的<strong>描述质量直接影响模型调用是否准确</strong>。几个要点：</p>
+<ul>
+<li><strong>名称清晰</strong>：动词开头，如 <code>get_weather</code>、<code>square_root</code>。</li>
+<li><strong>描述明确</strong>：写清楚「做什么、什么时候用、参数含义」。</li>
+<li><strong>参数注解</strong>：用类型注解 + docstring 说明每个参数，模型据此传参。</li>
+</ul>
+<p>描述写得好，模型才能「该调用时调用、参数传得对」。</p>
+<hr>
+<h1 id="三、创建与调用-Agent"><a href="#三、创建与调用-Agent" class="headerlink" title="三、创建与调用 Agent"></a>三、创建与调用 Agent</h1><h3 id="3-1-阻塞调用-invoke"><a href="#3-1-阻塞调用-invoke" class="headerlink" title="3.1 阻塞调用 invoke"></a>3.1 阻塞调用 invoke</h3><p><code>invoke</code> 同步执行，返回完整结果（摘自练习代码 <code>day05/09.Agent阻塞调用.ipynb</code>）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.agents <span class="keyword">import</span> create_agent</span><br><span class="line"><span class="keyword">from</span> langchain.chat_models <span class="keyword">import</span> init_chat_model</span><br><span class="line"><span class="keyword">from</span> langchain.messages <span class="keyword">import</span> HumanMessage</span><br><span class="line"></span><br><span class="line">model = init_chat_model(<span class="string">&quot;deepseek-v4-flash&quot;</span>)</span><br><span class="line">agent = create_agent(model=model, tools=[])</span><br><span class="line"></span><br><span class="line">response = agent.invoke(&#123;</span><br><span class="line">    <span class="string">&quot;messages&quot;</span>: [HumanMessage(<span class="string">&quot;你好，你是谁？&quot;</span>)]</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(response[<span class="string">&quot;messages&quot;</span>][-<span class="number">1</span>].content)   <span class="comment"># 取最后一条消息（AI 回复）</span></span><br></pre></td></tr></table></figure>
+
+<p>要点：</p>
+<ul>
+<li>Agent 的 <code>invoke</code> 入参是 <strong><code>&#123;&quot;messages&quot;: [...]&#125;</code> 字典</strong>（与模型的 <code>invoke</code> 传字符串&#x2F;列表不同）。</li>
+<li>返回值也是 <strong><code>&#123;&quot;messages&quot;: [...]&#125;</code> 字典</strong>，消息列表里包含完整的对话轨迹：用户消息 → AI 的 tool_calls → 工具结果 → 最终 AI 回复。</li>
+<li>取最终答案用 <code>response[&quot;messages&quot;][-1].content</code>。</li>
+</ul>
+<h3 id="3-2-系统提示词-system-prompt"><a href="#3-2-系统提示词-system-prompt" class="headerlink" title="3.2 系统提示词 system_prompt"></a>3.2 系统提示词 system_prompt</h3><p><code>create_agent</code> 支持 <code>system_prompt</code> 参数，用于设定 Agent 的人设&#x2F;规则（摘自练习代码 <code>day05/11.Agent系统提示词.ipynb</code>）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">agent = create_agent(</span><br><span class="line">    model=model,</span><br><span class="line">    tools=[],</span><br><span class="line">    system_prompt=<span class="string">&quot;你扮演火箭队的武藏，用武藏的口吻来回答问题，要用动画中的标志性台词。&quot;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p><code>system_prompt</code> 会被放在消息最前面作为 SystemMessage，是所有对话的「人设基座」。企业里常用它注入角色设定、业务规则、安全约束等。</p>
+<h3 id="3-3-流式调用-stream-events"><a href="#3-3-流式调用-stream-events" class="headerlink" title="3.3 流式调用 stream_events"></a>3.3 流式调用 stream_events</h3><p>流式调用让结果<strong>逐字输出</strong>（打字机效果），交互体验更好。用 <code>stream_events</code> 并遍历输出（摘自练习代码 <code>day05/10.Agent流式调用.ipynb</code>）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">stream = agent.stream_events(</span><br><span class="line">    &#123;<span class="string">&quot;messages&quot;</span>: [HumanMessage(<span class="string">&quot;你好，你是谁？&quot;</span>)]&#125;,</span><br><span class="line">    version=<span class="string">&quot;v3&quot;</span>                       <span class="comment"># 指定流式协议版本</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> message <span class="keyword">in</span> stream.messages:</span><br><span class="line">    <span class="keyword">for</span> chunk <span class="keyword">in</span> message.text:</span><br><span class="line">        <span class="built_in">print</span>(chunk, end=<span class="string">&quot;&quot;</span>, flush=<span class="literal">True</span>)   <span class="comment"># 逐字打印</span></span><br></pre></td></tr></table></figure>
+
+<p>要点：</p>
+<ul>
+<li><code>stream_events(输入, version=&quot;v3&quot;)</code> 返回一个流对象。</li>
+<li>遍历 <code>stream.messages</code> 拿到每个消息事件，再遍历 <code>message.text</code> 拿到逐字文本块。</li>
+<li>流式是「边生成边返回」，适合需要实时反馈的场景（聊天、长文本生成）。</li>
+</ul>
+<h3 id="3-4-阻塞-vs-流式"><a href="#3-4-阻塞-vs-流式" class="headerlink" title="3.4 阻塞 vs 流式"></a>3.4 阻塞 vs 流式</h3><table>
+<thead>
+<tr>
+<th>方式</th>
+<th>方法</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>阻塞</td>
+<td><code>invoke</code></td>
+<td>一次性返回完整结果，简单</td>
+</tr>
+<tr>
+<td>流式</td>
+<td><code>stream_events</code></td>
+<td>逐字返回，实时反馈，体验好</td>
+</tr>
+</tbody></table>
+<hr>
+<h1 id="四、完整案例：带工具的-Agent"><a href="#四、完整案例：带工具的-Agent" class="headerlink" title="四、完整案例：带工具的 Agent"></a>四、完整案例：带工具的 Agent</h1><p>把工具、模型、系统提示词、流式调用组合起来（综合练习代码）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.agents <span class="keyword">import</span> create_agent</span><br><span class="line"><span class="keyword">from</span> langchain.chat_models <span class="keyword">import</span> init_chat_model</span><br><span class="line"><span class="keyword">from</span> langchain.tools <span class="keyword">import</span> tool</span><br><span class="line"><span class="keyword">from</span> langchain.messages <span class="keyword">import</span> HumanMessage</span><br><span class="line"><span class="keyword">from</span> dotenv <span class="keyword">import</span> load_dotenv</span><br><span class="line"></span><br><span class="line">load_dotenv()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 1. 定义工具</span></span><br><span class="line"><span class="meta">@tool</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_weather</span>(<span class="params">location: <span class="built_in">str</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;查询指定 location 的天气&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">f&quot;Current weather in <span class="subst">&#123;location&#125;</span> is sunny&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@tool</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">square_root</span>(<span class="params">x: <span class="built_in">float</span></span>) -&gt; <span class="built_in">float</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;求 x 的平方根&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> x ** <span class="number">0.5</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 初始化模型</span></span><br><span class="line">model = init_chat_model(</span><br><span class="line">    <span class="string">&quot;deepseek-v4-flash&quot;</span>,</span><br><span class="line">    extra_body=&#123;<span class="string">&quot;thinking&quot;</span>: &#123;<span class="string">&quot;type&quot;</span>: <span class="string">&quot;disabled&quot;</span>&#125;&#125;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 创建 Agent</span></span><br><span class="line">agent = create_agent(</span><br><span class="line">    model=model,</span><br><span class="line">    tools=[get_weather, square_root],</span><br><span class="line">    system_prompt=<span class="string">&quot;你是天气与数学助手，回答要简洁。&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 调用</span></span><br><span class="line">response = agent.invoke(&#123;</span><br><span class="line">    <span class="string">&quot;messages&quot;</span>: [HumanMessage(<span class="string">&quot;北京天气如何？顺便算一下 16 的平方根&quot;</span>)]</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">print</span>(response[<span class="string">&quot;messages&quot;</span>][-<span class="number">1</span>].content)</span><br></pre></td></tr></table></figure>
+
+<p>模型会自动：识别要调 <code>get_weather(&quot;北京&quot;)</code> 和 <code>square_root(16)</code> → 依次执行 → 汇总结果生成最终回复。整个过程无需你手动写任何调度代码。</p>
+<hr>
+<h1 id="五、Agent-内部发生了什么"><a href="#五、Agent-内部发生了什么" class="headerlink" title="五、Agent 内部发生了什么"></a>五、Agent 内部发生了什么</h1><p>调用带工具的 Agent 时，<code>response[&quot;messages&quot;]</code> 里其实记录了完整的执行轨迹，理解它就能真正搞懂 Agent（接第 1 篇的底层原理）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># response[&quot;messages&quot;] 大致包含：</span></span><br><span class="line">[</span><br><span class="line">    HumanMessage(<span class="string">&quot;北京天气如何？&quot;</span>),            <span class="comment"># 1. 用户输入</span></span><br><span class="line">    AIMessage(tool_calls=[get_weather(<span class="string">&quot;北京&quot;</span>)]), <span class="comment"># 2. 模型决定调工具（还没答案）</span></span><br><span class="line">    ToolMessage(<span class="string">&quot;Current weather in 北京 is sunny&quot;</span>), <span class="comment"># 3. 工具执行结果</span></span><br><span class="line">    AIMessage(<span class="string">&quot;北京目前是晴天 ☀️&quot;</span>),             <span class="comment"># 4. 模型综合结果给出最终答案</span></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>四个阶段循环往复，直到模型不再产生 <code>tool_calls</code>、直接输出最终文本为止。这就是「Agent &#x3D; LLM + 工具 + 循环」的含义。</p>
+<hr>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>本篇是 LangChain 的核心能力，需要掌握：</p>
+<ol>
+<li>**<code>create_agent</code>**：一个函数创建 Agent，绑定模型 + 工具。</li>
+<li><strong><code>@tool</code> 三种定义方式</strong>：装饰器属性描述、docstring 描述（最常用）、Pydantic <code>args_schema</code> 精确约束。</li>
+<li><strong>调用方式</strong>：<code>invoke</code>（阻塞，返回完整结果）、<code>stream_events</code>（流式，逐字输出）。</li>
+<li>**<code>system_prompt</code>**：设定 Agent 人设与规则。</li>
+<li><strong>Agent 内部</strong>：模型返回 tool_calls → 执行工具 → 结果传回 → 循环，直到生成最终答案。</li>
+</ol>
+<blockquote>
+<p>本篇示例摘自练习代码 <code>hm-insurance/agent-service/notebooks/day05/09.Agent阻塞调用.ipynb</code>、<code>10.Agent流式调用.ipynb</code>、<code>11.Agent系统提示词.ipynb</code>、<code>12.工具-工具的定义方式.ipynb</code>。</p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Yang</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2026/11/18/Python/LangChain/Agent%20%E4%B8%8E%E5%B7%A5%E5%85%B7/">http://example.com/2026/11/18/Python/LangChain/Agent%20%E4%B8%8E%E5%B7%A5%E5%85%B7/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">Yang's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/LangChain/">LangChain</a><a class="post-meta__tags" href="/tags/Agent/">Agent</a><a class="post-meta__tags" href="/tags/%E5%B7%A5%E5%85%B7%E8%B0%83%E7%94%A8/">工具调用</a><a class="post-meta__tags" href="/tags/%E6%B5%81%E5%BC%8F/">流式</a><a class="post-meta__tags" href="/tags/%E7%B3%BB%E7%BB%9F%E6%8F%90%E7%A4%BA%E8%AF%8D/">系统提示词</a></div><div class="post-share"><div class="social-share" data-image="/img/avatar.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2026/11/20/Python/LangChain/%E4%BC%9A%E8%AF%9D%E8%AE%B0%E5%BF%86%E4%B8%8E%20MCP/" title="会话记忆与 MCP"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">会话记忆与 MCP</div></div><div class="info-2"><div class="info-item-1">一、会话记忆1.1 为什么需要会话记忆LLM 本身是无状态的：每次调用都是独立的，模型不会自动记住上一轮说了什么。所以多轮对话时，必须由程序把历史消息带回去，模型才能理解「上下文」。 123456# 没有记忆：模型不知道上一轮问了什么agent.invoke(&#123;&quot;messages&quot;: [HumanMessage(&quot;12个苹果分给4个人，每人分几个？&quot;)]&#125;)# 回答：每人 3 个agent.invoke(&#123;&quot;messages&quot;: [HumanMessage(&quot;如果是3个人呢？&quot;)]&#125;)# 回答：你在说什么？模型完全不知道「苹果」这回事  LangChain 通过 Checkpointer（检查点存储器） 解决这个问题：它把每个会话的完整消息历史持久化下来，下次带着同样的 thread_id 调用时，自动加载历史并继续对话。 1.2 用 checkpointer 实现会话记忆create_agent 支持 checkpointer 参数。最简单的做法是用内存版 I...</div></div></div></a><a class="pagination-related" href="/2026/11/16/Python/LangChain/%E6%A8%A1%E5%9E%8B%E4%B8%8E%E6%B6%88%E6%81%AF/" title="模型与消息"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">模型与消息</div></div><div class="info-2"><div class="info-item-1">一、模型初始化模型（Chat Model）是所有 LLM 应用的基础。LangChain 提供了 init_chat_model 统一入口，也支持直接实例化具体模型类。掌握三种初始化方式，就能接入几乎所有模型。 1.1 方式一：默认初始化（最简单）只传模型名字，LangChain 会根据名字自动推断厂商并读取对应的环境变量（摘自练习代码 day05/03.模型-默认初始化.ipynb）： 12345678from langchain.chat_models import init_chat_model# 只传名字即可，还能附加模型自身参数model = init_chat_model(    &quot;deepseek-v4-flash&quot;,              # 自动识别为 DeepSeek    temperature=1.2,                  # 模型参数    extra_body=&#123;&quot;thinking&quot;: &#123;&quot;type&quot;: &quot;disabled&quot;&#125;...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/11/26/Python/LangChain/RAG%20%E5%AE%9E%E6%88%98%EF%BC%9A%E5%AE%8C%E6%95%B4%E6%B5%81%E6%B0%B4%E7%BA%BF/" title="RAG 实战：完整流水线"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-11-26</div><div class="info-item-2">RAG 实战：完整流水线</div></div><div class="info-2"><div class="info-item-1">一、RAG 的两种实现方式前面两篇拆解了 RAG 的各个环节，实际落地有两种组织方式：  手动拼接：自己写「检索 → 拼提示词 → 调模型」的代码（第 6 篇 2.3 已示范）。简单直接，但检索时机固定。 Agentic RAG（智能体 RAG）：把「检索」封装成工具交给 Agent，让模型自己决定什么时候检索、检索什么。更灵活，是生产主流。  本篇重点讲 Agentic RAG，以及你项目里完整的生产级流水线。  二、Agentic RAG（RAG Agent）把向量库检索封装成一个 @tool，交给 Agent（摘自练习代码 day07/09.RAG Agent.ipynb）。 2.1 完整代码12345678910111213141516171819202122232425262728293031323334353637383940414243from langchain_text_splitters import MarkdownHeaderTextSplitterfrom langchain_ollama import OllamaEmbeddingsfrom lang...</div></div></div></a><a class="pagination-related" href="/2026/11/16/Python/LangChain/%E6%A8%A1%E5%9E%8B%E4%B8%8E%E6%B6%88%E6%81%AF/" title="模型与消息"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-11-16</div><div class="info-item-2">模型与消息</div></div><div class="info-2"><div class="info-item-1">一、模型初始化模型（Chat Model）是所有 LLM 应用的基础。LangChain 提供了 init_chat_model 统一入口，也支持直接实例化具体模型类。掌握三种初始化方式，就能接入几乎所有模型。 1.1 方式一：默认初始化（最简单）只传模型名字，LangChain 会根据名字自动推断厂商并读取对应的环境变量（摘自练习代码 day05/03.模型-默认初始化.ipynb）： 12345678from langchain.chat_models import init_chat_model# 只传名字即可，还能附加模型自身参数model = init_chat_model(    &quot;deepseek-v4-flash&quot;,              # 自动识别为 DeepSeek    temperature=1.2,                  # 模型参数    extra_body=&#123;&quot;thinking&quot;: &#123;&quot;type&quot;: &quot;disabled&quot;&#125;...</div></div></div></a><a class="pagination-related" href="/2026/11/14/Python/LangChain/LangChain%20%E5%85%A5%E9%97%A8%E4%B8%8E%E6%9E%B6%E6%9E%84/" title="LangChain 入门与架构"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-11-14</div><div class="info-item-2">LangChain 入门与架构</div></div><div class="info-2"><div class="info-item-1">一、LangChain 是什么LangChain 是当前最主流的 LLM（大语言模型）应用开发框架，目标是让你用统一、简洁的方式把大模型集成到自己的程序里，并快速搭建 Agent、RAG 等高级应用。 它的价值概括为三点：  统一 API：不同模型厂商（OpenAI、DeepSeek、Ollama、阿里云 DashScope 等）的接口各不相同，LangChain 提供统一的模型、消息、工具抽象，切换模型几乎不用改代码。 工具箱：把社区沉淀的常见模式（工具调用、会话记忆、Agent、RAG、结构化输出等）提炼成即用组件，不用从零造轮子。 生态整合：通过一个个独立的集成包，对接向量库（Milvus）、嵌入模型（Ollama&#x2F;DashScope）、MCP 服务器、文档加载器等第三方能力。   一句话：LangChain 不是「又一个模型 SDK」，而是站在模型 SDK 之上的一层抽象与编排框架。  1.1 1.x 统一 API vs 0.x 旧 API（重要，必看）LangChain 在 2025 年底发布了 1.0 版本，对 API 做了大幅重构，新旧写法差异很大。网上大...</div></div></div></a><a class="pagination-related" href="/2026/11/20/Python/LangChain/%E4%BC%9A%E8%AF%9D%E8%AE%B0%E5%BF%86%E4%B8%8E%20MCP/" title="会话记忆与 MCP"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-11-20</div><div class="info-item-2">会话记忆与 MCP</div></div><div class="info-2"><div class="info-item-1">一、会话记忆1.1 为什么需要会话记忆LLM 本身是无状态的：每次调用都是独立的，模型不会自动记住上一轮说了什么。所以多轮对话时，必须由程序把历史消息带回去，模型才能理解「上下文」。 123456# 没有记忆：模型不知道上一轮问了什么agent.invoke(&#123;&quot;messages&quot;: [HumanMessage(&quot;12个苹果分给4个人，每人分几个？&quot;)]&#125;)# 回答：每人 3 个agent.invoke(&#123;&quot;messages&quot;: [HumanMessage(&quot;如果是3个人呢？&quot;)]&#125;)# 回答：你在说什么？模型完全不知道「苹果」这回事  LangChain 通过 Checkpointer（检查点存储器） 解决这个问题：它把每个会话的完整消息历史持久化下来，下次带着同样的 thread_id 调用时，自动加载历史并继续对话。 1.2 用 checkpointer 实现会话记忆create_agent 支持 checkpointer 参数。最简单的做法是用内存版 I...</div></div></div></a><a class="pagination-related" href="/2026/11/22/Python/LangChain/RAG%20%E5%85%A5%E9%97%A8%EF%BC%9A%E6%96%87%E6%A1%A3%E5%8A%A0%E8%BD%BD%E4%B8%8E%E5%88%87%E5%88%86/" title="RAG 入门：文档加载与切分"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-11-22</div><div class="info-item-2">RAG 入门：文档加载与切分</div></div><div class="info-2"><div class="info-item-1">一、RAG 概述1.1 RAG 是什么RAG（Retrieval-Augmented Generation，检索增强生成） 是解决 LLM 三大痛点的核心技术范式：    LLM 痛点 表现 RAG 如何解决    知识过时 训练数据有截止日期 从外部知识库实时检索最新内容   幻觉 编造不存在的答案 基于检索到的真实片段回答   缺领域知识 不懂企业内部文档 把私有文档灌入知识库   核心思路：回答前先从知识库检索相关内容，再把「检索结果 + 用户问题」一起交给模型生成答案，让模型「有据可依」。 1.2 两个阶段RAG 分两个阶段（摘自练习代码 day07/01.RAG预览.ipynb 的结构）： 12345【离线构建知识库】文档加载 → 文档切分 → 向量化 → 存入向量库【在线问答】用户提问 → 检索相关知识片段 → 拼提示词 → 调用模型生成答案  从第 5~7 篇，就沿着这条链路逐步展开：本篇讲「文档加载 + 切分」，第 6 篇讲「向量化 + 检索」，第 7 篇讲「完整流水线 + Agentic RAG」。 1.3 核心对象：Document整个 RAG 流程中流转的基...</div></div></div></a><a class="pagination-related" href="/2026/11/24/Python/LangChain/RAG%20%E6%A0%B8%E5%BF%83%EF%BC%9A%E5%90%91%E9%87%8F%E5%8C%96%E4%B8%8E%E6%A3%80%E7%B4%A2/" title="RAG 核心：向量化与检索"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-11-24</div><div class="info-item-2">RAG 核心：向量化与检索</div></div><div class="info-2"><div class="info-item-1">一、向量化（Embedding）1.1 什么是向量化向量化（Embedding）把文本转换成一个高维数值向量。语义相近的文本，向量在空间中距离也近——这就是「相似度检索」的数学基础。 123&quot;我爱上班&quot;  → [0.0092, -0.0474, 0.0499, ...]   # 1024 维浮点向量&quot;我爱工作&quot;  → [0.0085, -0.0451, 0.0502, ...]   # 与上一句语义接近，向量也接近&quot;拒绝加班&quot;  → [-0.0310, 0.0182, -0.0267, ...]  # 语义不同，向量差异大  向量化由专门的 Embedding 模型完成，与对话模型（Chat Model）是两种不同的模型。 1.2 OllamaEmbeddings（本地向量模型）用本地 Ollama 跑的向量模型，免费、可离线（摘自练习代码 day07/06.向量化-Ollama.ipynb）： 12345678910111213141516from langchain_ollama import OllamaEmbed...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Yang</div><div class="author-info-description">萌新打怪升级中......</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">127</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">311</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81Agent-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">1.</span> <span class="toc-text">一、Agent 是什么</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%AE%9A%E4%B9%89%E5%B7%A5%E5%85%B7"><span class="toc-number">2.</span> <span class="toc-text">二、定义工具</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E4%B8%89%E7%A7%8D%E5%AE%9A%E4%B9%89%E6%96%B9%E5%BC%8F%EF%BC%88%E6%91%98%E8%87%AA%E7%BB%83%E4%B9%A0%E4%BB%A3%E7%A0%81-day05-12-%E5%B7%A5%E5%85%B7-%E5%B7%A5%E5%85%B7%E7%9A%84%E5%AE%9A%E4%B9%89%E6%96%B9%E5%BC%8F-ipynb%EF%BC%89"><span class="toc-number">2.0.1.</span> <span class="toc-text">2.1 三种定义方式（摘自练习代码 day05&#x2F;12.工具-工具的定义方式.ipynb）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E5%B7%A5%E5%85%B7%E6%8F%8F%E8%BF%B0%E7%9A%84%E9%87%8D%E8%A6%81%E6%80%A7"><span class="toc-number">2.0.2.</span> <span class="toc-text">2.2 工具描述的重要性</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%88%9B%E5%BB%BA%E4%B8%8E%E8%B0%83%E7%94%A8-Agent"><span class="toc-number">3.</span> <span class="toc-text">三、创建与调用 Agent</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E9%98%BB%E5%A1%9E%E8%B0%83%E7%94%A8-invoke"><span class="toc-number">3.0.1.</span> <span class="toc-text">3.1 阻塞调用 invoke</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E7%B3%BB%E7%BB%9F%E6%8F%90%E7%A4%BA%E8%AF%8D-system-prompt"><span class="toc-number">3.0.2.</span> <span class="toc-text">3.2 系统提示词 system_prompt</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E6%B5%81%E5%BC%8F%E8%B0%83%E7%94%A8-stream-events"><span class="toc-number">3.0.3.</span> <span class="toc-text">3.3 流式调用 stream_events</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-%E9%98%BB%E5%A1%9E-vs-%E6%B5%81%E5%BC%8F"><span class="toc-number">3.0.4.</span> <span class="toc-text">3.4 阻塞 vs 流式</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%AE%8C%E6%95%B4%E6%A1%88%E4%BE%8B%EF%BC%9A%E5%B8%A6%E5%B7%A5%E5%85%B7%E7%9A%84-Agent"><span class="toc-number">4.</span> <span class="toc-text">四、完整案例：带工具的 Agent</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E3%80%81Agent-%E5%86%85%E9%83%A8%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88"><span class="toc-number">5.</span> <span class="toc-text">五、Agent 内部发生了什么</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-number">6.</span> <span class="toc-text">小结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/11/26/Python/LangChain/RAG%20%E5%AE%9E%E6%88%98%EF%BC%9A%E5%AE%8C%E6%95%B4%E6%B5%81%E6%B0%B4%E7%BA%BF/" title="RAG 实战：完整流水线">RAG 实战：完整流水线</a><time datetime="2026-11-26T12:00:00.000Z" title="发表于 2026-11-26 20:00:00">2026-11-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/11/24/Python/LangChain/RAG%20%E6%A0%B8%E5%BF%83%EF%BC%9A%E5%90%91%E9%87%8F%E5%8C%96%E4%B8%8E%E6%A3%80%E7%B4%A2/" title="RAG 核心：向量化与检索">RAG 核心：向量化与检索</a><time datetime="2026-11-24T12:00:00.000Z" title="发表于 2026-11-24 20:00:00">2026-11-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/11/22/Python/LangChain/RAG%20%E5%85%A5%E9%97%A8%EF%BC%9A%E6%96%87%E6%A1%A3%E5%8A%A0%E8%BD%BD%E4%B8%8E%E5%88%87%E5%88%86/" title="RAG 入门：文档加载与切分">RAG 入门：文档加载与切分</a><time datetime="2026-11-22T12:00:00.000Z" title="发表于 2026-11-22 20:00:00">2026-11-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/11/20/Python/LangChain/%E4%BC%9A%E8%AF%9D%E8%AE%B0%E5%BF%86%E4%B8%8E%20MCP/" title="会话记忆与 MCP">会话记忆与 MCP</a><time datetime="2026-11-20T12:00:00.000Z" title="发表于 2026-11-20 20:00:00">2026-11-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/11/18/Python/LangChain/Agent%20%E4%B8%8E%E5%B7%A5%E5%85%B7/" title="Agent 与工具">Agent 与工具</a><time datetime="2026-11-18T12:00:00.000Z" title="发表于 2026-11-18 20:00:00">2026-11-18</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Yang</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.5-b1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.5-b1"></script><script src="/js/main.js?v=5.5.5-b1"></script><div class="js-pjax"></div><video id="bgvideo" autoplay muted loop playsinline> <source src="/video/bg.mp4" type="video/mp4"> </video><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
